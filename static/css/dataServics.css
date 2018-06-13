@@ -1,0 +1,61 @@
+#app{ width: 100%; height: 100%; display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.el-aside,.el-aside .el-menu{ background: #354357;}
+.el-aside .el-menu-item{ color: #fff; text-align: center;}
+.el-aside .el-menu-item.is-active{ color: #fff; background: #4a5769;}
+.el-aside .el-menu-item:hover{ background: #414e61;}
+.el-aside .el-menu-item,.el-aside .el-submenu__title{ height: 100px; line-height: 38px;}
+.menuico{ width:100%; height: 52px; display: block;}
+.menu_gl{ background: url(../img/menu_gl.png) no-repeat center 20px;}
+.menu_fw{ background: url(../img/menu_fw.png) no-repeat center 20px;}
+.menu_jk{ background: url(../img/menu_jk.png) no-repeat center 20px;}
+.menu_set{ background: url(../img/menu_set.png) no-repeat center 20px;}
+.el-aside::-webkit-scrollbar {
+    display: none;
+}
+
+.el-header{ background: #449afc;}
+.headbar-container{ height: 100%;}
+.headbar-container h1{ height: 60px; line-height: 60px;  padding-left: 14px;}
+.headbar-container h1 img{vertical-align: middle}
+.headbar-container h1 span{ color: #fff; font-size: 20px; font-weight: normal;}
+
+/************ 概览 ************/
+/* 系统概述 */
+.gl-rowbox{ margin-bottom: 20px;}
+.box-card .el-card__header{ color: #000; font-size: 18px; border: none; padding-bottom: 0;} 
+.box-card .xtgsdata{ display: block; color: #606266; font-size: 26px;}
+.box-card .xtgsname{ display: block; color: #909399; font-size: 16px;}
+.gl-rowbox .el-tag{ height: 24px; line-height: 24px;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
