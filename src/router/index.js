@@ -15,8 +15,22 @@ export default new Router({
       name: '概览',
       hidden: true,
       children: [{
-        path: 'generalization',
+        path: '/generalization',
         component: _import('basics/generalization/index')
+      }]
+    },{
+      path: '/service',
+      component:  Layout,
+      name: '服务',
+      hidden: true,
+      children: [{
+        path: '/service',
+        component: _import('basics/service/index'),
+        name:'服务数据'
+      },{
+        path: '/service/reviewed',
+        component: _import('basics/service/reviewed/index'),
+        name:'审核'
       }]
     },
   ]

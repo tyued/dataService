@@ -35,27 +35,48 @@
 .headbar-container h1 span{ color: #fff; font-size: 20px; font-weight: normal;}
 
 /************ 概览 ************/
+.gl-partbox{ height: 410px;}
+.gl-partbox .el-col,.gl-partbox .box-card{ height: 100%;}
 /* 系统概述 */
 .gl-rowbox{ margin-bottom: 20px;}
-.box-card .el-card__header{ color: #000; font-size: 18px; border: none; padding-bottom: 0;} 
-.box-card .xtgsdata{ display: block; color: #606266; font-size: 26px;}
-.box-card .xtgsname{ display: block; color: #909399; font-size: 16px;}
+.gl-rowbox .box-card .el-card__header{ color: #000; font-size: 18px; border: none; padding-bottom: 0;} 
+.gl-rowbox .box-card .xtgsdata{ display: block; color: #606266; font-size: 26px;}
+.gl-rowbox .box-card .xtgsname{ display: block; color: #909399; font-size: 16px;}
 .gl-rowbox .el-tag{ height: 24px; line-height: 24px;}
+/* 最新服务异常 */
+.gl-rowbox .box-card .more{ font-size: 14px; color: #909399; float: right; line-height: 24px; cursor: pointer;}
 
 
+/************ 服务 ************/
+.fw-rowbox-part .box-card{ cursor: pointer;} 
+.fw-topico{ width: 100%; height: 48px; display:block;}
+.fw-toppart{ text-align: center; padding-top: 10px; font-size: 16px; color: #606266;}
+.shenh-ico{ background:url("../img/shenh_ico.png") no-repeat center 0; }
+.zhuc-ico{ background:url("../img/zhuc_ico.png") no-repeat center 0; }
+.guanl-ico{ background:url("../img/guanl_ico.png") no-repeat center 0; }
+.shujuy-ico{ background:url("../img/shujuy_ico.png") no-repeat center 0; }
+.on .shenh-ico{ background:url("../img/shenh_ico_on.png") no-repeat center 0; }
+.on .zhuc-ico{ background:url("../img/zhuc_ico_on.png") no-repeat center 0; }
+.on .guanl-ico{ background:url("../img/guanl_ico_on.png") no-repeat center 0; }
+.on .shujuy-ico{ background:url("../img/shujuy_ico_on.png") no-repeat center 0; }
+.fw-rowbox{ padding-bottom: 20px;}
+.fw-part-tag{ margin-bottom: 25px;}
+.fw-part-card .box-card{ height: 310px;}
+.fw-rowbox .box-card .el-card__header{ color: #303133; font-size: 16px; border: none; padding-bottom: 0;} 
+.box-card .box-card-hbtn{ float: right;}
+.fw-part-con{ margin-bottom: 12px; font-size: 14px; color: #606266; line-height: 24px;word-break:break-all; display:-webkit-box; -webkit-line-clamp:7; -webkit-box-orient:vertical;  overflow:hidden;}
+.fw-part-foot{ border-top: 1px solid #e3e6ec; height: 64px; line-height: 64px; font-size: 14px;}
+.fw-part-foot .target{ float: left; height: 64px; line-height: 64px;}
+.fw-part-foot .target i{ display: inline-block; width: 24px; height: 24px; vertical-align: middle; background: #eee;}
+.fw-part-foot .target span{ display: inline-block; color: #449afc;}
+.fw-part-foot .count{ float: right; color: #606266;}
+.navPart{ position: fixed; right: 20px; bottom: 15%;}
+.navPart .el-button{ display: block; margin-bottom: 10px;}
+.navPart .el-button+.el-button{ margin-left: 0;}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.fw-rowbox .el-table::before{ height: 0}
+.colLeft{ float: left;}
+.colRight{ float: right;}
+.linkBlock .el-input{ width: 120px;}
+.opaPart{ padding-bottom: 15px;}
+.el-form-item{ margin-bottom: 15px!important;}

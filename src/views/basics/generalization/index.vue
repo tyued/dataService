@@ -35,7 +35,7 @@
                 </el-card>
             </el-col>
         </el-row>
-        <el-row class="gl-rowbox" :gutter="20">
+        <el-row class="gl-rowbox gl-partbox" :gutter="20">
             <el-col :span="8">
                 <el-card class="box-card">
                     <div slot="header" class="box-card-header">
@@ -51,6 +51,7 @@
                         服务访问量
                         <el-tag type="danger">TOP5</el-tag>
 					</div>
+                    <fwfwl-table></fwfwl-table>
                 </el-card>
             </el-col>
             <el-col :span="8">
@@ -59,6 +60,37 @@
                         服务订阅量
                         <el-tag type="danger">TOP5</el-tag>
 					</div>
+                    <line-chart></line-chart>
+                </el-card>
+            </el-col>
+        </el-row>
+        <el-row class="gl-rowbox gl-partbox" :gutter="20">
+            <el-col :span="12">
+                <el-card class="box-card">
+                    <div slot="header" class="box-card-header">
+                        最新服务异常
+                        <span class="more">更多</span>
+					</div>
+                    <zxfwyc-table></zxfwyc-table>
+                </el-card>
+            </el-col>
+            <el-col :span="12">
+                <el-card class="box-card">
+                    <div slot="header" class="box-card-header">
+                        异常类型汇总
+					</div>
+                    <pie-chart></pie-chart>
+                </el-card>
+            </el-col>
+        </el-row>      
+        <el-row class="gl-rowbox gl-partbox">
+            <el-col :span="24   ">
+                <el-card class="box-card">
+                    <div slot="header" class="box-card-header">
+                        申请接入列表
+                        <span class="more">更多</span>
+					</div>
+                    <sqjrlist-table></sqjrlist-table>
                 </el-card>
             </el-col>
         </el-row>
@@ -66,12 +98,33 @@
 </template>
 
 <script>
-import { barChart } from 'views/basics/generalization';
+import { barChart , fwfwlTable , lineChart , zxfwycTable , pieChart , sqjrlistTable } from 'views/basics/generalization';
+import * as api from 'api/generalization/index'
 
 export default {
     name:'generalization',
     components: {
-        barChart
+        barChart,fwfwlTable,lineChart,zxfwycTable,pieChart,sqjrlistTable
     },
+    data() {
+        return {
+            
+        }
+    },
+    created(){
+        // this.init()
+    },
+    methods:{
+        init(){
+            var data = {
+                pageNo:1,
+                limit:15
+            }
+            api.page(data).then(response => {
+                console.log(res)
+            })
+        }
+    },
+
 }
 </script>
