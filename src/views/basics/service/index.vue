@@ -10,10 +10,12 @@
                 </div>
             </el-col>
             <el-col :span="6">
-                <el-card class="box-card">
-                    <i class="zhuc-ico fw-topico"></i>
-                    <div class="fw-toppart">注册</div>
-                </el-card>
+                <div @click="clickRegister" :class="{'on':zhuc_on}">
+                    <el-card class="box-card">
+                        <i class="zhuc-ico fw-topico"></i>
+                        <div class="fw-toppart">注册</div>
+                    </el-card>
+                </div>
             </el-col>
             <el-col :span="6">
                 <el-card class="box-card">
@@ -39,12 +41,12 @@
 </template>
 
 <script>
-import { mainService , pageReviewed , pageDataservice } from 'views/basics/service';
+import { mainService , pageReviewed , pageDataservice , pageRegister } from 'views/basics/service';
 
 export default {
     name:'service',
     components: {
-        mainService,pageReviewed,pageDataservice
+        mainService,pageReviewed,pageDataservice,pageRegister
     },
     data() {
         return {
@@ -65,8 +67,16 @@ export default {
             this.zhuc_on = false
             this.guanl_on = false
             this.shujuy_on = false
-        },                          //数据源
-        clickDataservice(){
+        },                          
+        clickRegister(){            //注册
+            this.pageMB = pageRegister
+            this.shenh_on = false
+            this.zhuc_on = true
+            this.guanl_on = false
+            this.shujuy_on = false
+
+        },
+        clickDataservice(){         //数据源
             this.pageMB = pageDataservice
             this.shenh_on = false
             this.zhuc_on = false
