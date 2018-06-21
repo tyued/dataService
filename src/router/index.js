@@ -31,7 +31,11 @@ export default new Router({
         path: '/service/reviewed',
         component: _import('basics/service/reviewed/index'),
         name:'审核'
+      }, {
+        path: '/service/studentinfo',
+        component: _import('basics/service/studentinfo/index'),
+        name:'学生信息'
       }]
-    },
+    }
   ]
 })
