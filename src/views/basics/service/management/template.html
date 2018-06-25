@@ -1,0 +1,10 @@
+<el-card class="box-card management">
+  <el-row>
+    <el-button size="small" :class="{activeBtn:isActive1}" @click="goSubscription">已订阅(21322)</el-button>
+    <el-button size="small" :class="{activeBtn:isActive2}" @click="goPublication">已发布(231)</el-button>
+    <el-button size="small" :class="{activeBtn:isActive3}" @click="goChecked">待审核(1)</el-button>
+    <el-button size="small" :class="{activeBtn:isActive4}" @click="goForbidden">已禁用(12)</el-button>
+  </el-row>
+  
+  <component :is="listId"></component>
+</el-card>

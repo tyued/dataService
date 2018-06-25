@@ -18,10 +18,12 @@
                 </div>
             </el-col>
             <el-col :span="6">
-                <el-card class="box-card">
-                    <i class="guanl-ico fw-topico"></i>
-                    <div class="fw-toppart">管理</div>
-                </el-card>
+                <div @click="clickManegement" :class="{'on':guanl_on}">
+                    <el-card class="box-card">
+                        <i class="guanl-ico fw-topico"></i>
+                        <div class="fw-toppart">管理</div>
+                    </el-card>
+                </div>
             </el-col>
             <el-col :span="6">
                 <div @click="clickDataservice" :class="{'on':shujuy_on}">
@@ -33,20 +35,19 @@
             </el-col>
         </el-row>
         <el-row class="fw-rowbox">
-            <component :is="pageMB" ></component>
+            <component :is="pageMB"></component>
         </el-row>
-        
-        
+
     </div>
 </template>
 
 <script>
-import { mainService , pageReviewed , pageDataservice , pageRegister } from 'views/basics/service';
+import { mainService , pageReviewed , pageDataservice , pageRegister, pageManagement } from 'views/basics/service';
 
 export default {
     name:'service',
     components: {
-        mainService,pageReviewed,pageDataservice,pageRegister
+        mainService,pageReviewed,pageDataservice,pageRegister,pageManagement
     },
     data() {
         return {
@@ -83,6 +84,13 @@ export default {
             this.guanl_on = false
             this.shujuy_on = true
         },
+        clickManegement() {         // 管理
+            this.pageMB = pageManagement;
+            this.shenh_on = false;
+            this.zhuc_on = false;
+            this.guanl_on = true;
+            this.shujuy_on = false;
+        }
     }
 }
 </script>
