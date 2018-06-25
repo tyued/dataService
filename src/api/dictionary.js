@@ -24,3 +24,43 @@ export function getOptTypes(obj) {
         data: obj
     });
 }
+// 数据源信息
+export function getDatasources(obj) {
+    return fetch({
+        url: 'platform/dataset/datasources',
+        method: 'post',
+        data: obj
+    });
+}
+// 数据表信息
+export function getTables(query) {
+    return fetch({
+        url: 'platform/dataset/tables',
+        method: 'post',
+        params: query
+    });
+}
+// 视图信息
+export function getViews(query) {
+    return fetch({
+        url: 'platform/dataset/views',
+        method: 'post',
+        params: query
+    });
+}
+// 列信息数据
+export function getColumns(query) {
+    return fetch({
+        url: 'platform/dataset/columns',
+        method: 'post',
+        params: query
+    });
+}
+// 条件与条件值关系信息
+export function getRelations(query) {
+    return fetch({
+        url: 'platform/dataset/relations',
+        method: 'post',
+        params: query
+    });
+}

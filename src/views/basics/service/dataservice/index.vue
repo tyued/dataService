@@ -51,14 +51,14 @@
                 <el-form-item label="数据库访问端口" prop="port" :rules="[{ required: true, message: '数据库访问端口不能为空'},{ max: 10, message: '10个字符以内'}]">
                     <el-input v-model="form.port"></el-input>
                 </el-form-item>
-                <el-form-item label="数据库实例名称" prop="uid" :rules="[{ required: true, message: '数据库实例名称不能为空'},{ max: 50, message: '50个字符以内', trigger: 'blur' }]">
-                    <el-input v-model="form.uid"></el-input>
+                <el-form-item label="数据库实例名称" prop="dbname" :rules="[{ required: true, message: '数据库实例名称不能为空'},{ max: 50, message: '50个字符以内', trigger: 'blur' }]">
+                    <el-input v-model="form.dbname"></el-input>
                 </el-form-item>
                 <el-form-item label="连接字符串" class="linkBlock">
                     <el-input v-model="form.dburl" style="width:165px;" disabled></el-input>
                     <el-input v-model="form.ipv4" disabled></el-input>
                     <el-input v-model="':'+form.port" style="width:60px;" disabled></el-input>
-                    <el-input v-model="'/'+form.uid" disabled></el-input>
+                    <el-input v-model="'/'+form.dbname" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="用户名" prop="username" :rules="[{ required: true, message: '用户名不能为空'},{ max: 50, message: '50个字符以内', trigger: 'blur' }]">
                     <el-input v-model="form.username"></el-input>
@@ -120,7 +120,7 @@ export default {
             form:{
                 dburl:'',
                 port:'',
-                uid:'',
+                dbname:'',
             },    
             changeSure:false,
 
@@ -218,7 +218,7 @@ export default {
             this.form = {
                 dburl:'',
                 port:'',
-                uid:'',
+                dbname:'',
             };
             if(this.$refs['form']){
                 this.$refs['form'].resetFields();
@@ -264,7 +264,7 @@ export default {
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     this.changeSure = true;
-                    this.form.url = this.form.dburl+this.form.ipv4+":"+this.form.port+'/'+this.form.uid
+                    this.form.url = this.form.dburl+this.form.ipv4+":"+this.form.port+'/'+this.form.dbname
                     var testparams = {
                         dbtype: this.form.dbtype,
                         url:this.form.url,
@@ -309,7 +309,7 @@ export default {
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     this.changeSure = true;
-                    this.form.url = this.form.dburl+this.form.ipv4+":"+this.form.port+'/'+this.form.uid        
+                    this.form.url = this.form.dburl+this.form.ipv4+":"+this.form.port+'/'+this.form.dbname        
                     var testparams = {
                         dbtype: this.form.dbtype,
                         url:this.form.url,

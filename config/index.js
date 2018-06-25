@@ -13,7 +13,9 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/platform':{
-        target: 'http://192.168.0.111:8083/dsb',
+        // target: 'http://192.168.0.111:8083/dsb',
+        target: 'http://47.96.114.14:8083/dsb',
+        // target: 'http://vincent1003.oicp.net:12673/dsb',
         changeOrigin: true,
         pathRewrite: {
           '^/platform': '/platform'

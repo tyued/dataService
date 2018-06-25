@@ -7890,6 +7890,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
          * ```
          */
         getLang: function (path) {
+            // console.log(this.options)
             var lang = UE.I18N[this.options.lang];
             if (!lang) {
                 throw Error("not import language file");
