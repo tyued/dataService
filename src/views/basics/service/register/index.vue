@@ -6,7 +6,6 @@
                 <el-step title="选择服务用途"></el-step>
                 <el-step title="选择服务类型"></el-step>
                 <el-step title="填写注册信息"></el-step>
-                <el-step title="提交审核"></el-step>
             </el-steps>
             <div class="act_stepBox">
                 <el-form label-position="top" label-width="80px" :model="formLabelStep1" class="formStep1" v-if="active==0">
@@ -145,8 +144,8 @@
                                                             <template slot-scope="scope">   
                                                                 <span v-if="scope.row.state=='0'">{{scope.row.value?scope.row.value:'/'}}</span>                                   
                                                                 <el-input v-if="scope.row.state=='1' && scope.row.type=='1'" v-model="scope.row.value" placeholder="请输入字符" :disabled="disRelation"></el-input>
-                                                                <el-select v-if="scope.row.state=='1' && (scope.row.type=='2' || !scope.row.type)" v-model="scope.row.value" placeholder="请选择" :disabled="disRelation" clearable>
-                                                                    <el-option v-for='exp in valtypeList' :key="exp.key" :label="exp.name" :value="exp.key"></el-option>
+                                                                <el-select v-if="scope.row.state=='1' && (scope.row.type=='2' || !scope.row.type)" v-model="scope.row.value" @change="changeQuery(scope.row)" placeholder="请选择" :disabled="disRelation" clearable>
+                                                                    <el-option v-for='exp in item.queryList' :key="exp.name" :label="exp.name" :value="exp.name"></el-option>
                                                                 </el-select>
                                                             </template> 
                                                         </el-table-column>
@@ -181,8 +180,8 @@
                                                 <el-table :data="item.params" style="width: 100%">
                                                     <el-table-column label="名称">
                                                         <template slot-scope="scope">     
-                                                            <span v-if="scope.row.state=='0'">{{scope.row.name?scope.row.name:'/'}}</span>                                
-                                                            <el-input v-else v-model="scope.row.name" placeholder="请输入字符"></el-input>
+                                                            <span v-if="scope.row.state=='0'">{{scope.row.name?scope.row.name:'/'}}</span>                       
+                                                            <el-input v-else v-model="scope.row.name" autofocus placeholder="请输入字符"></el-input>
                                                         </template> 
                                                     </el-table-column>
                                                     <el-table-column label="必填">
@@ -290,7 +289,8 @@
             </div>
             <div class="stepBtnr">
                 <el-button @click='prev'>取 消</el-button>
-                <el-button type="primary" @click='next'>下一步</el-button>
+                <el-button type="primary" @click='sureReg' v-if="active==2">保存</el-button>
+                <el-button type="primary" @click='next'>{{active==2?'提交':'下一步'}}</el-button>
             </div>   
         </div>
         <el-dialog center :title="textMap[dialogStatus]" :visible.sync="dialogVisible_user" width="600px">
@@ -396,11 +396,21 @@ export default {
                 intro:'',
                 selexample:'1',
                 example:expSoap1,
+                queryList:[{               //输入参数
+                    name:'Key',
+                    required:true,           //0：否  1：是    
+                    type:'String',
+                    desc:'申请调用的Key',
+                    state:'0',              //0 编辑  1 保存
+                },{
+                    name:'新增参数'                   
+                }],
                 params:[{               //输入参数
                     name:'Key',
                     required:true,           //0：否  1：是    
                     type:'String',
                     desc:'申请调用的Key',
+                    foucs: false,
                     state:'0',              //0 编辑  1 保存
                 }], 
                 responses:[{                 //输出参数
@@ -650,7 +660,6 @@ export default {
             });
             dicty.getDatasources().then(response => {
                 this.dataSourceList = response.data
-                console.log(this.dataSourceList)
             });
             
             dicty.getOptTypes().then(response => {
@@ -683,11 +692,22 @@ export default {
                 intro:'',
                 selexample:'1',
                 example:expSoap1,
+                queryList:[{               //输入参数
+                        name:'Key',
+                        required:true,           //0：否  1：是    
+                        type:'String',
+                        desc:'申请调用的Key',
+                        state:'0',              //0 编辑  1 保存
+                    },{
+                        name:'新增参数'
+                        
+                }],
                 params:[{               //输入参数
                     name:'Key',
                     required:true,           //0：否  1：是    
                     type:'String',
                     desc:'申请调用的Key',
+                    foucs: true,
                     state:'0',              //0 编辑  1 保存
                 }], 
                 responses:[{                 //输出参数
@@ -726,6 +746,12 @@ export default {
             this.editableTabs[this.curEditTabs].target='';
             this.editableTabs[this.curEditTabs].column=[];
             this.ObjTransferList = []
+            var condobj = this.editableTabs[this.curEditTabs].conditions 
+            if(condobj){
+                condobj.forEach(function(item,index){
+                    if(item.name) item.name = ''
+                })
+            }
             var query = {uid:val}
             dicty.getTables(query).then(response => {
                 this.ObjTypeList = this.TablesList =  response.data
@@ -738,6 +764,12 @@ export default {
         changeObjType(val){
             this.editableTabs[this.curEditTabs].target = '';
             this.ObjTransferList = []
+            var condobj = this.editableTabs[this.curEditTabs].conditions 
+            if(condobj){
+                condobj.forEach(function(item,index){
+                    if(item.name) item.name = ''
+                })
+            }
             if(val==1){
                 this.ObjTypeList = this.TablesList
             }else{
@@ -748,6 +780,12 @@ export default {
         changeTarget(val){
             this.editableTabs[this.curEditTabs].column=[]
             this.ObjTransferList = []
+            var condobj = this.editableTabs[this.curEditTabs].conditions 
+            if(condobj){
+                condobj.forEach(function(item,index){
+                    if(item.name) item.name = ''
+                })
+            }
             var query={
                 uid: this.editableTabs[this.curEditTabs].dsId,
                 table:val
@@ -769,7 +807,12 @@ export default {
             this.editableTabs[this.curEditTabs].target='';
             this.editableTabs[this.curEditTabs].selObjType = 1;
             this.ObjTransferList = []
-
+            var condobj = this.editableTabs[this.curEditTabs].conditions
+            if(condobj){
+                condobj.forEach(function(item,index){
+                    if(item.name) item.name = ''
+                })
+            }
             if(val!='query'){
                 this.ObjTypeList = this.TablesList
             }
@@ -778,8 +821,8 @@ export default {
         changeRelation(val){
             if(val.relation == 'is null' || val.relation == 'is not null'){
                 this.disRelation = true
-                val.type = ''
-                val.value = ''
+                if(val.type) val.type = ''
+                if(val.value) val.value = ''
             }else{
                 this.disRelation = false
             }
@@ -787,10 +830,26 @@ export default {
         // 注册--数据流注册--接口列表--条件及参数设定--编辑
         tabNozzPUpdate(val,row){
             row.state = '1'
+            if(val=="params"){
+                var queryList = this.editableTabs[this.curEditTabs].queryList
+                if(queryList){
+                    queryList.forEach(function(item, index){
+                        if(item.name == row.name){
+                            queryList.splice(index, 1);  
+                        }
+                    })
+                }
+            }
         },
         // 注册--数据流注册--接口列表--条件及参数设定--保存
         tabNozzPSure(val,row){
-            row.state = '0'          
+            row.state = '0'       
+            if(val=="params"){
+                var queryList = this.editableTabs[this.curEditTabs].queryList
+                if(queryList){
+                    queryList.splice(queryList.length-1, 0, row); 
+                }
+            }   
         },
         // 注册--数据流注册--接口列表--条件及参数设定--删除
         tabNozzPDelete(val,row){
@@ -801,6 +860,8 @@ export default {
             if(val == 'params'){
                 const index = this.editableTabs[this.curEditTabs].params.indexOf(row);
                 this.editableTabs[this.curEditTabs].params.splice(index, 1); 
+                const index1 = this.editableTabs[this.curEditTabs].queryList.indexOf(row);
+                this.editableTabs[this.curEditTabs].queryList.splice(index1, 1); 
             }
             if(val == 'res'){                
                 const index = this.editableTabs[this.curEditTabs].responses.indexOf(row);
@@ -840,6 +901,13 @@ export default {
                 row.state = '0';
             }
         },
+        // 注册--数据流注册--接口列表--条件及参数设定--查询值
+        changeQuery(data){
+            if(data.value == "新增参数"){
+                this.addTabNozz("params")
+                data.value = ""
+            }
+        },
         // 注册--数据流注册--接口列表--条件及参数设定--新添加table
         addTabNozz(val){
             if(val=='nozz'){           
@@ -870,7 +938,10 @@ export default {
                 this.editableTabs[this.curEditTabs].intro = editorInstance.getContent()
             })
         },
-        
+        // 保存按钮
+        sureReg(){
+
+        },
     }
 }
 </script>
