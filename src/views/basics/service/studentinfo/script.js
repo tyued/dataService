@@ -1,5 +1,4 @@
-import * as http from 'api/service/studentinfo'
-import axios from 'axios'
+import * as api from 'api/service/studentinfo'
 export default {
   data() {
     return {
@@ -14,27 +13,8 @@ export default {
       value3: 4,
       centerDialogVisible: false,
       tabPosition: 'left',
-      tableData: [{
-        name: 'Key',
-        require: '是',
-        type: 'String',
-        state: '申请调用的Key'
-      }, {
-        name: 'Key',
-        require: '是',
-        type: 'String',
-        state: '申请调用的Key'
-      }, {
-        name: 'Key',
-        require: '是',
-        type: 'String',
-        state: '申请调用的Key'
-      }, {
-        name: 'Key',
-        require: '是',
-        type: 'String',
-        state: '申请调用的Key'
-      }],
+      requestTableData: [],
+      responseTableData: [],
       ruleForm: {
         name: '',
         region: '',
@@ -64,19 +44,14 @@ export default {
     };
   },
   created() {
-
-    // this.getToken();
+    this.getParamForms()
+    this.getRelationForms()
   },
   mounted() {
-    
+
   },
   methods: {
-    // 获取token请求
-    async getToken() {
-      const params = {}
-      const res = await http.getToken(params)
-      console.log(res)
-    },
+
     handledia() {
       console.log(11)
     },
@@ -95,6 +70,16 @@ export default {
     },
     handleCommand(command) {
       this.$message('click on item ' + command);
+    },
+    getParamForms() {
+      api.getParamForms().then((res) => {
+        this.requestTableData = res.data
+      })
+    },
+    getRelationForms() {
+      api.getRelationForms().then((res) => {
+        this.responseTableData = res.data
+      })
     }
   }
 };

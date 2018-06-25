@@ -13,11 +13,18 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/platform':{
-        target: 'http://192.168.0.111:8083/dsb',
+        target: 'http://47.96.114.14:8083/dsb',
         changeOrigin: true,
         pathRewrite: {
           '^/platform': '/platform'
-        },
+        }
+      },
+      '/api':{
+        target: 'http://47.96.114.14:8083/dsb',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
       }
     },
 
