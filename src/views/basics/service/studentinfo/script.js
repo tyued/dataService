@@ -15,23 +15,23 @@ export default {
       tabPosition: 'left',
       requestTableData: [],
       responseTableData: [],
-      ruleForm: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      },
+      // ruleForm: {
+      //   name: '',
+      //   region: '',
+      //   date1: '',
+      //   date2: '',
+      //   delivery: false,
+      //   type: [],
+      //   resource: '',
+      //   desc: ''
+      // },
       rules: {
-        name: [{
+        text: [{
           required: true,
           message: '请输入标题',
           trigger: 'blur'
         }],
-        desc: [{
+        title: [{
           required: true,
           message: '请填写评论',
           trigger: 'blur'
@@ -40,7 +40,15 @@ export default {
       isBottom: false,
       isMiddle: true,
       isP1: true,
-      isP2: false
+      isP2: false,
+      submitParams: {
+        userId: '001',
+        servId: '1',
+        text: '',
+        title: '',
+        rank: 5
+      },
+      accessList: []
     };
   },
   created() {
@@ -56,18 +64,31 @@ export default {
       console.log(11)
     },
     submitForm(formName) {
+
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+
+          // 增加一个新的服务评价信息
+          api.submitAssess(this.submitParams).then((res) => {
+            if (res.status === 200) {
+              this.$message({
+                message: res.data.message,
+                type: 'success'
+              });
+              this.centerDialogVisible = false
+            }
+          })
+
         } else {
-          console.log('error submit!!');
+          this.$message.error('提交失败');
+          this.centerDialogVisible = false
           return false;
         }
       });
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
+    // resetForm(formName) {
+    //   this.$refs[formName].resetFields();
+    // },
     handleCommand(command) {
       this.$message('click on item ' + command);
     },
@@ -79,6 +100,18 @@ export default {
     getRelationForms() {
       api.getRelationForms().then((res) => {
         this.responseTableData = res.data
+      })
+    },
+    handleList() {
+      this.isBottom = true
+      this.isMiddle = false
+      // 增加一个新的服务评价信息
+      api.getAssessList({
+        servId: this.submitParams.servId
+      }).then((res) => {
+        if (res.status === 200) {
+          this.accessList = res.data.rows
+        }
       })
     }
   }

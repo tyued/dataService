@@ -1,0 +1,7167 @@
+{
+
+  "paths": {
+    "/customer/logger/access": {
+      "get": {
+        "tags": ["数据使用方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取服务访问日志列表",
+        "description": "分页查询服务访问日志信息",
+        "operationId": "accessUsingGET",
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "servType",
+          "in": "query",
+          "description": "servType",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "2", "3", "4"]
+        }, {
+          "name": "servName",
+          "in": "query",
+          "description": "servName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "servTag",
+          "in": "query",
+          "description": "servTag",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "status",
+          "in": "query",
+          "description": "status",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      },
+      "post": {
+        "tags": ["数据使用方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取服务访问日志列表",
+        "description": "分页查询服务访问日志信息",
+        "operationId": "accessUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "servType",
+          "in": "query",
+          "description": "servType",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "2", "3", "4"]
+        }, {
+          "name": "servName",
+          "in": "query",
+          "description": "servName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "servTag",
+          "in": "query",
+          "description": "servTag",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "status",
+          "in": "query",
+          "description": "status",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/customer/logger/exceptions": {
+      "get": {
+        "tags": ["数据使用方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取异常监控日志列表",
+        "description": "分页查询登录日志信息",
+        "operationId": "exceptionsUsingGET",
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "servType",
+          "in": "query",
+          "description": "servType",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "2", "3", "4"]
+        }, {
+          "name": "servName",
+          "in": "query",
+          "description": "servName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "servTag",
+          "in": "query",
+          "description": "servTag",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "status",
+          "in": "query",
+          "description": "status",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      },
+      "post": {
+        "tags": ["数据使用方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取异常监控日志列表",
+        "description": "分页查询登录日志信息",
+        "operationId": "exceptionsUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "servType",
+          "in": "query",
+          "description": "servType",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "2", "3", "4"]
+        }, {
+          "name": "servName",
+          "in": "query",
+          "description": "servName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "servTag",
+          "in": "query",
+          "description": "servTag",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "status",
+          "in": "query",
+          "description": "status",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/customer/logger/logins": {
+      "get": {
+        "tags": ["数据使用方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取登录日志列表",
+        "description": "分页查询登录日志信息",
+        "operationId": "loginsUsingGET",
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "module",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "business",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "opt",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "level",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "addr",
+          "in": "query",
+          "description": "addr",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      },
+      "post": {
+        "tags": ["数据使用方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取登录日志列表",
+        "description": "分页查询登录日志信息",
+        "operationId": "loginsUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "module",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "business",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "opt",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "level",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "addr",
+          "in": "query",
+          "description": "addr",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/customer/logger/opts": {
+      "post": {
+        "tags": ["数据使用方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取操作日志列表",
+        "description": "分页查询操作日志信息",
+        "operationId": "optsUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "module",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "business",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "opt",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "level",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "addr",
+          "in": "query",
+          "description": "addr",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/customer/myapp/del/{appId}": {
+      "post": {
+        "tags": ["数据使用方 : 我的应用（Ok）"],
+        "summary": "删除我的应用",
+        "description": "根据应用ID删除我的应用；删除应用后订阅服务信息、认证信息都将清除",
+        "operationId": "delAppUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "appId",
+          "in": "path",
+          "description": "应用ID",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/customer/myapp/edit/{appId}": {
+      "post": {
+        "tags": ["数据使用方 : 我的应用（Ok）"],
+        "summary": "修改我的应用",
+        "description": "编辑 应用名称、开发语言、部署地址等",
+        "operationId": "editAppUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "appVo",
+          "description": "应用信息Vo",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/MyApplicationVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/customer/myapp/list": {
+      "post": {
+        "tags": ["数据使用方 : 我的应用（Ok）"],
+        "summary": "我的应用列表",
+        "description": "分页查询已维护的应用基本信息、订阅服务量",
+        "operationId": "listUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "pageNo",
+          "in": "query",
+          "description": "当前页码",
+          "required": false,
+          "type": "ref",
+          "default": "1"
+        }, {
+          "name": "limit",
+          "in": "query",
+          "description": "每页记录数",
+          "required": false,
+          "type": "ref",
+          "default": "15"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "排序字段名称",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "排序类型 asc \\ desc",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "name",
+          "in": "query",
+          "description": "应用名称",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/customer/myapp/new": {
+      "post": {
+        "tags": ["数据使用方 : 我的应用（Ok）"],
+        "summary": "创建我的应用",
+        "description": "增加我的应用信息： 应用名称、开发语言、部署地址等",
+        "operationId": "newAppUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "appVo",
+          "description": "应用信息传输对象",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/MyApplicationVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/customer/service/available/list": {
+      "post": {
+        "tags": ["数据使用方 : 我的服务（Testing）"],
+        "summary": "已订阅服务列表",
+        "description": "分页查询已订阅服务的基本信息、绑定的应用",
+        "operationId": "listUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "paginationVo",
+          "description": "服务注册信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceSubscribePaginationVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/customer/service/available/subscribe": {
+      "post": {
+        "tags": ["数据使用方 : 我的服务（Testing）"],
+        "summary": "服务订阅",
+        "description": "订阅服务信息，订阅成功后将增加 订阅记录、认证信息",
+        "operationId": "subscribeUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "subVo",
+          "description": "服务订阅信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceSubscribeVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/customer/service/available/unsubscribe": {
+      "post": {
+        "tags": ["数据使用方 : 我的服务（Testing）"],
+        "summary": "服务退订",
+        "description": "逻辑退订已订阅服务信息；提交退订操作，订阅记录、认证信息失效",
+        "operationId": "unsubscribeUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务编号",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/customer/service/retrieve/list": {
+      "post": {
+        "tags": ["数据使用方 : 服务查询"],
+        "summary": "获取可用的服务信息",
+        "description": "按照类别、功能等分页查询可用的服务信息",
+        "operationId": "listUsingPOST_2",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "paginationVo",
+          "description": "服务分页查询信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceRegistryPaginationVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/customer/service/sdk/doc/{servId}": {
+      "get": {
+        "tags": ["数据使用方 : SDK相关"],
+        "summary": "document",
+        "operationId": "documentUsingGET",
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "path",
+          "description": "servId",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "string",
+              "format": "byte"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/customer/service/sdk/download": {
+      "get": {
+        "tags": ["数据使用方 : SDK相关"],
+        "summary": "download",
+        "operationId": "downloadUsingGET",
+        "produces": ["*/*"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/dataset/basedata": {
+      "post": {
+        "tags": ["服务运营方 : 数据集合（Ok）"],
+        "summary": "基础数据",
+        "description": "根据数据分组代码查询基础数据集合",
+        "operationId": "basedataUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "group",
+          "in": "query",
+          "description": "数据分组代码",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/dataset/columns": {
+      "post": {
+        "tags": ["服务运营方 : 数据集合（Ok）"],
+        "summary": "列信息数据",
+        "description": "查询指定数据源、数据表对应的列信息",
+        "operationId": "tableColumnsUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "uid",
+          "in": "query",
+          "description": "数据源uid",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "table",
+          "in": "query",
+          "description": "数据表名称",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/dataset/dbTypes": {
+      "post": {
+        "tags": ["服务运营方 : 数据集合（Ok）"],
+        "summary": "查询数据源类型信息",
+        "description": "当前平台支持的数据源类型集合",
+        "operationId": "dbTypesUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/dataset/error-codes": {
+      "post": {
+        "tags": ["服务运营方 : 数据集合（Ok）"],
+        "summary": "服务错误对照信息",
+        "description": "查询服务错误对照信息",
+        "operationId": "errorCodesUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/dataset/optTypes": {
+      "post": {
+        "tags": ["服务运营方 : 数据集合（Ok）"],
+        "summary": "查询数据源操作类型信息",
+        "description": "操作类型：insert: 新增数据 、delete： 删除数据、update： 更新数据、query：查询数据",
+        "operationId": "optTypesUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/dataset/paramFroms": {
+      "post": {
+        "tags": ["服务运营方 : 数据集合（Ok）"],
+        "summary": "查询参数来源信息",
+        "description": "参数来源列表集合",
+        "operationId": "paramFromsUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/dataset/tables": {
+      "post": {
+        "tags": ["服务运营方 : 数据集合（Ok）"],
+        "summary": "数据表信息",
+        "description": "查询指定数据源下的数据表信息",
+        "operationId": "tableNamesUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "uid",
+          "in": "query",
+          "description": "数据源uid",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/dataset/views": {
+      "post": {
+        "tags": ["服务运营方 : 数据集合（Ok）"],
+        "summary": "视图信息",
+        "description": "查询指定数据源下指定的视图信息",
+        "operationId": "viewsUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "uid",
+          "in": "query",
+          "description": "数据源uid",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/logger/access": {
+      "get": {
+        "tags": ["服务运营方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取服务访问日志列表",
+        "description": "分页查询服务访问日志信息",
+        "operationId": "accessUsingGET_2",
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "servType",
+          "in": "query",
+          "description": "servType",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "2", "3", "4"]
+        }, {
+          "name": "servName",
+          "in": "query",
+          "description": "servName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "servTag",
+          "in": "query",
+          "description": "servTag",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "status",
+          "in": "query",
+          "description": "status",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      },
+      "post": {
+        "tags": ["服务运营方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取服务访问日志列表",
+        "description": "分页查询服务访问日志信息",
+        "operationId": "accessUsingPOST_2",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "servType",
+          "in": "query",
+          "description": "servType",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "2", "3", "4"]
+        }, {
+          "name": "servName",
+          "in": "query",
+          "description": "servName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "servTag",
+          "in": "query",
+          "description": "servTag",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "status",
+          "in": "query",
+          "description": "status",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/logger/exceptions": {
+      "get": {
+        "tags": ["服务运营方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取异常监控日志列表",
+        "description": "分页查询登录日志信息",
+        "operationId": "exceptionsUsingGET_2",
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "servType",
+          "in": "query",
+          "description": "servType",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "2", "3", "4"]
+        }, {
+          "name": "servName",
+          "in": "query",
+          "description": "servName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "servTag",
+          "in": "query",
+          "description": "servTag",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "status",
+          "in": "query",
+          "description": "status",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      },
+      "post": {
+        "tags": ["服务运营方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取异常监控日志列表",
+        "description": "分页查询登录日志信息",
+        "operationId": "exceptionsUsingPOST_2",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "servType",
+          "in": "query",
+          "description": "servType",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "2", "3", "4"]
+        }, {
+          "name": "servName",
+          "in": "query",
+          "description": "servName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "servTag",
+          "in": "query",
+          "description": "servTag",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "status",
+          "in": "query",
+          "description": "status",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/logger/logins": {
+      "get": {
+        "tags": ["服务运营方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取登录日志列表",
+        "description": "分页查询登录日志信息",
+        "operationId": "loginsUsingGET_2",
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "module",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "business",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "opt",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "level",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "addr",
+          "in": "query",
+          "description": "addr",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      },
+      "post": {
+        "tags": ["服务运营方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取登录日志列表",
+        "description": "分页查询登录日志信息",
+        "operationId": "loginsUsingPOST_2",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "module",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "business",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "opt",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "level",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "addr",
+          "in": "query",
+          "description": "addr",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/logger/opts": {
+      "post": {
+        "tags": ["服务运营方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取操作日志列表",
+        "description": "分页查询操作日志信息",
+        "operationId": "optsUsingPOST_2",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "module",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "business",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "opt",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "level",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "addr",
+          "in": "query",
+          "description": "addr",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/plugin/list": {
+      "post": {
+        "tags": ["服务运营方 : 服务插件管理"],
+        "summary": "list",
+        "operationId": "listUsingPOST_10",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "id",
+          "in": "query",
+          "description": "id",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "type",
+          "in": "query",
+          "description": "type",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/plugin/upload": {
+      "post": {
+        "tags": ["服务运营方 : 服务插件管理"],
+        "summary": "上传功能扩展插件",
+        "description": "必须是Maven打包的插件",
+        "operationId": "uploadUsingPOST_1",
+        "consumes": ["multipart/form-data"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "plugin",
+          "in": "formData",
+          "description": "服务插件程序包",
+          "required": false,
+          "type": "file"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/bundle/upload": {
+      "post": {
+        "tags": ["服务运营方 : 服务组件上传（Ok）"],
+        "summary": "上传OSGi规范服务程序包",
+        "description": "Karaf支持OSGi规范服务程序包",
+        "operationId": "uploadUsingPOST",
+        "consumes": ["multipart/form-data"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "bundle",
+          "in": "formData",
+          "description": "服务组件程序包",
+          "required": false,
+          "type": "file"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/datasource/delete": {
+      "post": {
+        "tags": ["服务运营方 : 数据源管理（Ok）"],
+        "summary": "删除数据源",
+        "description": "删除数据源信息:已经被发布成源数据服务的数据库不允许删除",
+        "operationId": "delDsUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "id",
+          "in": "query",
+          "description": "数据源ID",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/datasource/edit": {
+      "post": {
+        "tags": ["服务运营方 : 数据源管理（Ok）"],
+        "summary": "修改数据源",
+        "description": "编辑一个已有的数据源信息",
+        "operationId": "editDsUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "id",
+          "in": "query",
+          "description": "数据源Id",
+          "required": false,
+          "type": "string"
+        }, {
+          "in": "body",
+          "name": "dsVo",
+          "description": "数据源信息传输对象",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceDatasourceVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/datasource/get": {
+      "get": {
+        "tags": ["服务运营方 : 数据源管理（Ok）"],
+        "summary": "获取数据源信息",
+        "description": "根据数据源ID查询数据源信息",
+        "operationId": "getUsingGET",
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "id",
+          "in": "query",
+          "description": "数据源ID",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      },
+      "post": {
+        "tags": ["服务运营方 : 数据源管理（Ok）"],
+        "summary": "获取数据源信息",
+        "description": "根据数据源ID查询数据源信息",
+        "operationId": "getUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "id",
+          "in": "query",
+          "description": "数据源ID",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/datasource/list": {
+      "get": {
+        "tags": ["服务运营方 : 数据源管理（Ok）"],
+        "summary": "获取数据源列表",
+        "description": "分页查询数据源信息: 名称、连接URL、数据库类型、有效状态（检查连接），表数量、视图数量",
+        "operationId": "listUsingGET",
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "paginationVo",
+          "description": "分页查询信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceDatasourcePaginationVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      },
+      "post": {
+        "tags": ["服务运营方 : 数据源管理（Ok）"],
+        "summary": "获取数据源列表",
+        "description": "分页查询数据源信息: 名称、连接URL、数据库类型、有效状态（检查连接），表数量、视图数量",
+        "operationId": "listUsingPOST_7",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "paginationVo",
+          "description": "分页查询信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceDatasourcePaginationVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/datasource/new": {
+      "post": {
+        "tags": ["服务运营方 : 数据源管理（Ok）"],
+        "summary": "创建新数据源",
+        "description": "增加一个新的有效数据源信息",
+        "operationId": "newDsUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "dsVo",
+          "description": "数据源信息传输对象",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceDatasourceVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/datasource/test": {
+      "post": {
+        "tags": ["服务运营方 : 数据源管理（Ok）"],
+        "summary": "数据源连接有效性测试",
+        "description": "测试一个数据源信息的有效性,URL是否可以访问、账号密码是否可用",
+        "operationId": "testDsUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "dbtype",
+          "in": "query",
+          "description": "数据源类型",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "url",
+          "in": "query",
+          "description": "数据源连接地址",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "username",
+          "in": "query",
+          "description": "数据源用户名",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "password",
+          "in": "query",
+          "description": "数据源密码",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/destroy/dataset": {
+      "post": {
+        "tags": ["服务运营方 : 服务删除（Ok）"],
+        "summary": "数据源服务删除",
+        "description": "删除基于数据源的服务",
+        "operationId": "datasetUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/destroy/osgi": {
+      "post": {
+        "tags": ["服务运营方 : 服务删除（Ok）"],
+        "summary": "OSGi规范服务删除",
+        "description": "删除基于Osgi规范实现的服务",
+        "operationId": "osgiUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/destroy/rest": {
+      "post": {
+        "tags": ["服务运营方 : 服务删除（Ok）"],
+        "summary": "Rest服务删除",
+        "description": "删除Rest代理服务",
+        "operationId": "restUsingPOST_3",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/destroy/soap": {
+      "post": {
+        "tags": ["服务运营方 : 服务删除（Ok）"],
+        "summary": "Soap服务删除",
+        "description": "删除Soap代理服务",
+        "operationId": "soapUsingPOST_3",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/metirc/metircs": {
+      "post": {
+        "tags": ["服务运营方 : 服务监控统计"],
+        "summary": "metircs",
+        "operationId": "metircsUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "id",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "bizId",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "bizName",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "appKey",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "addr",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "uri",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "deviceName",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "osName",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "osVer",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "osMfr",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "browserName",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "browserVer",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "browserType",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "browserKernel",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/mgmt/deploy": {
+      "post": {
+        "tags": ["服务运营方 : 服务管理（Testing）"],
+        "summary": "服务发布",
+        "description": "发布服务",
+        "operationId": "deployUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "ver",
+          "in": "query",
+          "description": "服务版本号",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/mgmt/list": {
+      "post": {
+        "tags": ["服务运营方 : 服务管理（Testing）"],
+        "summary": "获取可管理的服务列表",
+        "description": "分页查询可管理的服务信息（已发布未部署、已部署、已暂停、已下线）",
+        "operationId": "listUsingPOST_8",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "paginationVo",
+          "description": "服务管理筛选条件",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServicePublishPaginationVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/mgmt/pause": {
+      "post": {
+        "tags": ["服务运营方 : 服务管理（Testing）"],
+        "summary": "服务停用",
+        "description": "停用服务:此处并不会真正的销毁运行中的服务",
+        "operationId": "pauseUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "ver",
+          "in": "query",
+          "description": "服务版本号",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/mgmt/redeploy": {
+      "post": {
+        "tags": ["服务运营方 : 服务管理（Testing）"],
+        "summary": "服务重新发布",
+        "description": "重新发布服务：销毁相同版本的服务",
+        "operationId": "redeployUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "ver",
+          "in": "query",
+          "description": "服务版本号",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/mgmt/undeploy": {
+      "post": {
+        "tags": ["服务运营方 : 服务管理（Testing）"],
+        "summary": "服务撤销",
+        "description": "撤销服务:该操作会销毁运行中的服务",
+        "operationId": "undeployUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "ver",
+          "in": "query",
+          "description": "服务版本号",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/monitoring/list": {
+      "post": {
+        "tags": ["服务运营方 : 服务监控"],
+        "summary": "获取可管理的服务列表",
+        "description": "分页查询可管理的服务信息（已发布未部署、已部署、已暂停、已下线）",
+        "operationId": "listUsingPOST_9",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "paginationVo",
+          "description": "服务管理筛选条件",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServicePublishPaginationVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/monitoring/status": {
+      "post": {
+        "tags": ["服务运营方 : 服务监控"],
+        "summary": "服务状态",
+        "description": "服务状态: 检查服务运行状态",
+        "operationId": "statusUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "ver",
+          "in": "query",
+          "description": "服务版本号",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/publish-review/list": {
+      "post": {
+        "tags": ["服务运营方 : 服务发布申请审批（Testing）"],
+        "summary": "待审批服务发布申请",
+        "description": "分页查询待审批服务发布申请记录",
+        "operationId": "listUsingPOST_12",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "paginationVo",
+          "description": "服务发布申请筛选条件",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServicePublishPaginationVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/publish-review/review": {
+      "post": {
+        "tags": ["服务运营方 : 服务发布申请审批（Testing）"],
+        "summary": "服务发布申请审批操作",
+        "description": "审批服务发布申请记录",
+        "operationId": "reviewUsingPOST_2",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "ids",
+          "in": "query",
+          "description": "调用申请ID集合（待审批的数据提供方ID集合）",
+          "required": false,
+          "type": "ref"
+        }, {
+          "name": "status",
+          "in": "query",
+          "description": "调用申请审批状态：0:待审批|1:审批通过|2:审批不通过",
+          "required": false,
+          "type": "string",
+          "enum": ["0", "1", "2"]
+        }, {
+          "name": "opinion",
+          "in": "query",
+          "description": "调用申请审批意见",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/publish/list": {
+      "post": {
+        "tags": ["服务运营方 : 服务发布申请（Ok）"],
+        "summary": "获取已发布过的服务列表",
+        "description": "分页查询已发布过的服务信息",
+        "operationId": "listUsingPOST_11",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "paginationVo",
+          "description": "服务发布申请筛选条件",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServicePublishPaginationVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/publish/submit": {
+      "post": {
+        "tags": ["服务运营方 : 服务发布申请（Ok）"],
+        "summary": "提交服务发布申请",
+        "description": "增加一个新的服务发布申请记录",
+        "operationId": "submitUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "publishVo",
+          "description": "服务发布申请数据Vo",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServicePublishVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/publish/version": {
+      "post": {
+        "tags": ["服务运营方 : 服务发布申请（Ok）"],
+        "summary": "服务版本",
+        "description": "获取指定服务的下一个版本号",
+        "operationId": "nextVersionUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/registry/dataset": {
+      "post": {
+        "tags": ["服务运营方 : 服务注册（Testing）"],
+        "summary": "数据源服务注册",
+        "description": "注册基于数据源的服务",
+        "operationId": "datasetUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/registry/osgi": {
+      "post": {
+        "tags": ["服务运营方 : 服务注册（Testing）"],
+        "summary": "OSGi规范服务注册",
+        "description": "注册基于Osgi规范实现的服务",
+        "operationId": "osgiUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "osgiVo",
+          "description": "服务注册信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceRegistryOsgiVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/registry/rest": {
+      "post": {
+        "tags": ["服务运营方 : 服务注册（Testing）"],
+        "summary": "Rest服务注册",
+        "description": "注册Rest代理服务",
+        "operationId": "restUsingPOST_4",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "restVo",
+          "description": "服务注册信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceRegistryRestVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/registry/soap": {
+      "post": {
+        "tags": ["服务运营方 : 服务注册（Testing）"],
+        "summary": "Soap服务注册",
+        "description": "注册Soap代理服务",
+        "operationId": "soapUsingPOST_4",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "soapVo",
+          "description": "服务注册信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceRegistrySoapVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/renew/dataset": {
+      "post": {
+        "tags": ["服务运营方 : 服务更新（Testing）"],
+        "summary": "数据源服务更新",
+        "description": "更新基于数据源的服务",
+        "operationId": "datasetUsingPOST_2",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "datasetVo",
+          "description": "服务更新信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceRegistryDatasetVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/renew/osgi": {
+      "post": {
+        "tags": ["服务运营方 : 服务更新（Testing）"],
+        "summary": "OSGi规范服务更新",
+        "description": "更新基于Osgi规范实现的服务",
+        "operationId": "osgiUsingPOST_2",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "osgiVo",
+          "description": "服务更新信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceRegistryOsgiVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/renew/rest": {
+      "post": {
+        "tags": ["服务运营方 : 服务更新（Testing）"],
+        "summary": "Rest服务更新",
+        "description": "更新Rest代理服务",
+        "operationId": "restUsingPOST_5",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "restVo",
+          "description": "服务更新信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceRegistryRestVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/renew/soap": {
+      "post": {
+        "tags": ["服务运营方 : 服务更新（Testing）"],
+        "summary": "Soap服务更新",
+        "description": "更新Soap代理服务",
+        "operationId": "soapUsingPOST_5",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "soapVo",
+          "description": "服务更新信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceRegistrySoapVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/subscribe/list": {
+      "post": {
+        "tags": ["服务运营方 : 服务订阅申请审批（Testing）"],
+        "summary": "待审批服务订阅申请",
+        "description": "按条件分页查询待审批服务订阅申请记录",
+        "operationId": "listUsingPOST_14",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "paginationVo",
+          "description": "服务订阅申请筛选条件",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceSubscribePaginationVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/platform/service/subscribe/review": {
+      "post": {
+        "tags": ["服务运营方 : 服务订阅申请审批（Testing）"],
+        "summary": "审批订阅申请审批操作",
+        "description": "审批服务订阅申请记录",
+        "operationId": "reviewUsingPOST_3",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "reviewVo",
+          "description": "调用申请审批数据",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceSubscribeReviewVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/info-review/list": {
+      "post": {
+        "tags": ["数据提供方 : 信息注册审批（Ok）"],
+        "summary": "数据提供方信息注册信息",
+        "description": "分页查询数据提供方信息注册申请记录",
+        "operationId": "listUsingPOST_3",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "paginationVo",
+          "description": "服务发布申请筛选条件",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ProducerRegistryPaginationVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/info-review/review": {
+      "post": {
+        "tags": ["数据提供方 : 信息注册审批（Ok）"],
+        "summary": "数据提供方信息注册审批",
+        "description": "审批数据提供方信息注册记录",
+        "operationId": "reviewUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "ids",
+          "in": "query",
+          "description": "注册信息ID集合（待审批的数据提供方ID集合）",
+          "required": false,
+          "type": "ref"
+        }, {
+          "name": "status",
+          "in": "query",
+          "description": "注册信息审批状态：0:待审批|1:审批通过|2:审批不通过",
+          "required": false,
+          "type": "string",
+          "enum": ["0", "1", "2"]
+        }, {
+          "name": "opinion",
+          "in": "query",
+          "description": "注册信息审批意见",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/info/preview": {
+      "post": {
+        "tags": ["数据提供方 : 信息注册（Ok）"],
+        "summary": "数据提供方信息预览",
+        "description": "查询数据提供方注册信息",
+        "operationId": "previewUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "pdId",
+          "in": "query",
+          "description": "信息ID编号",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/info/registry": {
+      "post": {
+        "tags": ["数据提供方 : 信息注册（Ok）"],
+        "summary": "数据提供方信息注册",
+        "description": "注册数据提供方信息",
+        "operationId": "registryUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "producerVo",
+          "description": "数据提供方信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ProducerRegistryVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/info/update": {
+      "post": {
+        "tags": ["数据提供方 : 信息注册（Ok）"],
+        "summary": "数据提供方注册信息",
+        "description": "更新数据提供方注册信息",
+        "operationId": "updateUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "producerVo",
+          "description": "数据提供方信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ProducerRegistryVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/logger/access": {
+      "get": {
+        "tags": ["数据提供方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取服务访问日志列表",
+        "description": "分页查询服务访问日志信息",
+        "operationId": "accessUsingGET_1",
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "servType",
+          "in": "query",
+          "description": "servType",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "2", "3", "4"]
+        }, {
+          "name": "servName",
+          "in": "query",
+          "description": "servName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "servTag",
+          "in": "query",
+          "description": "servTag",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "status",
+          "in": "query",
+          "description": "status",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      },
+      "post": {
+        "tags": ["数据提供方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取服务访问日志列表",
+        "description": "分页查询服务访问日志信息",
+        "operationId": "accessUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "servType",
+          "in": "query",
+          "description": "servType",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "2", "3", "4"]
+        }, {
+          "name": "servName",
+          "in": "query",
+          "description": "servName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "servTag",
+          "in": "query",
+          "description": "servTag",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "status",
+          "in": "query",
+          "description": "status",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/logger/exceptions": {
+      "get": {
+        "tags": ["数据提供方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取异常监控日志列表",
+        "description": "分页查询登录日志信息",
+        "operationId": "exceptionsUsingGET_1",
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "servType",
+          "in": "query",
+          "description": "servType",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "2", "3", "4"]
+        }, {
+          "name": "servName",
+          "in": "query",
+          "description": "servName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "servTag",
+          "in": "query",
+          "description": "servTag",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "status",
+          "in": "query",
+          "description": "status",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      },
+      "post": {
+        "tags": ["数据提供方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取异常监控日志列表",
+        "description": "分页查询登录日志信息",
+        "operationId": "exceptionsUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "servType",
+          "in": "query",
+          "description": "servType",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "2", "3", "4"]
+        }, {
+          "name": "servName",
+          "in": "query",
+          "description": "servName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "servTag",
+          "in": "query",
+          "description": "servTag",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "status",
+          "in": "query",
+          "description": "status",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/logger/logins": {
+      "get": {
+        "tags": ["数据提供方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取登录日志列表",
+        "description": "分页查询登录日志信息",
+        "operationId": "loginsUsingGET_1",
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "module",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "business",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "opt",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "level",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "addr",
+          "in": "query",
+          "description": "addr",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      },
+      "post": {
+        "tags": ["数据提供方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取登录日志列表",
+        "description": "分页查询登录日志信息",
+        "operationId": "loginsUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "module",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "business",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "opt",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "level",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "addr",
+          "in": "query",
+          "description": "addr",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/logger/opts": {
+      "post": {
+        "tags": ["数据提供方 : 日志管理（操作日志、登录日志、服务访问日志、异常监控日志）"],
+        "summary": "获取操作日志列表",
+        "description": "分页查询操作日志信息",
+        "operationId": "optsUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "limit",
+          "in": "query",
+          "description": "limit",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "pageNo",
+          "in": "query",
+          "description": "pageNo",
+          "required": false,
+          "type": "integer",
+          "format": "int32"
+        }, {
+          "name": "sortName",
+          "in": "query",
+          "description": "sortName",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "sortOrder",
+          "in": "query",
+          "description": "sortOrder",
+          "required": false,
+          "type": "string",
+          "enum": ["asc", "desc"]
+        }, {
+          "name": "module",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "business",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "opt",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "level",
+          "in": "query",
+          "description": "level",
+          "required": false,
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"]
+        }, {
+          "name": "addr",
+          "in": "query",
+          "description": "addr",
+          "required": false,
+          "type": "string",
+          "enum": ["1", "0"]
+        }, {
+          "name": "begintime",
+          "in": "query",
+          "description": "begintime",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "endtime",
+          "in": "query",
+          "description": "endtime",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/destroy/rest": {
+      "post": {
+        "tags": ["数据提供方 : 服务删除（Ok）"],
+        "summary": "Rest服务删除",
+        "description": "删除Rest代理服务",
+        "operationId": "restUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/destroy/soap": {
+      "post": {
+        "tags": ["数据提供方 : 服务删除（Ok）"],
+        "summary": "Soap服务删除",
+        "description": "删除Soap代理服务",
+        "operationId": "soapUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/metircs": {
+      "post": {
+        "tags": ["数据提供方 : 服务监控统计"],
+        "summary": "metircs",
+        "operationId": "metircsUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "id",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "bizId",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "bizName",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "appKey",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "addr",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "uri",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "deviceName",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "osName",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "osVer",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "osMfr",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "browserName",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "browserVer",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "browserType",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }, {
+          "name": "browserKernel",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/mgmt/deploy": {
+      "post": {
+        "tags": ["数据提供方 : 服务管理（Testing）"],
+        "summary": "服务发布",
+        "description": "发布服务",
+        "operationId": "deployUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "ver",
+          "in": "query",
+          "description": "服务版本号",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/mgmt/list": {
+      "post": {
+        "tags": ["数据提供方 : 服务管理（Testing）"],
+        "summary": "获取可管理的服务列表",
+        "description": "分页查询可管理的服务信息（已发布未部署、已部署、已暂停、已下线）",
+        "operationId": "listUsingPOST_4",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "paginationVo",
+          "description": "服务管理筛选条件",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServicePublishPaginationVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/mgmt/pause": {
+      "post": {
+        "tags": ["数据提供方 : 服务管理（Testing）"],
+        "summary": "服务停用",
+        "description": "停用服务:此处并不会真正的销毁运行中的服务",
+        "operationId": "pauseUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "ver",
+          "in": "query",
+          "description": "服务版本号",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/mgmt/redeploy": {
+      "post": {
+        "tags": ["数据提供方 : 服务管理（Testing）"],
+        "summary": "服务重新发布",
+        "description": "重新发布服务：销毁相同版本的服务",
+        "operationId": "redeployUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "ver",
+          "in": "query",
+          "description": "服务版本号",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/mgmt/undeploy": {
+      "post": {
+        "tags": ["数据提供方 : 服务管理（Testing）"],
+        "summary": "服务撤销",
+        "description": "撤销服务:该操作会销毁运行中的服务",
+        "operationId": "undeployUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "ver",
+          "in": "query",
+          "description": "服务版本号",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/publish/list": {
+      "post": {
+        "tags": ["数据提供方 : 服务发布申请（Ok）"],
+        "summary": "获取已发布过的服务列表",
+        "description": "分页查询已发布过的服务信息",
+        "operationId": "listUsingPOST_5",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "paginationVo",
+          "description": "服务发布申请筛选条件",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServicePublishPaginationVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/publish/submit": {
+      "post": {
+        "tags": ["数据提供方 : 服务发布申请（Ok）"],
+        "summary": "提交服务发布申请",
+        "description": "增加一个新的服务发布申请记录",
+        "operationId": "submitUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "publishVo",
+          "description": "服务发布申请数据Vo",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServicePublishVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/publish/version": {
+      "post": {
+        "tags": ["数据提供方 : 服务发布申请（Ok）"],
+        "summary": "服务版本",
+        "description": "获取指定服务的下一个版本号",
+        "operationId": "nextVersionUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/registry/rest": {
+      "post": {
+        "tags": ["数据提供方 : 服务注册（Ok）"],
+        "summary": "Rest服务注册",
+        "description": "注册Rest代理服务",
+        "operationId": "restUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "restVo",
+          "description": "服务注册信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceRegistryRestVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/registry/soap": {
+      "post": {
+        "tags": ["数据提供方 : 服务注册（Ok）"],
+        "summary": "Soap服务注册",
+        "description": "注册Soap代理服务",
+        "operationId": "soapUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "soapVo",
+          "description": "服务注册信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceRegistrySoapVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/renew/rest": {
+      "post": {
+        "tags": ["数据提供方 : 服务更新（Testing）"],
+        "summary": "Rest服务更新",
+        "description": "更新Rest代理服务",
+        "operationId": "restUsingPOST_2",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "restVo",
+          "description": "服务更新信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceRegistryRestVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/renew/soap": {
+      "post": {
+        "tags": ["数据提供方 : 服务更新（Testing）"],
+        "summary": "Soap服务更新",
+        "description": "更新Soap代理服务",
+        "operationId": "soapUsingPOST_2",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "soapVo",
+          "description": "服务更新信息",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceRegistrySoapVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/subscribe/list": {
+      "post": {
+        "tags": ["数据提供方: 服务订阅申请审批（Testing）"],
+        "summary": "待审批服务订阅申请",
+        "description": "按条件分页查询待审批服务订阅申请记录",
+        "operationId": "listUsingPOST_6",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "paginationVo",
+          "description": "服务订阅申请筛选条件",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceSubscribePaginationVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/producer/service/subscribe/review": {
+      "post": {
+        "tags": ["数据提供方: 服务订阅申请审批（Testing）"],
+        "summary": "审批订阅申请审批操作",
+        "description": "审批服务订阅申请记录",
+        "operationId": "reviewUsingPOST_1",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "reviewVo",
+          "description": "调用申请审批数据",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceSubscribeReviewVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/service/retrieve/dataset": {
+      "post": {
+        "tags": ["标准接口 : 服务查询（Ok）"],
+        "summary": "数据源服务查询",
+        "description": "查询基于数据源的服务",
+        "operationId": "datasetUsingPOST_3",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "detail",
+          "in": "query",
+          "description": "是否查询服务的接口详情信息",
+          "required": true,
+          "type": "boolean"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/service/retrieve/list": {
+      "post": {
+        "tags": ["标准接口 : 服务查询（Ok）"],
+        "summary": "获取已注册的服务信息",
+        "description": "按照类别、功能等分页查询已注册的服务信息",
+        "operationId": "listUsingPOST_13",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "in": "body",
+          "name": "paginationVo",
+          "description": "已注册服务分页查询",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/ServiceRegistryPaginationVo"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/service/retrieve/osgi": {
+      "post": {
+        "tags": ["标准接口 : 服务查询（Ok）"],
+        "summary": "OSGi规范服务查询",
+        "description": "查询基于Osgi规范实现的服务",
+        "operationId": "osgiUsingPOST_3",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "detail",
+          "in": "query",
+          "description": "是否查询服务的接口详情信息",
+          "required": true,
+          "type": "boolean"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/service/retrieve/rest": {
+      "post": {
+        "tags": ["标准接口 : 服务查询（Ok）"],
+        "summary": "Rest服务查询",
+        "description": "查询Rest代理服务",
+        "operationId": "restUsingPOST_6",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "detail",
+          "in": "query",
+          "description": "是否查询服务的接口详情信息",
+          "required": true,
+          "type": "boolean"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    },
+    "/service/retrieve/soap": {
+      "post": {
+        "tags": ["标准接口 : 服务查询（Ok）"],
+        "summary": "Soap服务查询",
+        "description": "查询Soap代理服务",
+        "operationId": "soapUsingPOST_6",
+        "consumes": ["application/json"],
+        "produces": ["*/*"],
+        "parameters": [{
+          "name": "servId",
+          "in": "query",
+          "description": "服务ID",
+          "required": true,
+          "type": "string"
+        }, {
+          "name": "detail",
+          "in": "query",
+          "description": "是否查询服务的接口详情信息",
+          "required": true,
+          "type": "boolean"
+        }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [{
+          "Authorization": ["global"]
+        }]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Authorization": {
+      "type": "apiKey",
+      "name": "TOKEN",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "MyApplicationVo": {
+      "type": "object",
+      "required": ["addr", "desc", "lang", "name"],
+      "properties": {
+        "addr": {
+          "type": "string",
+          "description": "addr",
+          "allowEmptyValue": false
+        },
+        "appId": {
+          "type": "string",
+          "description": "appId",
+          "allowEmptyValue": false
+        },
+        "appKey": {
+          "type": "string",
+          "description": "appKey",
+          "allowEmptyValue": false
+        },
+        "appSecret": {
+          "type": "string",
+          "description": "appSecret",
+          "allowEmptyValue": false
+        },
+        "desc": {
+          "type": "string",
+          "description": "desc",
+          "allowEmptyValue": false
+        },
+        "id": {
+          "type": "string"
+        },
+        "lang": {
+          "type": "string",
+          "description": "lang",
+          "allowEmptyValue": false
+        },
+        "name": {
+          "type": "string",
+          "description": "name",
+          "allowEmptyValue": false
+        },
+        "subSum": {
+          "type": "integer",
+          "format": "int32",
+          "description": "subSum",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "MyApplicationVo",
+      "description": "我的应用信息Vo"
+    },
+    "ProducerRegistryPaginationVo": {
+      "type": "object",
+      "properties": {
+        "begintime": {
+          "type": "string",
+          "description": "begintime",
+          "allowEmptyValue": false
+        },
+        "code": {
+          "type": "string",
+          "description": "code",
+          "allowEmptyValue": false
+        },
+        "endtime": {
+          "type": "string",
+          "description": "endtime",
+          "allowEmptyValue": false
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32",
+          "example": 15,
+          "description": "limit",
+          "allowEmptyValue": false
+        },
+        "name": {
+          "type": "string",
+          "description": "name",
+          "allowEmptyValue": false
+        },
+        "pageNo": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "pageNo",
+          "allowEmptyValue": false
+        },
+        "sortName": {
+          "type": "string",
+          "example": "name",
+          "description": "sortName",
+          "allowEmptyValue": false
+        },
+        "sortOrder": {
+          "type": "string",
+          "example": "desc",
+          "description": "sortOrder",
+          "allowEmptyValue": false,
+          "enum": ["asc", "desc"]
+        },
+        "status": {
+          "type": "string",
+          "description": "status",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ProducerRegistryPaginationVo",
+      "description": "数据提供方分页查询参数Vo"
+    },
+    "ProducerRegistryVo": {
+      "type": "object",
+      "required": ["addr", "code", "contact", "name", "password", "trade", "username"],
+      "properties": {
+        "addr": {
+          "type": "string",
+          "description": "addr",
+          "allowEmptyValue": false
+        },
+        "code": {
+          "type": "string",
+          "description": "code",
+          "allowEmptyValue": false
+        },
+        "contact": {
+          "type": "string",
+          "description": "contact",
+          "allowEmptyValue": false
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "name",
+          "allowEmptyValue": false
+        },
+        "password": {
+          "type": "string",
+          "description": "username",
+          "allowEmptyValue": false
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "timestamp",
+          "allowEmptyValue": false
+        },
+        "trade": {
+          "type": "string",
+          "description": "trade",
+          "allowEmptyValue": false
+        },
+        "username": {
+          "type": "string",
+          "description": "username",
+          "allowEmptyValue": false
+        },
+        "uuid": {
+          "type": "string",
+          "description": "uuid",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ProducerRegistryVo"
+    },
+    "ProducerUpdateVo": {
+      "type": "object",
+      "required": ["addr", "code", "contact", "name", "trade"],
+      "properties": {
+        "addr": {
+          "type": "string",
+          "description": "addr",
+          "allowEmptyValue": false
+        },
+        "code": {
+          "type": "string",
+          "description": "code",
+          "allowEmptyValue": false
+        },
+        "contact": {
+          "type": "string",
+          "description": "contact",
+          "allowEmptyValue": false
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "name",
+          "allowEmptyValue": false
+        },
+        "trade": {
+          "type": "string",
+          "description": "trade",
+          "allowEmptyValue": false
+        },
+        "uuid": {
+          "type": "string",
+          "description": "uuid",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ProducerUpdateVo"
+    },
+    "ServiceDatasourcePaginationVo": {
+      "type": "object",
+      "properties": {
+        "dbtype": {
+          "type": "string",
+          "description": "dbtype",
+          "allowEmptyValue": false
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32",
+          "example": 15,
+          "description": "limit",
+          "allowEmptyValue": false
+        },
+        "name": {
+          "type": "string",
+          "description": "name",
+          "allowEmptyValue": false
+        },
+        "pageNo": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "pageNo",
+          "allowEmptyValue": false
+        },
+        "sortName": {
+          "type": "string",
+          "example": "name",
+          "description": "sortName",
+          "allowEmptyValue": false
+        },
+        "sortOrder": {
+          "type": "string",
+          "example": "desc",
+          "description": "sortOrder",
+          "allowEmptyValue": false,
+          "enum": ["asc", "desc"]
+        }
+      },
+      "title": "ServiceDatasourcePaginationVo",
+      "description": "数据源信息分页查询参数传输对象"
+    },
+    "ServiceDatasourceVo": {
+      "type": "object",
+      "required": ["dbtype", "desc", "ipv4", "name", "password", "port", "uid", "url", "username"],
+      "properties": {
+        "dbtype": {
+          "type": "string",
+          "description": "dbtype",
+          "allowEmptyValue": false
+        },
+        "desc": {
+          "type": "string",
+          "description": "desc",
+          "allowEmptyValue": false
+        },
+        "id": {
+          "type": "string"
+        },
+        "ipv4": {
+          "type": "string",
+          "description": "ipv4",
+          "allowEmptyValue": false
+        },
+        "name": {
+          "type": "string",
+          "description": "name",
+          "allowEmptyValue": false
+        },
+        "password": {
+          "type": "string",
+          "description": "password",
+          "allowEmptyValue": false
+        },
+        "port": {
+          "type": "integer",
+          "format": "int32",
+          "description": "port",
+          "allowEmptyValue": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "uid": {
+          "type": "string",
+          "description": "uid",
+          "allowEmptyValue": false
+        },
+        "url": {
+          "type": "string",
+          "example": "jdbc:mysql://127.0.0.1:3306/test?rewriteBatchedStatements=true&useUnicode=true&characterEncoding=UTF-8",
+          "description": "url",
+          "allowEmptyValue": false
+        },
+        "username": {
+          "type": "string",
+          "description": "username",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ServiceDatasourceVo",
+      "description": "数据源信息传输对象"
+    },
+    "ServicePublishPaginationVo": {
+      "type": "object",
+      "properties": {
+        "begintime": {
+          "type": "string",
+          "description": "begintime",
+          "allowEmptyValue": false
+        },
+        "endtime": {
+          "type": "string",
+          "description": "endtime",
+          "allowEmptyValue": false
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32",
+          "example": 15,
+          "description": "limit",
+          "allowEmptyValue": false
+        },
+        "pageNo": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "pageNo",
+          "allowEmptyValue": false
+        },
+        "sortName": {
+          "type": "string",
+          "example": "name",
+          "description": "sortName",
+          "allowEmptyValue": false
+        },
+        "sortOrder": {
+          "type": "string",
+          "example": "desc",
+          "description": "sortOrder",
+          "allowEmptyValue": false,
+          "enum": ["asc", "desc"]
+        },
+        "status": {
+          "type": "string",
+          "description": "status",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ServicePublishPaginationVo",
+      "description": "服务发布申请分页查询参数Vo"
+    },
+    "ServicePublishVo": {
+      "type": "object",
+      "required": ["desc", "servId", "userId"],
+      "properties": {
+        "desc": {
+          "type": "string",
+          "description": "desc",
+          "allowEmptyValue": false
+        },
+        "id": {
+          "type": "string"
+        },
+        "servId": {
+          "type": "string",
+          "description": "servId",
+          "allowEmptyValue": false
+        },
+        "servName": {
+          "type": "string",
+          "description": "servName",
+          "allowEmptyValue": false
+        },
+        "servTag": {
+          "type": "string",
+          "description": "servTag",
+          "allowEmptyValue": false
+        },
+        "status": {
+          "type": "string",
+          "description": "status",
+          "allowEmptyValue": false
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "timestamp",
+          "allowEmptyValue": false
+        },
+        "userId": {
+          "type": "string",
+          "description": "userId",
+          "allowEmptyValue": false
+        },
+        "ver": {
+          "type": "string",
+          "description": "ver",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ServicePublishVo",
+      "description": "服务发布申请数据Vo"
+    },
+    "ServiceRegistryApiErrorVo": {
+      "type": "object",
+      "properties": {
+        "apiId": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "servId": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "title": "ServiceRegistryApiErrorVo"
+    },
+    "ServiceRegistryApiParamVo": {
+      "type": "object",
+      "properties": {
+        "apiId": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "required": {
+          "type": "string"
+        },
+        "servId": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "title": "ServiceRegistryApiParamVo"
+    },
+    "ServiceRegistryApiResponseVo": {
+      "type": "object",
+      "properties": {
+        "alias": {
+          "type": "string"
+        },
+        "apiId": {
+          "type": "string"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "servId": {
+          "type": "string"
+        }
+      },
+      "title": "ServiceRegistryApiResponseVo"
+    },
+    "ServiceRegistryDatasetApiColumnVo": {
+      "type": "object",
+      "properties": {
+        "apiId": {
+          "type": "string"
+        },
+        "column": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "servId": {
+          "type": "string"
+        }
+      },
+      "title": "ServiceRegistryDatasetApiColumnVo"
+    },
+    "ServiceRegistryDatasetApiConditionVo": {
+      "type": "object",
+      "properties": {
+        "apiId": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "relation": {
+          "type": "string"
+        },
+        "servId": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "title": "ServiceRegistryDatasetApiConditionVo"
+    },
+    "ServiceRegistryDatasetItemVo": {
+      "type": "object",
+      "required": ["dsId", "dsName", "ename", "example", "extensionId", "intro", "name", "opt", "pageable", "path", "pluginId", "rtType", "target"],
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryDatasetApiColumnVo"
+          }
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryDatasetApiConditionVo"
+          }
+        },
+        "dsId": {
+          "type": "string",
+          "description": "dsId",
+          "allowEmptyValue": false
+        },
+        "dsName": {
+          "type": "string",
+          "description": "dsName",
+          "allowEmptyValue": false
+        },
+        "ename": {
+          "type": "string",
+          "description": "ename",
+          "allowEmptyValue": false
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryApiErrorVo"
+          }
+        },
+        "example": {
+          "type": "string",
+          "description": "example",
+          "allowEmptyValue": false
+        },
+        "extensionId": {
+          "type": "string",
+          "description": "extensionId",
+          "allowEmptyValue": false
+        },
+        "id": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string",
+          "description": "desc",
+          "allowEmptyValue": false
+        },
+        "name": {
+          "type": "string",
+          "description": "name",
+          "allowEmptyValue": false
+        },
+        "opt": {
+          "type": "string",
+          "description": "opt",
+          "allowEmptyValue": false
+        },
+        "pageable": {
+          "type": "boolean",
+          "description": "pageable",
+          "allowEmptyValue": false
+        },
+        "params": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryApiParamVo"
+          }
+        },
+        "path": {
+          "type": "string",
+          "description": "path",
+          "allowEmptyValue": false
+        },
+        "pluginId": {
+          "type": "string",
+          "description": "pluginId",
+          "allowEmptyValue": false
+        },
+        "responses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryApiResponseVo"
+          }
+        },
+        "rtType": {
+          "type": "string",
+          "description": "rtType",
+          "allowEmptyValue": false
+        },
+        "target": {
+          "type": "string",
+          "description": "target",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ServiceRegistryDatasetItemVo"
+    },
+    "ServiceRegistryDatasetVo": {
+      "type": "object",
+      "required": ["detail", "intro", "name", "tag", "type", "useof"],
+      "properties": {
+        "apis": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryDatasetItemVo"
+          }
+        },
+        "belong": {
+          "type": "string",
+          "description": "belong",
+          "allowEmptyValue": false
+        },
+        "detail": {
+          "type": "string",
+          "description": "detail",
+          "allowEmptyValue": false
+        },
+        "id": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string",
+          "description": "intro",
+          "allowEmptyValue": false
+        },
+        "name": {
+          "type": "string",
+          "description": "name",
+          "allowEmptyValue": false
+        },
+        "status": {
+          "type": "string",
+          "description": "status",
+          "allowEmptyValue": false
+        },
+        "tag": {
+          "type": "string",
+          "description": "tag",
+          "allowEmptyValue": false
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "timestamp",
+          "allowEmptyValue": false
+        },
+        "type": {
+          "type": "string",
+          "description": "type",
+          "allowEmptyValue": false,
+          "enum": ["1", "2", "3", "4"]
+        },
+        "useof": {
+          "type": "string",
+          "description": "useof",
+          "allowEmptyValue": false
+        },
+        "userId": {
+          "type": "string",
+          "description": "userId",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ServiceRegistryDatasetVo",
+      "description": "数据源服务信息传输对象"
+    },
+    "ServiceRegistryOsgiItemVo": {
+      "type": "object",
+      "required": ["ename", "example", "extensionId", "intro", "name", "path", "pluginId"],
+      "properties": {
+        "artifactId": {
+          "type": "string",
+          "description": "maven",
+          "allowEmptyValue": false
+        },
+        "ename": {
+          "type": "string",
+          "description": "ename",
+          "allowEmptyValue": false
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryApiErrorVo"
+          }
+        },
+        "example": {
+          "type": "string",
+          "description": "example",
+          "allowEmptyValue": false
+        },
+        "extensionId": {
+          "type": "string",
+          "description": "extensionId",
+          "allowEmptyValue": false
+        },
+        "groupId": {
+          "type": "string",
+          "description": "maven",
+          "allowEmptyValue": false
+        },
+        "id": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string",
+          "description": "desc",
+          "allowEmptyValue": false
+        },
+        "name": {
+          "type": "string",
+          "description": "name",
+          "allowEmptyValue": false
+        },
+        "packaging": {
+          "type": "string",
+          "description": "packaging",
+          "allowEmptyValue": false
+        },
+        "params": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryApiParamVo"
+          }
+        },
+        "path": {
+          "type": "string",
+          "description": "path",
+          "allowEmptyValue": false
+        },
+        "pluginId": {
+          "type": "string",
+          "description": "pluginId",
+          "allowEmptyValue": false
+        },
+        "responses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryApiResponseVo"
+          }
+        },
+        "version": {
+          "type": "string",
+          "description": "maven",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ServiceRegistryOsgiItemVo"
+    },
+    "ServiceRegistryOsgiVo": {
+      "type": "object",
+      "required": ["detail", "intro", "name", "tag", "type", "useof"],
+      "properties": {
+        "apis": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryOsgiItemVo"
+          }
+        },
+        "belong": {
+          "type": "string",
+          "description": "belong",
+          "allowEmptyValue": false
+        },
+        "detail": {
+          "type": "string",
+          "description": "detail",
+          "allowEmptyValue": false
+        },
+        "id": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string",
+          "description": "intro",
+          "allowEmptyValue": false
+        },
+        "name": {
+          "type": "string",
+          "description": "name",
+          "allowEmptyValue": false
+        },
+        "status": {
+          "type": "string",
+          "description": "status",
+          "allowEmptyValue": false
+        },
+        "tag": {
+          "type": "string",
+          "description": "tag",
+          "allowEmptyValue": false
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "timestamp",
+          "allowEmptyValue": false
+        },
+        "type": {
+          "type": "string",
+          "description": "type",
+          "allowEmptyValue": false,
+          "enum": ["1", "2", "3", "4"]
+        },
+        "useof": {
+          "type": "string",
+          "description": "useof",
+          "allowEmptyValue": false
+        },
+        "userId": {
+          "type": "string",
+          "description": "userId",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ServiceRegistryOsgiVo",
+      "description": "OSGi 规范服务信息传输对象"
+    },
+    "ServiceRegistryPaginationVo": {
+      "type": "object",
+      "required": ["name", "tag", "type", "useof"],
+      "properties": {
+        "begintime": {
+          "type": "string",
+          "description": "begintime",
+          "allowEmptyValue": false
+        },
+        "endtime": {
+          "type": "string",
+          "description": "endtime",
+          "allowEmptyValue": false
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32",
+          "example": 15,
+          "description": "limit",
+          "allowEmptyValue": false
+        },
+        "name": {
+          "type": "string",
+          "description": "name",
+          "allowEmptyValue": false
+        },
+        "pageNo": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "pageNo",
+          "allowEmptyValue": false
+        },
+        "sortName": {
+          "type": "string",
+          "example": "name",
+          "description": "sortName",
+          "allowEmptyValue": false
+        },
+        "sortOrder": {
+          "type": "string",
+          "example": "desc",
+          "description": "sortOrder",
+          "allowEmptyValue": false,
+          "enum": ["asc", "desc"]
+        },
+        "tag": {
+          "type": "string",
+          "description": "tag",
+          "allowEmptyValue": false
+        },
+        "type": {
+          "type": "string",
+          "description": "type",
+          "allowEmptyValue": false,
+          "enum": ["1", "2", "3", "4"]
+        },
+        "useof": {
+          "type": "string",
+          "description": "useof",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ServiceRegistryPaginationVo",
+      "description": "服务信息分页查询数据传输对象"
+    },
+    "ServiceRegistryRestItemVo": {
+      "type": "object",
+      "required": ["ename", "example", "extensionId", "intro", "method", "name", "path", "pluginId", "resp", "url"],
+      "properties": {
+        "ename": {
+          "type": "string",
+          "description": "ename",
+          "allowEmptyValue": false
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryApiErrorVo"
+          }
+        },
+        "example": {
+          "type": "string",
+          "description": "example",
+          "allowEmptyValue": false
+        },
+        "extensionId": {
+          "type": "string",
+          "description": "extensionId",
+          "allowEmptyValue": false
+        },
+        "id": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string",
+          "description": "desc",
+          "allowEmptyValue": false
+        },
+        "method": {
+          "type": "string",
+          "description": "method",
+          "allowEmptyValue": false,
+          "enum": ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "TRACE"]
+        },
+        "name": {
+          "type": "string",
+          "description": "name",
+          "allowEmptyValue": false
+        },
+        "params": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryApiParamVo"
+          }
+        },
+        "path": {
+          "type": "string",
+          "description": "path",
+          "allowEmptyValue": false
+        },
+        "pluginId": {
+          "type": "string",
+          "description": "pluginId",
+          "allowEmptyValue": false
+        },
+        "resp": {
+          "type": "string",
+          "description": "resp",
+          "allowEmptyValue": false,
+          "enum": ["normal", "json", "xml", "stream"]
+        },
+        "responses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryApiResponseVo"
+          }
+        },
+        "url": {
+          "type": "string",
+          "description": "url",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ServiceRegistryRestItemVo"
+    },
+    "ServiceRegistryRestVo": {
+      "type": "object",
+      "required": ["detail", "intro", "name", "tag", "type", "useof"],
+      "properties": {
+        "apis": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryRestItemVo"
+          }
+        },
+        "belong": {
+          "type": "string",
+          "description": "belong",
+          "allowEmptyValue": false
+        },
+        "detail": {
+          "type": "string",
+          "description": "detail",
+          "allowEmptyValue": false
+        },
+        "id": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string",
+          "description": "intro",
+          "allowEmptyValue": false
+        },
+        "name": {
+          "type": "string",
+          "description": "name",
+          "allowEmptyValue": false
+        },
+        "status": {
+          "type": "string",
+          "description": "status",
+          "allowEmptyValue": false
+        },
+        "tag": {
+          "type": "string",
+          "description": "tag",
+          "allowEmptyValue": false
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "timestamp",
+          "allowEmptyValue": false
+        },
+        "type": {
+          "type": "string",
+          "description": "type",
+          "allowEmptyValue": false,
+          "enum": ["1", "2", "3", "4"]
+        },
+        "useof": {
+          "type": "string",
+          "description": "useof",
+          "allowEmptyValue": false
+        },
+        "userId": {
+          "type": "string",
+          "description": "userId",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ServiceRegistryRestVo",
+      "description": "Http 协议服务信息传输对象"
+    },
+    "ServiceRegistrySoapItemVo": {
+      "type": "object",
+      "required": ["ename", "example", "extensionId", "intro", "method", "name", "namespace", "path", "pluginId", "url"],
+      "properties": {
+        "ename": {
+          "type": "string",
+          "description": "ename",
+          "allowEmptyValue": false
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryApiErrorVo"
+          }
+        },
+        "example": {
+          "type": "string",
+          "description": "example",
+          "allowEmptyValue": false
+        },
+        "extensionId": {
+          "type": "string",
+          "description": "extensionId",
+          "allowEmptyValue": false
+        },
+        "id": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string",
+          "description": "desc",
+          "allowEmptyValue": false
+        },
+        "method": {
+          "type": "string",
+          "description": "method",
+          "allowEmptyValue": false
+        },
+        "name": {
+          "type": "string",
+          "description": "name",
+          "allowEmptyValue": false
+        },
+        "namespace": {
+          "type": "string",
+          "description": "namespace",
+          "allowEmptyValue": false
+        },
+        "params": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryApiParamVo"
+          }
+        },
+        "path": {
+          "type": "string",
+          "description": "path",
+          "allowEmptyValue": false
+        },
+        "pluginId": {
+          "type": "string",
+          "description": "pluginId",
+          "allowEmptyValue": false
+        },
+        "responses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistryApiResponseVo"
+          }
+        },
+        "url": {
+          "type": "string",
+          "description": "url",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ServiceRegistrySoapItemVo"
+    },
+    "ServiceRegistrySoapVo": {
+      "type": "object",
+      "required": ["detail", "intro", "name", "tag", "type", "useof"],
+      "properties": {
+        "apis": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceRegistrySoapItemVo"
+          }
+        },
+        "belong": {
+          "type": "string",
+          "description": "belong",
+          "allowEmptyValue": false
+        },
+        "detail": {
+          "type": "string",
+          "description": "detail",
+          "allowEmptyValue": false
+        },
+        "id": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string",
+          "description": "intro",
+          "allowEmptyValue": false
+        },
+        "name": {
+          "type": "string",
+          "description": "name",
+          "allowEmptyValue": false
+        },
+        "status": {
+          "type": "string",
+          "description": "status",
+          "allowEmptyValue": false
+        },
+        "tag": {
+          "type": "string",
+          "description": "tag",
+          "allowEmptyValue": false
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "timestamp",
+          "allowEmptyValue": false
+        },
+        "type": {
+          "type": "string",
+          "description": "type",
+          "allowEmptyValue": false,
+          "enum": ["1", "2", "3", "4"]
+        },
+        "useof": {
+          "type": "string",
+          "description": "useof",
+          "allowEmptyValue": false
+        },
+        "userId": {
+          "type": "string",
+          "description": "userId",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ServiceRegistrySoapVo",
+      "description": "Soap 协议服务信息传输对象"
+    },
+    "ServiceReleasePaginationVo": {
+      "type": "object",
+      "properties": {
+        "begintime": {
+          "type": "string",
+          "description": "begintime",
+          "allowEmptyValue": false
+        },
+        "endtime": {
+          "type": "string",
+          "description": "endtime",
+          "allowEmptyValue": false
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32",
+          "example": 15,
+          "description": "limit",
+          "allowEmptyValue": false
+        },
+        "pageNo": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "pageNo",
+          "allowEmptyValue": false
+        },
+        "sortName": {
+          "type": "string",
+          "example": "name",
+          "description": "sortName",
+          "allowEmptyValue": false
+        },
+        "sortOrder": {
+          "type": "string",
+          "example": "desc",
+          "description": "sortOrder",
+          "allowEmptyValue": false,
+          "enum": ["asc", "desc"]
+        },
+        "status": {
+          "type": "string",
+          "description": "status",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ServiceReleasePaginationVo",
+      "description": "服务信息分页查询参数Vo"
+    },
+    "ServiceSubscribePaginationVo": {
+      "type": "object",
+      "properties": {
+        "appId": {
+          "type": "string",
+          "description": "appId",
+          "allowEmptyValue": false
+        },
+        "begintime": {
+          "type": "string",
+          "description": "begintime",
+          "allowEmptyValue": false
+        },
+        "endtime": {
+          "type": "string",
+          "description": "endtime",
+          "allowEmptyValue": false
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32",
+          "example": 15,
+          "description": "limit",
+          "allowEmptyValue": false
+        },
+        "pageNo": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "pageNo",
+          "allowEmptyValue": false
+        },
+        "servId": {
+          "type": "string",
+          "description": "servId",
+          "allowEmptyValue": false
+        },
+        "sortName": {
+          "type": "string",
+          "example": "name",
+          "description": "sortName",
+          "allowEmptyValue": false
+        },
+        "sortOrder": {
+          "type": "string",
+          "example": "desc",
+          "description": "sortOrder",
+          "allowEmptyValue": false,
+          "enum": ["asc", "desc"]
+        }
+      },
+      "title": "ServiceSubscribePaginationVo",
+      "description": "服务调用申请分页查询参数传输对象"
+    },
+    "ServiceSubscribeReviewVo": {
+      "type": "object",
+      "required": ["opinion", "subscribes", "userId"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "opinion": {
+          "type": "string",
+          "description": "opinion",
+          "allowEmptyValue": false
+        },
+        "status": {
+          "type": "string",
+          "description": "status",
+          "allowEmptyValue": false
+        },
+        "subscribes": {
+          "type": "array",
+          "description": "subscribes",
+          "allowEmptyValue": false,
+          "items": {
+            "type": "string"
+          }
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "timestamp",
+          "allowEmptyValue": false
+        },
+        "userId": {
+          "type": "string",
+          "description": "userId",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ServiceSubscribeReviewVo",
+      "description": "服务订阅申请审批数据Vo"
+    },
+    "ServiceSubscribeVo": {
+      "type": "object",
+      "required": ["appId", "desc", "servId", "userId"],
+      "properties": {
+        "appId": {
+          "type": "string",
+          "description": "appId",
+          "allowEmptyValue": false
+        },
+        "appName": {
+          "type": "string",
+          "description": "appName",
+          "allowEmptyValue": false
+        },
+        "desc": {
+          "type": "string",
+          "description": "desc",
+          "allowEmptyValue": false
+        },
+        "id": {
+          "type": "string",
+          "description": "id",
+          "allowEmptyValue": false
+        },
+        "opinion": {
+          "type": "string",
+          "description": "opinion",
+          "allowEmptyValue": false
+        },
+        "servId": {
+          "type": "string",
+          "description": "servId",
+          "allowEmptyValue": false
+        },
+        "servName": {
+          "type": "string",
+          "description": "servName",
+          "allowEmptyValue": false
+        },
+        "servTag": {
+          "type": "string",
+          "description": "servTag",
+          "allowEmptyValue": false
+        },
+        "status": {
+          "type": "string",
+          "description": "status",
+          "allowEmptyValue": false
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "timestamp",
+          "allowEmptyValue": false
+        },
+        "userId": {
+          "type": "string",
+          "description": "userId",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "ServiceSubscribeVo",
+      "description": "服务调用申请数据Vo"
+    }
+  }
+}

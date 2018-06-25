@@ -248,11 +248,11 @@
 
     <el-row class="dialog-middlebox" v-if="isMiddle">
       <el-col :span="12">
-        <a @click="isBottom = true, isMiddle = false" href="javascript:;">&emsp;撰写评论</a>
+        <a @click="handleList" href="javascript:;">&emsp;撰写评论</a>
       </el-col>
       <el-col :span="12">
         <span>给我打分&nbsp;&nbsp;</span>
-        <el-rate v-model="value1" class="dialog-stars"></el-rate>
+        <el-rate v-model="submitParams.rank" class="dialog-stars"></el-rate>
       </el-col>
     </el-row>
 
@@ -260,20 +260,20 @@
       <el-row class="dialog-bottombox">
         <div class="dialog-title">
           <span>&emsp;给我打分&nbsp;&nbsp;</span>
-          <el-rate v-model="value1" class="dialog-stars"></el-rate>
+          <el-rate v-model="submitParams.rank" class="dialog-stars"></el-rate>
         </div>
 
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="标题" prop="name">
-            <el-input v-model="ruleForm.name"></el-input>
+        <el-form :model="submitParams" :rules="rules" ref="submitParams" label-width="70px" class="demo-ruleForm">
+          <el-form-item label="标题" prop="text">
+            <el-input v-model="submitParams.text"></el-input>
           </el-form-item>
 
-          <el-form-item label="评论" prop="desc">
-            <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+          <el-form-item label="评论" prop="title">
+            <el-input type="textarea" v-model="submitParams.title"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button size="small" type="primary" @click="submitForm('ruleForm')">确 定</el-button>
-            <el-button size="small">取 消</el-button>
+            <el-button size="small" type="primary" @click="submitForm('submitParams')">确 定</el-button>
+            <el-button size="small" @click="centerDialogVisible = false">取 消</el-button>
           </el-form-item>
         </el-form>
 
@@ -291,34 +291,26 @@
             <el-dropdown-item command="c">时间</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <h4>评论标题评论标题</h4>
-        <div class="dialog-title">
-          <span>某某某 2018年12月12日</span>
-          <el-rate v-model="value1" class="dialog-stars"></el-rate>
-        </div>
-        <div class="dialog-message">
-          <p v-if="isP1">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
-            magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat.&nbsp;
-            <a @click="isP1 = false, isP2 = true" href="javascript:;">更多
-              <i class="el-icon-arrow-down"></i>
-            </a>
-          </p>
-          <p v-if="isP2">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
-            magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
-            magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&nbsp;
-            <a @click="isP1 = true, isP2 = false" href="javascript:;">收起
-              <i class="el-icon-arrow-up"></i>
-            </a>
-          </p>
-
-
-        </div>
+        <el-col v-for="(item, index) in accessList" :key="index" :span="24">
+          <h4>{{item.title}}</h4>
+          <div class="dialog-title">
+            <span>某某某 2018年12月12日</span>
+            <el-rate v-model="+item.rank" class="dialog-stars"></el-rate>
+          </div>
+          <div class="dialog-message">
+            <p v-if="isP1">{{item.text}}&nbsp;
+              <a @click="isP1 = false, isP2 = true" href="javascript:;">更多
+                <i class="el-icon-arrow-down"></i>
+              </a>
+            </p>
+            <p v-if="isP2">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
+              magna aliqua. Ut enim ad minim veniam, sunt in culpa qui officia deserunt mollit anim id est laborum.&nbsp;
+              <a @click="isP1 = true, isP2 = false" href="javascript:;">收起
+                <i class="el-icon-arrow-up"></i>
+              </a>
+            </p>
+          </div>
+        </el-col>
       </el-row>
     </section>
   </el-dialog>
