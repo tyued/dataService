@@ -42,55 +42,68 @@
 </template>
 
 <script>
-import { mainService , pageReviewed , pageDataservice , pageRegister, pageManagement } from 'views/basics/service';
+import {
+  mainService,
+  pageReviewed,
+  pageDataservice,
+  pageRegister,
+  pageManagement
+} from "views/basics/service";
 
 export default {
-    name:'service',
-    components: {
-        mainService,pageReviewed,pageDataservice,pageRegister,pageManagement
+  name: "service",
+  components: {
+    mainService,
+    pageReviewed,
+    pageDataservice,
+    pageRegister,
+    pageManagement
+  },
+  data() {
+    return {
+      pageMB: "",
+      shenh_on: false,
+      zhuc_on: false,
+      guanl_on: false,
+      shujuy_on: false
+    };
+  },
+  created() {
+    this.pageMB = mainService;
+  },
+  methods: {
+    clickReview() {
+      //审核页
+      this.pageMB = pageReviewed;
+      this.shenh_on = true;
+      this.zhuc_on = false;
+      this.guanl_on = false;
+      this.shujuy_on = false;
     },
-    data() {
-        return {
-            pageMB:'',
-            shenh_on:false,
-            zhuc_on:false,
-            guanl_on:false,
-            shujuy_on:false,
-        }
+    clickRegister() {
+      //注册
+      this.pageMB = pageRegister;
+      this.shenh_on = false;
+      this.zhuc_on = true;
+      this.guanl_on = false;
+      this.shujuy_on = false;
     },
-    created(){
-        this.pageMB = mainService
+    clickDataservice() {
+      //数据源
+      this.pageMB = pageDataservice;
+      this.shenh_on = false;
+      this.zhuc_on = false;
+      this.guanl_on = false;
+      this.shujuy_on = true;
     },
-    methods:{
-        clickReview(){              //审核页
-            this.pageMB = pageReviewed
-            this.shenh_on = true
-            this.zhuc_on = false
-            this.guanl_on = false
-            this.shujuy_on = false
-        },                          
-        clickRegister(){            //注册
-            this.pageMB = pageRegister
-            this.shenh_on = false
-            this.zhuc_on = true
-            this.guanl_on = false
-            this.shujuy_on = false
-
-        },
-        clickDataservice(){         //数据源
-            this.pageMB = pageDataservice
-            this.shenh_on = false
-            this.zhuc_on = false
-            this.guanl_on = false
-            this.shujuy_on = true
-        },
-        clickManegement() {         // 管理
-            this.pageMB = pageManagement;
-            this.shenh_on = false;
-            this.zhuc_on = false;
-            this.guanl_on = true;
-            this.shujuy_on = false;
-        }
+    clickManegement() {
+      // 管理
+      this.pageMB = pageManagement;
+      this.shenh_on = false;
+      this.zhuc_on = false;
+      this.guanl_on = true;
+      this.shujuy_on = false;
     }
-}
+  }
+};
 </script>
