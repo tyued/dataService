@@ -1,183 +1,182 @@
 @charset "UTF-8";
 .container {
-  padding: 4px;
-  width: 100%;
-  overflow-x: hidden;
-  color: #303133;
-  font-size: 14px;
-  line-height: 24px;
-  /* 鍗＄墖 */ }
-  .container .top-nav {
-    min-width: 1550px; }
-    .container .top-nav .el-rate {
-      margin-top: 6px; }
-  .container h1 {
-    font-size: 24px; }
-  .container ul li {
-    float: left;
-    padding: 20px 0;
-    margin-left: 26px;
-    box-sizing: content-box;
-    line-height: 32px;
-    height: 32px; }
-  .container ul li:first-child {
-    margin-left: 0; }
-    .container ul li:first-child a {
+    padding: 4px;
+    width: 100%;
+    overflow-x: hidden;
+    color: #303133;
+    font-size: 14px;
+    line-height: 24px;
+}
+/* .container .top-nav { min-width: 1550px; } */
+  .container .top-nav .el-rate {
+    margin-top: 6px; }
+.container h1 {
+  font-size: 24px; }
+.container ul li {
+  float: left;
+  padding: 20px 0;
+  margin-left: 26px;
+  box-sizing: content-box;
+  line-height: 32px;
+  height: 32px; }
+.container ul li:first-child {
+  margin-left: 0; }
+  .container ul li:first-child a {
+    color: #449AFC; }
+.container ul li:nth-child(n+3) {
+  padding-left: 34px; }
+.container ul li:nth-child(n+7) {
+  float: right; }
+.container ul li:nth-child(3) {
+  background: url("./img/info_wifi.png") no-repeat left center; }
+.container ul li:nth-child(4) {
+  background: url("./img/info_heart.png") no-repeat left center; }
+.container ul li:nth-child(5) {
+  background: url("./img/info_message.png") no-repeat left center; }
+.container ul li:nth-child(6) {
+  background: url("./img/info_good.png") no-repeat left center; }
+.container ul li:nth-child(7) {
+  background: url("./img/info_back.png") no-repeat left center; }
+.container ul li:nth-child(8) {
+  background: url("./img/info_forbidden.png") no-repeat left center; }
+.container ul li:nth-child(9) {
+  background: url("./img/info_watch.png") no-repeat left center; }
+.container ul li:nth-child(10) {
+  background: url("./img/info_wifi.png") no-repeat left center; }
+.container ul li:nth-child(11) {
+  background: url("./img/info_edit.png") no-repeat left center; }
+.container ul li:nth-child(12) {
+  background: url("./img/info_add.png") no-repeat left center; }
+.container .card-item {
+  min-width: 530px;
+  height: 408px; }
+  .container .card-item h5 {
+    line-height: 52px; }
+  .container .card-item .card-item-title {
+    height: 52px;
+    line-height: 52px; }
+    .container .card-item .card-item-title h5 {
+      float: left; }
+    .container .card-item .card-item-title a {
+      float: right;
       color: #449AFC; }
-  .container ul li:nth-child(n+3) {
-    padding-left: 34px; }
-  .container ul li:nth-child(n+7) {
-    float: right; }
-  .container ul li:nth-child(3) {
-    background: url("./img/info_wifi.png") no-repeat left center; }
-  .container ul li:nth-child(4) {
-    background: url("./img/info_heart.png") no-repeat left center; }
-  .container ul li:nth-child(5) {
-    background: url("./img/info_message.png") no-repeat left center; }
-  .container ul li:nth-child(6) {
-    background: url("./img/info_good.png") no-repeat left center; }
-  .container ul li:nth-child(7) {
-    background: url("./img/info_back.png") no-repeat left center; }
-  .container ul li:nth-child(8) {
-    background: url("./img/info_forbidden.png") no-repeat left center; }
-  .container ul li:nth-child(9) {
-    background: url("./img/info_watch.png") no-repeat left center; }
-  .container ul li:nth-child(10) {
-    background: url("./img/info_wifi.png") no-repeat left center; }
-  .container ul li:nth-child(11) {
-    background: url("./img/info_edit.png") no-repeat left center; }
-  .container ul li:nth-child(12) {
-    background: url("./img/info_add.png") no-repeat left center; }
-  .container .card-item {
-    min-width: 500px;
-    height: 408px; }
-    .container .card-item h5 {
-      line-height: 52px; }
-    .container .card-item .card-item-title {
-      height: 52px;
-      line-height: 52px; }
-      .container .card-item .card-item-title h5 {
-        float: left; }
-      .container .card-item .card-item-title a {
-        float: right;
-        color: #449AFC; }
-    .container .card-item h5 {
-      font-size: 20px; }
-    .container .card-item .card-itembox {
-      padding: 10px;
-      width: 100%;
-      height: 130px;
-      background-color: #F5F7FA;
-      border-radius: 2px;
-      margin-bottom: 20px; }
-    .container .card-item .card-item-top {
-      border-bottom: 1px solid #ccc;
-      overflow: hidden;
-      padding: 0 10px;
-      height: 44px;
-      line-height: 44px; }
-      .container .card-item .card-item-top > span {
-        float: left;
-        font-size: 16px;
-        color: #000; }
-      .container .card-item .card-item-top .el-button {
-        float: right;
-        margin-top: 6px; }
-    .container .card-item .card-item-bottom {
-      height: 76px; }
-      .container .card-item .card-item-bottom .el-rate {
-        margin-top: 6px; }
-      .container .card-item .card-item-bottom li {
-        float: left;
-        padding: 20px 0;
-        margin-left: 14px;
-        box-sizing: content-box;
-        line-height: 32px;
-        height: 32px; }
-      .container .card-item .card-item-bottom li:first-child {
-        margin-left: 10px; }
-      .container .card-item .card-item-bottom li:nth-child(2) {
-        padding-left: 30px;
-        background: url("./img/info_wifi.png") no-repeat left center; }
-      .container .card-item .card-item-bottom li:nth-child(3) {
-        padding-left: 30px;
-        background: url("./img/info_message.png") no-repeat left center; }
-      .container .card-item .card-item-bottom li:nth-child(4) {
-        padding-left: 30px;
-        background: url("./img/info_good.png") no-repeat left center; }
-  .container .main {
-    margin-top: 12px; }
-    .container .main .el-card {
-      height: auto; }
-      .container .main .el-card .el-tabs {
-        height: auto; }
-    .container .main .el-tabs__content h5 {
-      font-size: 16px; }
-    .container .main ol {
-      padding-left: 10px; }
-    .container .main ol li {
-      padding: 4px 0;
-      color: #606266; }
-    .container .main .right-box {
-      height: inherit;
-      background-color: #E3E6EC; }
-  .container .dialog-topbox {
-    height: 150px;
-    border-bottom: 1px solid #E3E6EC; }
-    .container .dialog-topbox h2 {
-      font-size: 50px;
-      line-height: 1.2em; }
-    .container .dialog-topbox span {
-      font-size: 12px; }
-  .container .dialog-stars {
-    text-align: right;
-    padding-right: 6px; }
-    .container .dialog-stars i {
-      margin-right: 4px; }
-  .container .dialog-line {
-    margin-top: 9px;
-    height: 4px; }
-  .container .dialog-middlebox {
-    height: 70px;
-    line-height: 70px;
-    font-size: 12px;
+  .container .card-item h5 {
+    font-size: 20px; }
+  .container .card-item .card-itembox {
+    padding: 10px;
+    width: 100%;
+    height: 130px;
+    background-color: #F5F7FA;
+    border-radius: 2px;
+    margin-bottom: 20px; }
+  .container .card-item .card-item-top {
+    border-bottom: 1px solid #eaedf4;
     overflow: hidden;
-    border-bottom: 1px solid #E3E6EC; }
-    .container .dialog-middlebox a {
-      color: #50a1fc; }
-    .container .dialog-middlebox .dialog-stars {
-      float: right;
-      margin-top: 25px; }
-    .container .dialog-middlebox div:last-child {
-      text-align: right; }
-  .container .dialog-bottombox {
-    font-size: 12px;
-    height: 280px;
-    border-bottom: 1px solid #E3E6EC; }
-    .container .dialog-bottombox .dialog-stars {
+    padding: 0 10px;
+    height: 44px;
+    line-height: 44px; }
+    .container .card-item .card-item-top > span {
       float: left;
-      margin-top: 2px; }
-    .container .dialog-bottombox span {
-      float: left;
-      height: 24px;
-      line-height: 24px; }
-    .container .dialog-bottombox .dialog-title {
-      overflow: hidden;
-      padding: 14px 0; }
-  .container .dialog-more {
-    padding-top: 6px; }
-    .container .dialog-more h4 {
-      color: #000;
-      margin-top: 20px;
-      font-size: 16px; }
-    .container .dialog-more .dialog-stars {
+      font-size: 16px;
+      color: #000; }
+    .container .card-item .card-item-top .el-button {
       float: right;
-      margin-top: 2px; }
-  .container .el-dropdown-link {
-    cursor: pointer; }
-  .container .el-icon-arrow-down {
+      margin-top: 6px; }
+  .container .card-item .card-item-bottom {
+    height: 76px; }
+    .container .card-item .card-item-bottom .el-rate {
+      margin-top: 6px; }
+    .container .card-item .card-item-bottom li {
+      float: left;
+      padding: 20px 0;
+      margin-left: 14px;
+      box-sizing: content-box;
+      line-height: 32px;
+      height: 32px; }
+    .container .card-item .card-item-bottom li:first-child {
+      margin-left: 10px; }
+    .container .card-item .card-item-bottom li:nth-child(2) {
+      padding-left: 30px;
+      background: url("./img/info_wifi.png") no-repeat left center; }
+    .container .card-item .card-item-bottom li:nth-child(3) {
+      padding-left: 30px;
+      background: url("./img/info_message.png") no-repeat left center; }
+    .container .card-item .card-item-bottom li:nth-child(4) {
+      padding-left: 30px;
+      background: url("./img/info_good.png") no-repeat left center; }
+.container .main {
+  margin-top: 12px; }
+  .container .main .el-card {
+    height: auto; }
+    .container .main .el-card .el-tabs {
+      height: auto; }
+  .container .main .el-tabs__content h5 {
+    font-size: 16px; }
+  .container .main ol {
+    padding-left: 10px; }
+  .container .main ol li {
+    padding: 4px 0;
+    color: #606266; }
+  .container .main .right-box {
+    height: inherit;
+    background-color: #E3E6EC; }
+.container .dialog-topbox {
+  height: 150px;
+  border-bottom: 1px solid #E3E6EC; }
+  .container .dialog-topbox h2 {
+    font-size: 50px;
+    line-height: 1.2em; }
+  .container .dialog-topbox span {
     font-size: 12px; }
-  .container .dialog-message a, .container .dialog-message i {
+.container .dialog-stars {
+  text-align: right;
+  padding-right: 6px; }
+  .container .dialog-stars i {
+    margin-right: 4px; }
+.container .dialog-line {
+  margin-top: 9px;
+  height: 4px; }
+.container .dialog-middlebox {
+  height: 70px;
+  line-height: 70px;
+  font-size: 12px;
+  overflow: hidden;
+  border-bottom: 1px solid #E3E6EC; }
+  .container .dialog-middlebox a {
     color: #50a1fc; }
+  .container .dialog-middlebox .dialog-stars {
+    float: right;
+    margin-top: 25px; }
+  .container .dialog-middlebox div:last-child {
+    text-align: right; }
+.container .dialog-bottombox {
+  font-size: 12px;
+  height: 280px;
+  border-bottom: 1px solid #E3E6EC; }
+  .container .dialog-bottombox .dialog-stars {
+    float: left;
+    margin-top: 2px; }
+  .container .dialog-bottombox span {
+    float: left;
+    height: 24px;
+    line-height: 24px; }
+  .container .dialog-bottombox .dialog-title {
+    overflow: hidden;
+    padding: 14px 0; }
+.container .dialog-more {
+  padding-top: 6px; }
+  .container .dialog-more h4 {
+    color: #000;
+    margin-top: 20px;
+    font-size: 16px; }
+  .container .dialog-more .dialog-stars {
+    float: right;
+    margin-top: 2px; }
+.container .el-dropdown-link {
+  cursor: pointer; }
+.container .el-icon-arrow-down {
+  font-size: 12px; }
+.container .dialog-message a, .container .dialog-message i {
+  color: #50a1fc; }
 
 /*# sourceMappingURL=style.css.map */

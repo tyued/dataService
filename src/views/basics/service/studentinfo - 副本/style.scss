@@ -1,0 +1,253 @@
+.container {
+  padding: 4px;
+  width: 100%;
+  overflow-x: hidden;
+  color: #303133;
+  font-size: 14px;
+  line-height: 24px;
+  .top-nav {
+    min-width: 1550px;
+    .el-rate {
+      margin-top: 6px;
+    }
+  }
+  h1 {
+    font-size: 24px;
+  }
+  ul li {
+    float: left;
+    padding: 20px 0;
+    margin-left: 26px;
+    box-sizing: content-box;
+    line-height: 32px;
+    height: 32px;
+  }
+  ul li:first-child {
+    margin-left: 0;
+    a {
+      color: #449AFC;
+    }
+  }
+  ul li:nth-child(n+3) {
+    padding-left: 34px;
+  }
+  ul li:nth-child(n+7) {
+    float: right;
+  }
+  ul li:nth-child(3) {
+    background: url('./img/info_wifi.png') no-repeat left center;
+  }
+  ul li:nth-child(4) {
+    background: url('./img/info_heart.png') no-repeat left center;
+  }
+  ul li:nth-child(5) {
+    background: url('./img/info_message.png') no-repeat left center;
+  }
+  ul li:nth-child(6) {
+    background: url('./img/info_good.png') no-repeat left center;
+  }
+  ul li:nth-child(7) {
+    background: url('./img/info_back.png') no-repeat left center;
+  }
+  ul li:nth-child(8) {
+    background: url('./img/info_forbidden.png') no-repeat left center;
+  }
+  ul li:nth-child(9) {
+    background: url('./img/info_watch.png') no-repeat left center;
+  }
+  ul li:nth-child(10) {
+    background: url('./img/info_wifi.png') no-repeat left center;
+  }
+  ul li:nth-child(11) {
+    background: url('./img/info_edit.png') no-repeat left center;
+  }
+  ul li:nth-child(12) {
+    background: url('./img/info_add.png') no-repeat left center;
+  }
+  /* 卡片 */
+  .card-item {
+    min-width: 500px;
+    height: 408px;
+    h5 {
+      line-height: 52px;
+    }
+    .card-item-title {
+      height: 52px;
+      line-height: 52px;
+      h5 {
+        float: left;
+      }
+      a {
+        float: right;
+        color: #449AFC;
+      }
+    }
+    h5 {
+      font-size: 20px;
+    }
+    .card-itembox {
+      padding: 10px;
+      width: 100%;
+      height: 130px;
+      background-color: #F5F7FA;
+      border-radius: 2px;
+      margin-bottom: 20px;
+    }
+    .card-item-top {
+      border-bottom: 1px solid #ccc;
+      overflow: hidden;
+      padding: 0 10px;
+      height: 44px;
+      line-height: 44px;
+      &>span {
+        float: left;
+        font-size: 16px;
+        color: #000;
+      }
+      .el-button {
+        float: right;
+        margin-top: 6px;
+      }
+    }
+    .card-item-bottom {
+      height: 76px;
+      .el-rate {
+        margin-top: 6px;
+      }
+      li {
+        float: left;
+        padding: 20px 0;
+        margin-left: 14px;
+        box-sizing: content-box;
+        line-height: 32px;
+        height: 32px;
+      }
+      li:first-child {
+        margin-left: 10px;
+      }
+      li:nth-child(2) {
+        padding-left: 30px;
+        background: url('./img/info_wifi.png') no-repeat left center;
+      }
+      li:nth-child(3) {
+        padding-left: 30px;
+        background: url('./img/info_message.png') no-repeat left center;
+      }
+      li:nth-child(4) {
+        padding-left: 30px;
+        background: url('./img/info_good.png') no-repeat left center;
+      }
+    }
+  }
+  .main {
+    margin-top: 12px;
+    .el-card {
+      height: auto;
+      .el-tabs {
+        height: auto;
+      }
+    }
+    .el-tabs__content {
+      h5 {
+        font-size: 16px;
+      }
+    }
+    ol {
+      padding-left: 10px;
+    }
+    ol li {
+      padding: 4px 0;
+      color: #606266;
+    }
+    .right-box {
+      height: inherit;
+      background-color: #E3E6EC;
+    }
+  }
+  .dialog-topbox {
+    height: 150px;
+    border-bottom: 1px solid #E3E6EC;
+    h2 {
+      font-size: 50px;
+      line-height: 1.2em;
+    }
+    span {
+      font-size: 12px;
+    }
+  }
+  .dialog-stars {
+    text-align: right;
+    padding-right: 6px;
+    i {
+      margin-right: 4px;
+    }
+  }
+  .dialog-line {
+    margin-top: 9px;
+    // width: 100%;
+    height: 4px;
+  }
+  .dialog-middlebox {
+    height: 70px;
+    line-height: 70px;
+    font-size: 12px;
+    overflow: hidden;
+    border-bottom: 1px solid #E3E6EC;
+    a {
+      color: #50a1fc;
+    }
+    .dialog-stars {
+      float: right;
+      margin-top: 25px;
+    }
+    & div:last-child {
+      text-align: right;
+    }
+  }
+
+  .dialog-bottombox {
+    font-size: 12px;
+    height: 280px;
+    border-bottom: 1px solid #E3E6EC;
+    .dialog-stars {
+      float: left;
+      margin-top: 2px;
+    }
+    & span {
+      float: left;
+      height: 24px;
+      line-height: 24px;
+    }
+    .dialog-title {
+      overflow: hidden;
+      padding: 14px 0;
+    }
+    
+  }
+  .dialog-more {
+    padding-top: 6px;
+    h4 {
+      color: #000;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+    .dialog-stars {
+      float: right;
+      margin-top: 2px;
+    }
+  }
+  .el-dropdown-link {
+    cursor: pointer;
+  }
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
+  .dialog-message {
+    // height: 3em;
+    a, i {
+      color: #50a1fc;
+      // font-size: 12px;
+    }
+    
+  }
+}

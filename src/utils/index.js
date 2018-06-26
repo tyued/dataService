@@ -33,3 +33,10 @@ export function debounce(func, wait, immediate) {
         return result;
     };
 }
+
+// 获取地址栏信息
+export function _getQueryId(name) {
+    var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if(r!=null)return  unescape(r[2]); return "";
+}

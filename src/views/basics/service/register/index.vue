@@ -343,8 +343,7 @@ export default {
     name:'pageRegister',
     components: {
         VueUEditor
-    },
-    
+    },  
     data() {
         return {
             active:0,              //当前步骤
