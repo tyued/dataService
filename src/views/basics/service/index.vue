@@ -50,12 +50,22 @@
 </template>
 
 <script>
-import { mainService , pageReviewed , pageDataservice , pageRegister, pageManagement } from 'views/basics/service';
+import {
+    mainService,
+    pageReviewed,
+    pageDataservice,
+    pageRegister,
+    pageManagement
+} from "views/basics/service";
 
 export default {
-    name:'service',
+    name: "service",
     components: {
-        mainService,pageReviewed,pageDataservice,pageRegister,pageManagement
+        mainService,
+        pageReviewed,
+        pageDataservice,
+        pageRegister,
+        pageManagement
     },
     data() {
         return {
@@ -115,5 +125,6 @@ export default {
             this.shujuy_on = false;
         }
     }
-}
+
+};
 </script>

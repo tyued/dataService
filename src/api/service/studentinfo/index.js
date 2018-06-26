@@ -37,4 +37,20 @@ export function getRelationForms(data) {
   })
 }
 
+// 增加一个新的服务评价信息
+export function submitAssess(data) {
+  return fetch({
+    url: 'admin/service/eval/submit',
+    method: 'post',
+    data
+  })
+}
 
+// 查询服务评价信息集合
+export function getAssessList(params) {
+  return fetch({
+    url: 'admin/service/eval/evalList',
+    method: 'post',
+    params
+  })
+}
