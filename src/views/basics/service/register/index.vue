@@ -26,57 +26,84 @@
                     </el-col>
                 </el-row>
                 <el-form label-width="120px" :model="formLabelStep3" class="formStep3" v-if="active==2">
-                    <el-form-item label="服务名称">
+                    <el-form-item required label="服务名称">
                         <el-input v-model="formLabelStep3.name" placeholder="3-20个字符"></el-input>
                     </el-form-item>
-                    <el-form-item label="服务分类">
+                    <el-form-item required label="服务分类">
                         <el-radio-group v-model="formLabelStep3.tag">
                             <el-radio v-for="item in servTypeList" :key="item.key" :label="item.key" border>{{item.value}}</el-radio>
-                        </el-radio-group>
+                        </el-radio-group> 
+                    </el-form-item>                                
+                    <el-form-item label="服务简介">
+                        <el-input type="textarea" v-model="formLabelStep3.intro"></el-input>
+                    </el-form-item>                                                                                            
+                    <el-form-item label='服务详情'>
+                        <VueUEditor :ueditorConfig='editorConfig' @ready="editorReadyServ"></VueUEditor>
                     </el-form-item>
                     <div class="nozzleList">
                         <div class="nozz-label">接口列表<el-button class="addNozz" size="small" @click="addTab(editableTabsValue)" icon="el-icon-plus"></el-button></div>                             
                         <div class="nozz-box">
                             <el-tabs type="border-card" v-model="editableTabsValue" closable @tab-remove="removeTab">
                                 <el-tab-pane v-for="(item, index) in editableTabs" :key="item.tabInd" :label="item.title" :name="item.tabInd">
-                                    <el-form-item label="接口中文名称">
+                                    <el-form-item required label="接口中文名称">
                                         <el-input v-model="item.name" placeholder="3-20个字符"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="接口英文名称">
+                                    <el-form-item required label="接口英文名称">
                                         <el-input v-model="item.ename" placeholder="3-20个字符"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="接口地址" v-if="selSerType!=4">
+                                    <el-form-item required label="接口地址" v-if="selSerType!=4">
                                         <el-input v-model="item.url" placeholder="3-20个字符"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="命名空间" v-if="selSerType==2">
+                                    <el-form-item required label="命名空间" v-if="selSerType==2">
                                         <el-input v-model="item.namespace" placeholder="3-20个字符"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="方法名称" v-if="selSerType==2">
+                                    <el-form-item required label="方法名称" v-if="selSerType==2">
                                         <el-input v-model="item.method" placeholder="3-20个字符"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="接口返回示例" v-if="selSerType==2 || selSerType==3">
+                                    <el-form-item required label="外部访问地址" v-if="selSerType!=4">
+                                        <el-input v-model="item.wburl" placeholder="3-20个字符"></el-input>
+                                    </el-form-item>
+                                    <el-form-item required label="请求方式" v-if="selSerType!=4">
+                                        <el-radio-group v-model="item.method">
+                                            <el-radio v-for='list in reqmethod' :key="list" :label="list">{{list}}</el-radio>
+                                        </el-radio-group>
+                                    </el-form-item>
+                                    <el-form-item required label="返回格式" v-if="selSerType==1||selSerType==3">
+                                        <el-radio-group v-model="item.resp" @change="changeResp">
+                                            <el-radio v-for='list in retformat' :key="list" :label="list">{{list}}</el-radio>
+                                        </el-radio-group>
+                                    </el-form-item>
+                                    
+                                    <el-form-item required label="返回格式" v-if="selSerType==2">
+                                        <el-radio-group v-model="item.resp">
+                                            <el-radio label="XML">XML</el-radio>
+                                        </el-radio-group>
+                                    </el-form-item>
+
+                                    <el-form-item required label="接口返回示例" v-if="item.resp!='XML'">
+                                        <el-input type="textarea" :rows="11" placeholder="请输入字符" v-model="item.example"></el-input>
+                                    </el-form-item>
+                                    <el-form-item required label="接口返回示例" v-if="item.resp=='XML'">
                                         <el-radio-group v-model="item.selexample" @change="changeExample">                                       
                                             <el-radio label="1">Soap 1.1</el-radio>
                                             <el-radio label="2">Soap 1.2</el-radio>
                                         </el-radio-group>
                                         <el-input type="textarea" :rows="11" placeholder="请输入字符" v-model="item.example"></el-input>
                                     </el-form-item>
-
-
-                                    <el-form-item label="选择数据源" v-if="selSerType==3" class="dbType_sel">
+                                    <el-form-item required label="选择数据源" v-if="selSerType==3" class="dbType_sel">
                                         <el-select v-model="item.dsId" placeholder="请选择" clearable @change="selDataSource">
                                             <el-option v-for='list in dataSourceList' :key="list.uid" :label="list.name" :value="list.uid"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="选择操作类型" v-if="selSerType==3">
+                                    <el-form-item required label="选择操作类型" v-if="selSerType==3">
                                         <el-radio-group v-model="item.opt" @change="selOpt">
                                             <el-radio v-for="item in OptTypes" :key="item.key" :label="item.key">{{item.desc}}</el-radio>
                                         </el-radio-group>
                                     </el-form-item>
-                                    <el-form-item label="发布路径规则" v-if="selSerType==3">
+                                    <el-form-item required label="发布路径规则" v-if="selSerType==3">
                                         <el-input v-model="item.path" placeholder="3-20个字符"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="上传接口文件" v-if="selSerType==4">
+                                    <el-form-item required label="上传接口文件" v-if="selSerType==4">
                                         <!-- <el-upload class="upload-demo"
                                             action="https://jsonplaceholder.typicode.com/posts/"
                                             :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove"
@@ -84,8 +111,7 @@
                                             <el-button size="small" type="primary">点击上传</el-button>
                                             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                                         </el-upload>-->
-                                    </el-form-item>
-                                    
+                                    </el-form-item>                                  
                                     <el-tabs v-model="item.opt" v-if="selSerType==3">
                                         <el-tab-pane v-if="item.opt==itemOpt.key" v-for="itemOpt in OptTypes" :key="itemOpt.key" :label="itemOpt.desc" :name="itemOpt.key">
                                             <div>
@@ -171,10 +197,10 @@
                                             </div>
                                         </el-tab-pane>
                                     </el-tabs>                                                      
-                                    <el-form-item  class="topFormBox" required label='接口简介'>
+                                    <el-form-item required class="topFormBox" required label='接口简介'>
                                         <VueUEditor :ueditorConfig='editorConfig' @ready="editorReady"></VueUEditor>
                                     </el-form-item>           
-                                    <el-form-item  class="topFormBox" label='服务分类'>
+                                    <el-form-item required class="topFormBox" label='服务分类'>
                                         <el-tabs type="border-card">
                                             <el-tab-pane label="输入参数">
                                                 <el-table :data="item.params" style="width: 100%">
@@ -382,7 +408,8 @@ export default {
             agreeuser:false,                           //用户许可协议
             dialogVisible_nazz:false,               //接口须知
             agreenazz:false,
-
+            reqmethod:['GET','HEAD','POST','PUT','PATCH','DELETE','OPTIONS','TRACE'],                           //请求方式
+            retformat:['normal','JSON','XML','Stream'],                           //返回格式
             editableTabsValue: '1',
             editableTabs: [{
                 title: '接口1',
@@ -394,15 +421,17 @@ export default {
                 rtType:1,
                 intro:'',
                 selexample:'1',
-                example:expSoap1,
+                example:'',
+                resp:'JSON',                    //返回格式
+                method:'GET',
                 queryList:[{               //输入参数
-                    name:'Key',
-                    required:true,           //0：否  1：是    
-                    type:'String',
-                    desc:'申请调用的Key',
-                    state:'0',              //0 编辑  1 保存
-                },{
-                    name:'新增参数'                   
+                        name:'Key',
+                        required:true,           //0：否  1：是    
+                        type:'String',
+                        desc:'申请调用的Key',
+                        state:'0',              //0 编辑  1 保存
+                    },{
+                        name:'新增参数'                   
                 }],
                 params:[{               //输入参数
                     name:'Key',
@@ -470,8 +499,57 @@ export default {
     methods:{
         // 上一步
         prev(){
-            if (this.active < 1) return false;
-            if (this.active-- < 1) return false;
+            var actpart = this.active
+            if(actpart==1){
+                this.active--
+            }
+            if(actpart==2){
+                this.editableTabsValue = '1'
+                this.editableTabs = [{
+                    title: '接口1',
+                    tabInd: '1',
+                    opt:"query",
+                    selObjType:1,
+                    target:'',
+                    column:[],
+                    rtType:1,
+                    intro:'',
+                    selexample:'1',
+                    example:"",
+                    resp:'JSON',                    //返回格式
+                    queryList:[{               //输入参数
+                            name:'Key',
+                            required:true,           //0：否  1：是    
+                            type:'String',
+                            desc:'申请调用的Key',
+                            state:'0',              //0 编辑  1 保存
+                        },{
+                            name:'新增参数'                   
+                    }],
+                    params:[{               //输入参数
+                        name:'Key',
+                        required:true,           //0：否  1：是    
+                        type:'String',
+                        desc:'申请调用的Key',
+                        foucs: false,
+                        state:'0',              //0 编辑  1 保存
+                    }], 
+                    responses:[{                 //输出参数
+                        state:'1',              //0 编辑  1 保存
+                    }],  
+                    errors:[{                 //错误代码
+                        state:'1',              //0 编辑  1 保存
+                    }], 
+                    conditions:[{
+                        state:'1',              //0 编辑  1 保存
+                    }],
+                }];
+                this.tabIndex = 1;
+                this.active--
+            }
+            // if (this.active < 1) return false;
+            // if (this.active-- < 1) return false;
+            
         },
         // 下一步
         next(){
@@ -498,7 +576,14 @@ export default {
                     if(item.sel){
                         that.selSerType = item.type 
                     }
-                })  
+                }) 
+                if(this.selSerType==2){
+                    this.editableTabs[0].resp="XML"
+                    this.editableTabs[0].example=expSoap1;
+                }else{
+                    this.editableTabs[0].resp="JSON"
+                    this.editableTabs[0].example="";
+                }
             }
             if(actpart == 2){
                 var submitD = {};
@@ -507,21 +592,20 @@ export default {
                 submitD.type = this.selSerType                  //选择的服务类型
                 submitD.name = this.formLabelStep3.name?this.formLabelStep3.name:''         //服务名称
                 submitD.tag = this.formLabelStep3.tag           //服务分类
-                submitD.intro = "服务简介"                       //服务简介
-                submitD.detail = "服务详情"                      //服务详情
+                submitD.intro = this.formLabelStep3.intro                      //服务简介
+                submitD.detail = this.formLabelStep3.detail?this.formLabelStep3.detail : '空'                      //服务详情
                 submitD.apis = []       //接口列表
 
-                if(submitD.name.length<3 || submitD.name.length>20){
-                    judge = false
-                }
-                if(!submitD.tag){
-                    judge = false
-                }
+                if(submitD.name.length<3 || submitD.name.length>20) judge = false
+                if(!submitD.tag) judge = false
+                if(!submitD.intro || submitD.intro.length<3) judge = false
+
+
                 this.editableTabs.forEach(function(item,index){
                     var exp={}
                     exp.name = item.name;               //接口中文名称
                     exp.ename = item.ename;             //接口英文名称
-                    exp.intro = item.intro;
+                    exp.intro = item.intro?item.intro:'空';
                     exp.params = [];
                     exp.responses = [];
                     exp.errors = [];
@@ -543,11 +627,17 @@ export default {
                             exp.errors.push(obj)
                         }
                     })
+                    if(!exp.name) judge = false;
+                    if(!exp.ename) judge = false;
+
                     submitD.apis.push(exp)
                 })
                 if(this.selSerType==1){                 //rest---http api
                     this.editableTabs.forEach(function(item,index){
-                        submitD.apis[index].url = item.url  //接口地址                        
+                        submitD.apis[index].url = item.url  //接口地址           
+                        submitD.apis[index].method = item.method  //请求方式         
+                        submitD.apis[index].resp = item.resp  //返回格式     
+                        if(!submitD.apis[index].url) judge = false;     
                     })
                     if(judge){                   
                         api.putRest(submitD).then(res => {
@@ -566,8 +656,11 @@ export default {
                     this.editableTabs.forEach(function(item,index){
                         submitD.apis[index].example = item.example  //接口返回示例    
                         submitD.apis[index].url = item.url  //接口地址     
-                        submitD.apis[index].namespace = item.namespace  //命名空间    
-                        submitD.apis[index].method = submitD.apis[index].path = item.method  //方法名称                         
+                        submitD.apis[index].namespace = item.namespace  //命名空间         
+                        submitD.apis[index].method = item.method  //请求方式         
+                        submitD.apis[index].resp = item.resp  //返回格式    
+                        if(!submitD.apis[index].url) judge = false;    
+                        // submitD.apis[index].method = submitD.apis[index].path = item.method  //方法名称                         
                     })
                     if(judge){                   
                         api.putSoap(submitD).then(res => {
@@ -586,14 +679,14 @@ export default {
                     var that =this
                     this.editableTabs.forEach(function(item,index){
                         submitD.apis[index].example = item.example  //接口返回示例    
-                        submitD.apis[index].url = item.url  //接口地址     
-                        
+                        submitD.apis[index].url = item.url  //接口地址          
+                        submitD.apis[index].method = item.method  //请求方式         
+                        submitD.apis[index].resp = item.resp  //返回格式   
                         that.dataSourceList.forEach(function(objData,ind){   //数据源   
                             if(item.dsId==objData.uid){
                                 submitD.apis[index].dsId = objData.id
                             }
-                        })
-                        
+                        })                      
                         submitD.apis[index].opt = item.opt  //选择操作类型     
                         submitD.apis[index].rtType = item.rtType  //返回内容     
                         submitD.apis[index].columns = []     //返回属性 
@@ -605,8 +698,9 @@ export default {
                         submitD.apis[index].conditions = item.conditions     //返回属性       
                         submitD.apis[index].target = item.target    //查询-操作对象 
                         submitD.apis[index].path = item.path    //接口发布路径规则
+                        
+                        if(!submitD.apis[index].url) judge = false;    
                     })
-                    console.log(submitD)
                     if(judge){                   
                         api.putDataSet(submitD).then(res => {
                             if(res.status=="200"){
@@ -620,13 +714,7 @@ export default {
                         this.$message({ type: 'warning', message: '请完整填写条件!' });
                     }
                 }
-
-                
-
-
             }
-
-
         },
         //同意 用户协议
         Clickagreeuser(){
@@ -678,8 +766,25 @@ export default {
                 this.editableTabs[this.curEditTabs].example = expSoap2
             }
         },
+        // 返回格式
+        changeResp(val){
+            if(val == 'XML'){
+                this.editableTabs[this.curEditTabs].example = expSoap1
+            }else{
+                this.editableTabs[this.curEditTabs].example = ""
+            }
+        },
         // 添加接口列表
         addTab(targetName) {
+            var respSel = ''
+            var exampleSel = ''
+            if(this.selSerType==2){
+                respSel = 'XML'
+                exampleSel = expSoap1;
+            }else{
+                respSel = 'JSON'
+                exampleSel= '';
+            }
             let tabInd = ++this.tabIndex + '';
             this.editableTabs.push({
                 title: '接口'+tabInd,
@@ -690,7 +795,9 @@ export default {
                 rtType:1,
                 intro:'',
                 selexample:'1',
-                example:expSoap1,
+                example:exampleSel,
+                resp:respSel,
+                method:'GET',
                 queryList:[{               //输入参数
                         name:'Key',
                         required:true,           //0：否  1：是    
@@ -932,9 +1039,14 @@ export default {
             }
         },       
         // 富文本编辑器
-        editorReady(editorInstance){            
+        editorReady(editorInstance){ 
             editorInstance.addListener('contentChange',()=>{
                 this.editableTabs[this.curEditTabs].intro = editorInstance.getContent()
+            })
+        },
+        editorReadyServ(editorInstance){
+            editorInstance.addListener('contentChange',()=>{
+                this.formLabelStep3.detail = editorInstance.getContent()
             })
         },
         // 保存按钮

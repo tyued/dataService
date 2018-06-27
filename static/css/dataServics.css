@@ -66,7 +66,8 @@
 .fw-part-tag{ margin-bottom: 10px;}
 .fw-part-card .box-card{ height: 310px;}
 
-.fw-rowbox .box-card .el-col{ margin: 10px 0; height: 290px;}
+/*  height: 290px; */
+.fw-rowbox .box-card .el-col{ margin: 10px 0;}
 .fw-rowbox .box-card .el-card__header{ color: #303133; font-size: 16px; border: none; padding-bottom: 0;} 
 .box-card .box-card-hbtn{ float: right;}
 .fw-part-con{ margin-bottom: 12px; height: 120px; font-size: 14px; color: #606266; line-height: 24px;word-break:break-all; display:-webkit-box; -webkit-line-clamp:5; -webkit-box-orient:vertical;  overflow:hidden;}
@@ -106,6 +107,8 @@ div.edui-box{ float: left;}
 .formStep1 .el-radio-group label{ display: block; text-align: left;}
 .formStep1 .el-radio{ margin-bottom: 20px;}
 .formStep1 .el-radio+.el-radio{ margin-left: 0;}
+.formStep3 .el-radio{ margin-right: 20px;}
+.formStep3 .el-radio+.el-radio{ margin-left: 0; margin-right: 20px;}
 .stepBtnr{ text-align: center;}
 .act_stepBox .box-card{ cursor: pointer;}
 .box-card .stepTypeBox{ height: 150px; line-height: 150px; text-align: center; font-size: 20px; color: #606266;}
@@ -136,7 +139,7 @@ div.edui-box{ float: left;}
 .topFormBox .el-form-item__label{ width: 100%!important; text-align: left; float: inherit;}
 .topFormBox .el-form-item__content{ width: 100%!important; margin-left: 0!important;}
 .top-label{font-size: 14px; color: #606266; line-height: 32px;}
-.topFormBox .edui-default .edui-editor{ width: 100%!important;}
+.edui-default .edui-editor{ width: 100%!important;}
 .edui-default .edui-editor-iframeholder{ width:100%!important;}
 
 /* 服务接口详情 */

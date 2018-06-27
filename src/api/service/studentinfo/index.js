@@ -16,9 +16,32 @@ export function getRest(query) {
     params: query
   })
 }
+// Soap服务查询
+export function getSoap(query) {
+  return fetch({
+    url: 'admin/service/retrieve/soap',
+    method: 'post',
+    params: query
+  })
+}
 
+// 猜你喜欢服务信息
+export function getEnjoy(query) {
+  return fetch({
+    url: 'admin/service/retrieve/enjoy',
+    method: 'post',
+    params: query
+  })
+}
 
-
+// 服务错误对照信息
+export function getErrorCode(query) {
+  return fetch({
+    url: 'platform/dataset/error-codes',
+    method: 'post',
+    params: query
+  })
+}
 
 // 参数来源列表集合
 export function getParamForms(data) {
