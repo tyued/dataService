@@ -28,6 +28,7 @@ export default {
   },
   data() {
     return {
+      listLoading: true,
       listId: subscription,
       isActive1: true,
       isActive2: false,

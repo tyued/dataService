@@ -1,92 +1,48 @@
 <template>
-  <div class="container">
-    <h1>学生信息查询</h1>
+  <div class="container"  v-loading.body="listLoading">
+    <h1>{{infoData.name}}</h1>
     <el-row class="top-nav">
       <el-col :span="24">
         <ul>
-          <li>&emsp;服务商：
-            <a href="javascript:;">天音智慧校园</a>
-          </li>
+          <li>&emsp;服务商：<a href="javascript:;">天音智慧校园</a></li>
           <li>分&emsp;类:&nbsp;
-            <el-button type="success" plain size="small">学生信息</el-button>&nbsp;
-            <el-button type="primary" plain size="small">信息查询</el-button>
+            <el-tag type="success">{{infoData.tagname}}</el-tag> 
           </li>
-          <li>{{ navData.wifi }}</li>
-          <li>{{ navData.heart }}</li>
-          <li>{{ navData.message }}</li>
-          <li>
-            <el-rate v-model="value2" disabled show-score text-color="#ff9900" score-template="{value}">
-            </el-rate>
-          </li>
-          <li>
-            <a href="javascript:;">返回</a>
-          </li>
-          <li>
-            <a href="javascript:;">禁用/发布</a>
-          </li>
-          <li>
-            <a href="javascript:;">监控</a>
-          </li>
-          <li>
-            <a href="javascript:;">&nbsp;订阅/取消</a>
-          </li>
-          <li>
-            <a href="javascript:;" @click="handleList">意见反馈</a>
-          </li>
-          <li>
-            <a href="javascript:;">加入收藏</a>
-          </li>
+          <li>123456</li>
+          <li>123456</li>
+          <li>123456</li>
+          <li><el-rate v-model="valRate" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></li>
+          <li>返回</li>
+          <li>禁用/发布</li>
+          <li>监控</a></li>
+          <li>&nbsp;订阅/取消</li>
+          <li @click="handleList">意见反馈</li>
+          <li>加入收藏</li>
         </ul>
       </el-col>
     </el-row>
     <el-row :gutter="12">
-      <el-col :span="16">
+      <el-col :span="15">
         <el-card shadow="always" class="card-item">
           <h5>服务简介</h5>
-          <section>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-          </section>
+          <section>{{infoData.detail}}</section>
         </el-card>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="9">
         <el-card shadow="always" class="card-item">
           <div class="card-item-title">
-            <h5>猜你喜欢</h5>
-            <a href="javascript:;">换一批</a>
+            <h5>猜你喜欢</h5><a href="javascript:;">换一批</a>
           </div>
-          <div class="card-itembox">
+          <div class="card-itembox" v-for="item in enjoyList" :key="item.id">
             <div class="card-item-top">
-              <span>学生分数查询</span>
+              <span>{{item.name}}</span>
               <el-button type="success" size="small">查看</el-button>
             </div>
             <div class="card-item-bottom">
               <li>天音智慧教育</li>
-              <li>{{ navData.wifi }}</li>
-              <li>{{ navData.message }}</li>
-              <li>
-                <el-rate v-model="value2" disabled show-score text-color="#ff9900" score-template="{value}">
-                </el-rate>
-              </li>
-            </div>
-          </div>
-          <div class="card-itembox">
-            <div class="card-item-top">
-              <span>学生成绩查询</span>
-              <el-button type="success" size="small">查看</el-button>
-            </div>
-            <div class="card-item-bottom">
-              <li>天音智慧教育</li>
-              <li>{{ navData.wifi }}</li>
-              <li>{{ navData.message }}</li>
-              <li>
-                <el-rate v-model="value3" disabled show-score text-color="#ff9900" score-template="{value}">
-                </el-rate>
-              </li>
+              <li>123456</li>
+              <li>123456</li>
+              <li><el-rate v-model="value2" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></li>
             </div>
           </div>
         </el-card>
@@ -96,83 +52,66 @@
     <el-row :gutter="12" class="main">
       <el-col :span="24">
         <el-card shadow="always" class="card-item">
-          <h5>服务简介</h5>
           <section>
             <el-radio-group v-model="tabPosition" style="margin-bottom: 30px;" :stretch="true">
               <el-radio-button label="left">API文档</el-radio-button>
               <el-radio-button label="top">错误代码</el-radio-button>
             </el-radio-group>
-
             <el-tabs :tab-position="tabPosition">
-              <el-tab-pane class="tab-container" label="获取token">
-                <el-col :span="12" class="left-box">
-                  <h5>基本信息</h5>
-                  <ol>
-                    <li>接口地址：http://www.91118.com/apo/test</li>
-                    <li>返回格式：
-                      <el-button type="primary" plain size="mini">JSON</el-button>
-                      <el-button type="success" plain size="mini">XML</el-button>
-                    </li>
-                    <li>请求方式：
-                      <el-button type="info" plain size="mini">GET</el-button>
-                      <el-button type="warning" plain size="mini">POST</el-button>
-                    </li>
-                    <li>请求示例：http://www.91118.com/apo/test?param1=xxx&amp;param2=123</li>
-                    <li>接口备注：</li>
-                  </ol>
-                  <h5>请求参数说明</h5>
-                  <el-table :data="requestTableData" style="width: 100%" height="200">
-                    <el-table-column prop="key" label="名称">
-                    </el-table-column>
-                    <el-table-column prop="require" label="必填">
-                    </el-table-column>
-                    <el-table-column prop="type" label="类型">
-                    </el-table-column>
-                    <el-table-column prop="desc" label="说明" width="300">
-                    </el-table-column>
-                  </el-table>
-                  <h5>返回参数说明</h5>
-                  <el-table :data="responseTableData" style="width: 100%" height="200" empty-text="是">
-                    <el-table-column prop="key" label="名称">
-                    </el-table-column>
-                    <el-table-column prop="require" label="必填">
-                    </el-table-column>
-                    <el-table-column prop="type" label="类型">
-                    </el-table-column>
-                    <el-table-column prop="desc" label="说明" width="300">
-                    </el-table-column>
-                  </el-table>
-                </el-col>
-                <el-col :span="12" class="right-box">
-                  <h5>&emsp;JSON返回示例</h5>
-                  <pre>
-                  "swagger": "2.0",
-                  "info": {
-                      "description": "数据服务总线-管理后台接口",
-                      "version": "1.0.0-SNAPSHOT",
-                      "title": "数据服务总线",
-                      "contact": {
-                          "name": "杭州天音计算机系统工程有限公司",
-                          "url": "http://www.yd-jxt.com/",
-                          "email": "171274313@qq.com"
-                      },
-                      "license": {
-                          "name": "Apache License, Version 2.0",
-                          "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-                      }
-                    },
-                    "host": "192.168.0.111:8083",
-                    "basePath": "/dsb"
-                  </pre>
-                </el-col>
+              <el-tab-pane v-for="item in apisList" :key="item.id" :label="item.name">
+                <el-row :gutter="12" v-if='tabPosition=="left"'>
+                  <el-col :span="12" class="left-box">
+                    <h5>基本信息</h5>
+                    <ol>
+                      <li>接口地址：{{item.url}}</li>
+                      <li>返回格式：<el-tag>{{item.resp}}</el-tag></li>
+                      <li>请求方式：<el-tag>{{item.method}}</el-tag></li>
+                      <li>请求示例：{{item.example}}</li>
+                      <li>接口备注：{{item.intro}}</li>
+                    </ol>
+                    <h5>请求参数说明</h5>
+                    <el-tabs type="border-card">
+                        <el-tab-pane label="输入参数">
+                            <el-table :data="item.params" style="width: 100%">
+                                <el-table-column prop="name" label="名称"></el-table-column>
+                                <el-table-column prop="required" label="必填">
+                                  <template slot-scope="scope">
+                                    {{scope.row.required=="1"?'是':'否'}}
+                                  </template> 
+                                </el-table-column>
+                                <el-table-column prop="type" label="类型"></el-table-column>
+                                <el-table-column prop="desc" label="说明"></el-table-column>
+                            </el-table>
+                        </el-tab-pane>
+                        <el-tab-pane label="输出参数">
+                            <el-table :data="item.responses" style="width: 100%">
+                                <el-table-column prop="name" label="名称"></el-table-column>
+                                <el-table-column prop="key" label="类型"></el-table-column>
+                                <el-table-column prop="desc" label="说明"></el-table-column>
+                            </el-table> 
+                        </el-tab-pane>
+                    </el-tabs>
+                  </el-col>
+                  <el-col :span="12" class="right-box">
+                    <h5 >&emsp;{{item.resp}}返回示例</h5>
+                    <pre>{{item.example}}</pre>
+                  </el-col>
+                </el-row>
+                <el-row v-else>
+                  <el-col :span="24">
+                    <h5>服务级错误码参照</h5>                  
+                    <el-table :data="item.errors" style="width: 100%">
+                        <el-table-column prop="code" label="错误码"></el-table-column>
+                        <el-table-column prop="text" label="说明"></el-table-column>
+                    </el-table>
+                    <h5>系统级错误码参照</h5>                  
+                    <el-table :data="ErrorCode" style="width: 100%">
+                        <el-table-column prop="code" label="错误码"></el-table-column>
+                        <el-table-column prop="text" label="说明"></el-table-column>
+                    </el-table>
+                  </el-col>
+                </el-row>
               </el-tab-pane>
-
-              <el-tab-pane label="获取当年学年学期">获取当年学年学期</el-tab-pane>
-              <el-tab-pane label="获取年级列表">获取年级列表</el-tab-pane>
-              <el-tab-pane label="获取年级列表">获取年级列表</el-tab-pane>
-              <el-tab-pane label="获取班级查询学生信息">获取班级查询学生信息</el-tab-pane>
-              <el-tab-pane label="根据年级查询学生信息">根据年级查询学生信息</el-tab-pane>
-              <el-tab-pane label="通过学籍编号获取学生信息">通过学籍编号获取学生信息</el-tab-pane>
             </el-tabs>
           </section>
         </el-card>
@@ -180,7 +119,7 @@
     </el-row>
 
     <!-- 对话框 -->
-    <el-dialog title="意见反馈" :visible.sync="centerDialogVisible" width="30%" center>
+    <el-dialog title="意见反馈" :visible.sync="centerDialogVisible" width="450px" center>
       <el-row class="dialog-topbox">
         <el-col :span="6">
           <h4>评论及评分</h4>
@@ -312,10 +251,28 @@
 </template>
 
 <script>
-import * as api from "api/service/studentinfo";
+import * as api from 'api/service/studentinfo/index';
+import * as dicty from 'api/dictionary';
 export default {
   data() {
     return {
+      listLoading: true,
+      type:'',                //1. HTTP API(rest)  2. WebService API   3.  通过数据源发布
+      servId:'',
+      detail:true,
+      DetailQuery:{
+          detail: true
+      },
+      infoData:[],            //详细信息
+      servTypeList:[],        //服务分类
+      valRate: 0,             //评分
+      tabPosition: "left",
+      apisList:[],            //接口详情
+      enjoyList:[],           //猜你喜欢的
+      ErrorCode:[],           //服务错误对照信息
+
+
+
       navData: {
         wifi: 13256,
         heart: 12321,
@@ -326,7 +283,6 @@ export default {
       value2: 5,
       value3: 4,
       centerDialogVisible: false,
-      tabPosition: "left",
       requestTableData: [],
       responseTableData: [],
       rules: {
@@ -361,11 +317,91 @@ export default {
     };
   },
   created() {
+    this.type =  this.$route.query.type
+    this.servId =  this.$route.query.servId
+    this.DetailQuery.servId = this.servId
+    this.getBaseData()
+    this.getErrorCode()
+
+
+
     this.getParamForms();
     this.getRelationForms();
   },
-  mounted() {},
+  mounted() {
+    this.init()  
+
+  },
   methods: {
+    // 获取服务分类
+    getBaseData(){
+        var query = {group:'servType'}
+        dicty.getBaseData(query).then(response => {
+            this.servTypeList = response.data
+        });         
+        
+    },
+    init(){
+        if(this.type=='1'){                 //HTTP API(rest)
+            api.getRest(this.DetailQuery).then(response => {
+                this.infoData = response.data
+                this.apisList = response.data.apis
+                this.infoData.tagname = ''
+                var that = this
+                this.servTypeList.forEach(function(item,index){
+                    if(that.infoData.tag == item.key){
+                        that.infoData.tagname = item.value    
+                    }
+                })
+                this.infoData.tagname = this.infoData.tagname ? this.infoData.tagname : '其他'
+                this.listLoading = false               
+                this.getEnjoyList()
+            });         
+        }
+        if(this.type=='2'){                 //WebService API(soap)
+            api.getSoap(this.DetailQuery).then(response => {
+              
+                // this.infoData = response.data
+                // this.apisList = response.data.apis
+                // this.infoData.tagname = ''
+                // var that = this
+                // this.servTypeList.forEach(function(item,index){
+                //     if(that.infoData.tag == item.key){
+                //         that.infoData.tagname = item.value    
+                //     }
+                // })
+                // this.infoData.tagname = this.infoData.tagname ? this.infoData.tagname : '其他'
+                // this.listLoading = false
+                            
+                this.getEnjoyList()
+
+            });         
+        }
+    },
+    // 猜你喜欢的
+    getEnjoyList(){
+      var query={tag:this.infoData.tag}
+      api.getEnjoy(query).then(response => {
+        this.enjoyList = response.data
+        console.log(response.data)
+      });         
+
+    },
+    //服务错误对照信息
+    getErrorCode(){
+      api.getErrorCode().then(response => {
+        this.ErrorCode = response.data
+      }); 
+    },
+
+
+
+
+
+
+
+
+
     handledia() {
       console.log(11);
     },
@@ -445,7 +481,9 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
+
+// .container .box-card .el-col{height: 290px;}
 .container {
   padding: 4px;
   width: 100%;
@@ -480,7 +518,7 @@ export default {
     padding-left: 34px;
   }
   ul li:nth-child(n + 7) {
-    float: right;
+    float: right; cursor:pointer;
   }
   ul li:nth-child(3) {
     background: url("./img/info_wifi.png") no-repeat left center;
@@ -514,7 +552,7 @@ export default {
   }
   /* 卡片 */
   .card-item {
-    min-width: 500px;
+    min-width: 530px;
     height: 408px;
     h5 {
       line-height: 52px;
@@ -618,6 +656,7 @@ export default {
       // margin-bottom: -20000px;
       // padding-bottom: 20000px;
       height: inherit;
+      min-height: 520px;
       background-color: #e3e6ec;
     }
   }
