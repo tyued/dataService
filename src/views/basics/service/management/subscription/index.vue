@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table :data="tableDataPub" style="width: 100%; height: 580px; overflow-y: auto" :default-sort="{prop: 'name', order: 'descending'}" :cell-class-name="handleRedFont">
+    <el-table v-loading.body="listLoading" :data="tableDataPub" style="width: 100%; height: 580px; overflow-y: auto" :default-sort="{prop: 'name', order: 'descending'}" :cell-class-name="handleRedFont">
       <el-table-column prop="name" label="服务名称" sortable>
       </el-table-column>
       <el-table-column prop="detail" label="请求秘钥" sortable>
@@ -43,6 +43,7 @@ export default {
   name: "subcription",
   data() {
     return {
+      listLoading: true,
       tableDataPub: [],
       tips: "禁用成功!",
       totalItem: 0,
@@ -99,6 +100,7 @@ export default {
         // console.log(res);
         const { status, statusText, data } = res;
         if (status === 200 && statusText === "OK") {
+          this.listLoading = false
           this.tableDataPub = data.rows;
           this.totalItem = data.total;
           // this.$emit("gettotal", data.total);
