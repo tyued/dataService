@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table :data="tableDataCheck" style="width: 100%; height: 580px; overflow-y: auto" :default-sort="{prop: 'name', order: 'descending'}">
+    <el-table v-loading.body="listLoading" :data="tableDataCheck" style="width: 100%; height: 580px; overflow-y: auto" :default-sort="{prop: 'name', order: 'descending'}">
       <el-table-column prop="name" label="接口名称" sortable>
       </el-table-column>
       <el-table-column prop="tag" label="所需服务" sortable>
@@ -39,6 +39,7 @@ export default {
   name: "publication",
   data() {
     return {
+      listLoading: true,
       tableDataCheck: [],
       tips: "启用成功!",
       totalItem: 0,
@@ -96,6 +97,7 @@ export default {
       api.getSubscribeList(params).then(res => {
         const { status, statusText, data } = res;
         if (status === 200 && statusText === "OK") {
+          this.listLoading = false
           this.tableDataCheck = data.rows;
           this.totalItem = data.total;
         }

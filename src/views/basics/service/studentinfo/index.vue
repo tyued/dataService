@@ -220,9 +220,10 @@
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="评分">评分</el-dropdown-item>
-              <el-dropdown-item command="内容">内容</el-dropdown-item>
-              <el-dropdown-item command="时间">时间</el-dropdown-item>
+              <el-dropdown-item command="最有帮助">按最有帮助排序</el-dropdown-item>
+              <el-dropdown-item command="最高评价">按最高评价排序</el-dropdown-item>
+              <el-dropdown-item command="最低评价">按最低评价排序</el-dropdown-item>
+              <el-dropdown-item command="最新评价">按最新评价排序</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
           <el-col v-for="(item, index) in accessList" :key="index" :span="24" class="dialog-assessbox">
