@@ -61,16 +61,22 @@
                                         <el-input v-model="item.method" placeholder="3-20个字符"></el-input>
                                     </el-form-item>
                                     <el-form-item required label="外部访问地址" v-if="selSerType!=4">
-                                        <el-input v-model="item.wburl" placeholder="3-20个字符"></el-input>
+                                        <el-input v-model="Settings+'/'+item.ename+'/{version}'" disabled></el-input>
                                     </el-form-item>
-                                    <el-form-item required label="请求方式" v-if="selSerType!=4">
+                                    <el-form-item required label="请求方式" v-if="selSerType==1 || selSerType==3">
                                         <el-radio-group v-model="item.method">
                                             <el-radio v-for='list in reqmethod' :key="list" :label="list">{{list}}</el-radio>
                                         </el-radio-group>
                                     </el-form-item>
-                                    <el-form-item required label="返回格式" v-if="selSerType==1||selSerType==3">
+                                    <el-form-item required label="返回格式" v-if="selSerType==1">
                                         <el-radio-group v-model="item.resp" @change="changeResp">
                                             <el-radio v-for='list in retformat' :key="list" :label="list">{{list}}</el-radio>
+                                        </el-radio-group>
+                                    </el-form-item>
+
+                                    <el-form-item required label="返回格式" v-if="selSerType==3">
+                                        <el-radio-group v-model="item.resp">
+                                            <el-radio label="JSON">JSON</el-radio>
                                         </el-radio-group>
                                     </el-form-item>
                                     
@@ -413,6 +419,7 @@ export default {
             editableTabsValue: '1',
             editableTabs: [{
                 title: '接口1',
+                ename:'',
                 tabInd: '1',
                 opt:"query",
                 selObjType:1,
@@ -461,7 +468,9 @@ export default {
                     'justifyleft','justifycenter','justifyright','justifyjustify', '|',
                 ]]
             },
-            datatype:['String','Boolean','Number'],                //数据类型      
+            datatype:['String','Boolean','Number'],                //数据类型    
+            
+            Settings:'',            //访问地址前缀
         }
     },
     created(){
@@ -507,6 +516,7 @@ export default {
                 this.editableTabsValue = '1'
                 this.editableTabs = [{
                     title: '接口1',
+                    ename:'',
                     tabInd: '1',
                     opt:"query",
                     selObjType:1,
@@ -515,8 +525,9 @@ export default {
                     rtType:1,
                     intro:'',
                     selexample:'1',
-                    example:"",
+                    example:"",   
                     resp:'JSON',                    //返回格式
+                    method:'GET',                //返回格式
                     queryList:[{               //输入参数
                             name:'Key',
                             required:true,           //0：否  1：是    
@@ -755,7 +766,10 @@ export default {
             dicty.getRelations().then(response => {
                 this.conditionList = response.data
             });
-            
+            // 访问前缀
+            dicty.getSettings().then(response => {
+                this.Settings = response.data.servUrl
+            }); 
             
         },
         // 接口返回实例
@@ -788,6 +802,7 @@ export default {
             let tabInd = ++this.tabIndex + '';
             this.editableTabs.push({
                 title: '接口'+tabInd,
+                ename:'',
                 tabInd: tabInd,
                 opt:"query",
                 selObjType:1,

@@ -8,6 +8,15 @@ export function getSubscribeList (data) {
   })
 }
 
+// 待审批服务发布申请    0:待审核|1:审核通过|2:审核不通过
+export function getReviewTG (data) {
+  return fetch({
+    url: 'admin/service/review/list',
+    method: 'post',
+    data:data
+  })
+}
+
 // 增加一个新的服务发布申请记录 提交服务发布申请
 export function submitService (data) {
   return fetch({

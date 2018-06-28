@@ -31,12 +31,13 @@
       <el-col :span="9">
         <el-card shadow="always" class="card-item">
           <div class="card-item-title">
-            <h5>猜你喜欢</h5><a href="javascript:;">换一批</a>
+            <h5>猜你喜欢</h5>
+            <!--<a href="javascript:;">换一批</a>-->
           </div>
           <div class="card-itembox" v-for="item in enjoyList" :key="item.id">
             <div class="card-item-top">
               <span>{{item.name}}</span>
-              <el-button type="success" size="small">查看</el-button>
+              <el-button type="success" size="small" @click="toStudentInfo(item.type,item.id)">查看</el-button>
             </div>
             <div class="card-item-bottom">
               <li>天音智慧教育</li>
@@ -64,7 +65,7 @@
                     <h5>基本信息</h5>
                     <ol>
                       <li>接口地址：{{item.url}}</li>
-                      <li>返回格式：<el-tag>{{item.resp}}</el-tag></li>
+                      <li>返回格式：<el-tag>{{item.resp?item.resp:(type==2?'XML':'空')}}</el-tag></li>
                       <li>请求方式：<el-tag>{{item.method}}</el-tag></li>
                       <li>请求示例：{{item.example}}</li>
                       <li>接口备注：{{item.intro}}</li>
@@ -93,8 +94,8 @@
                     </el-tabs>
                   </el-col>
                   <el-col :span="12" class="right-box">
-                    <h5 >&emsp;{{item.resp}}返回示例</h5>
-                    <pre>{{item.example}}</pre>
+                    <h5 >&emsp;{{item.resp?item.resp:(type==2?'XML':'空')}}返回示例</h5>
+                    <div class="respBox" v-html="item.example"></div>
                   </el-col>
                 </el-row>
                 <el-row v-else>
@@ -324,6 +325,8 @@ export default {
 
 
 
+
+
     this.getParamForms();
     this.getRelationForms();
   },
@@ -360,17 +363,17 @@ export default {
         if(this.type=='2'){                 //WebService API(soap)
             api.getSoap(this.DetailQuery).then(response => {
               
-                // this.infoData = response.data
-                // this.apisList = response.data.apis
-                // this.infoData.tagname = ''
-                // var that = this
-                // this.servTypeList.forEach(function(item,index){
-                //     if(that.infoData.tag == item.key){
-                //         that.infoData.tagname = item.value    
-                //     }
-                // })
-                // this.infoData.tagname = this.infoData.tagname ? this.infoData.tagname : '其他'
-                // this.listLoading = false
+                this.infoData = response.data
+                this.apisList = response.data.apis
+                this.infoData.tagname = ''
+                var that = this
+                this.servTypeList.forEach(function(item,index){
+                    if(that.infoData.tag == item.key){
+                        that.infoData.tagname = item.value    
+                    }
+                })
+                this.infoData.tagname = this.infoData.tagname ? this.infoData.tagname : '其他'
+                this.listLoading = false
                             
                 this.getEnjoyList()
 
@@ -382,7 +385,6 @@ export default {
       var query={tag:this.infoData.tag}
       api.getEnjoy(query).then(response => {
         this.enjoyList = response.data
-        console.log(response.data)
       });         
 
     },
@@ -391,6 +393,10 @@ export default {
       api.getErrorCode().then(response => {
         this.ErrorCode = response.data
       }); 
+    },
+    // 猜你喜欢的查看
+    toStudentInfo (type,id) {
+        this.$router.push({ path: '/service/studentinfo', query: { type:type,servId:id} });
     },
 
 
@@ -481,7 +487,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 // .container .box-card .el-col{height: 290px;}
 .container {
   padding: 4px;

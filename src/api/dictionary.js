@@ -64,3 +64,11 @@ export function getRelations(query) {
         params: query
     });
 }
+// 数据服务总线服务配置信息
+export function getSettings(query) {
+    return fetch({
+        url: 'platform/dataset/settings',
+        method: 'post',
+        params: query
+    });
+}
