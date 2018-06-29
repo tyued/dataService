@@ -4,7 +4,7 @@ export function getReviewList (data) {
   return fetch({
     url: '/admin/service/review/list',
     method: 'post',
-    data
+    data:data
   })
 }
 

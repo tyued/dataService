@@ -71,11 +71,11 @@ export default {
 
 <style lang="scss">
 .management {
-  .el-tag {
-    color: #303133;
-    background-color: #fff;
-    cursor: pointer;
-  }
+  // .el-tag {
+  //   color: #303133;
+  //   background-color: #fff;
+  //   cursor: pointer;
+  // }
   .activeBtn {
     background-color: #449afc;
     color: #fff;

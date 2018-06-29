@@ -57,6 +57,7 @@ import {
     pageRegister,
     pageManagement
 } from "views/basics/service";
+import { mapGetters } from 'vuex';
 
 export default {
     name: "service",
@@ -75,6 +76,18 @@ export default {
             zhuc_on:false,
             guanl_on:false,
             shujuy_on:false,
+        }
+    },
+    computed: {
+        ...mapGetters([
+            'getfuwindex_on'
+        ])
+    },
+    watch:{
+        getfuwindex_on(){
+            if(this.$store.getters.getfuwindex_on){
+                this.clickIndex()
+            }
         }
     },
     created(){

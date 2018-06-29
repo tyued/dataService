@@ -6,6 +6,7 @@
                 <el-step title="选择服务用途"></el-step>
                 <el-step title="选择服务类型"></el-step>
                 <el-step title="填写注册信息"></el-step>
+                <el-step title="提交审核"></el-step>
             </el-steps>
             <div class="act_stepBox">
                 <el-form label-position="top" label-width="80px" :model="formLabelStep1" class="formStep1" v-if="active==0">
@@ -34,7 +35,7 @@
                             <el-radio v-for="item in servTypeList" :key="item.key" :label="item.key" border>{{item.value}}</el-radio>
                         </el-radio-group> 
                     </el-form-item>                                
-                    <el-form-item label="服务简介">
+                    <el-form-item required label="服务简介">
                         <el-input type="textarea" v-model="formLabelStep3.intro"></el-input>
                     </el-form-item>                                                                                            
                     <el-form-item label='服务详情'>
@@ -320,9 +321,9 @@
                 </el-form>
             </div>
             <div class="stepBtnr">
-                <el-button @click='prev'>取 消</el-button>
-                <el-button type="primary" @click='sureReg' v-if="active==2">保存</el-button>
-                <el-button type="primary" @click='next'>{{active==2?'提交':'下一步'}}</el-button>
+                <el-button @click='prev' v-if='active!=3'>取 消</el-button>
+                <el-button type="primary" @click='next' v-if="active!=3">{{active==2?'保存':'下一步'}}</el-button>
+                <el-button type="primary" @click='sureReg' v-if="active==3">提交审核</el-button>
             </div>   
         </div>
         <el-dialog center :title="textMap[dialogStatus]" :visible.sync="dialogVisible_user" width="600px">
@@ -471,6 +472,7 @@ export default {
             datatype:['String','Boolean','Number'],                //数据类型    
             
             Settings:'',            //访问地址前缀
+            servId:'',
         }
     },
     created(){
@@ -652,11 +654,13 @@ export default {
                     })
                     if(judge){                   
                         api.putRest(submitD).then(res => {
+                            console.log(res)
                             if(res.status=="200"){
                                 this.$notify({title: '成功', message: '创建成功', type: 'success', duration: 2000});
+                                this.servId = res.data.servId
                                 this.active++
                             }else{
-                                this.$notify({title: '失败', message: res.message, type: 'error', duration: 2000});
+                                this.$notify({title: '失败', message: res.data.message, type: 'error', duration: 2000});
                             }
                         });
                     }else{
@@ -677,6 +681,7 @@ export default {
                         api.putSoap(submitD).then(res => {
                             if(res.status=="200"){
                                 this.$notify({title: '成功', message: '创建成功', type: 'success', duration: 2000});
+                                this.servId = res.data.servId
                                 this.active++
                             }else{
                                 this.$notify({title: '失败', message: res.message, type: 'error', duration: 2000});
@@ -716,6 +721,7 @@ export default {
                         api.putDataSet(submitD).then(res => {
                             if(res.status=="200"){
                                 this.$notify({title: '成功', message: '创建成功', type: 'success', duration: 2000});
+                                this.servId = res.data.servId
                                 this.active++
                             }else{
                                 this.$notify({title: '失败', message: res.message, type: 'error', duration: 2000});
@@ -1064,9 +1070,20 @@ export default {
                 this.formLabelStep3.detail = editorInstance.getContent()
             })
         },
-        // 保存按钮
+        // 提交审核
         sureReg(){
-
+            var submitD = {
+                servId: this.servId,
+                userId: '',
+            }
+            api.putSubmit(submitD).then(res => {
+                if(res.status=="200"){
+                    this.$notify({title: '成功', message: '提交成功', type: 'success', duration: 2000});
+                    this.$store.dispatch('GET_fuwindex_on',true);
+                }else{
+                    this.$notify({title: '失败', message: res.message, type: 'error', duration: 2000});
+                }
+            });
         },
     }
 }

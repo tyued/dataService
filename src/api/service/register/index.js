@@ -1,6 +1,6 @@
 import fetch from 'utils/fetch';
 
-// Rest服务注册   http api
+// Rest服务注册--保存  http api
 export function putRest(obj) {
     return fetch({
         url: 'platform/service/registry/rest',
@@ -8,7 +8,7 @@ export function putRest(obj) {
         data: obj
     });
 }
-// Soap服务注册   webservice
+// Soap服务注册--保存  webservice
 export function putSoap(obj) {
     return fetch({
         url: 'platform/service/registry/soap',
@@ -16,10 +16,19 @@ export function putSoap(obj) {
         data: obj
     });
 }
-// DataSet服务注册   数据源
+// DataSet服务注册--保存   数据源
 export function putDataSet(obj) {
     return fetch({
         url: 'platform/service/registry/dataset',
+        method: 'post',
+        data: obj
+    });
+}
+
+// 提交服务发布申请
+export function putSubmit(obj) {
+    return fetch({
+        url: 'admin/service/publish/submit',
         method: 'post',
         data: obj
     });

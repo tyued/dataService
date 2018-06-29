@@ -26,6 +26,23 @@ export function submitService (data) {
   })
 }
 
+// 获取已注册的服务接口信息
+export function getApiList (data) {
+  return fetch({
+    url: 'admin/service/retrieve/apiList',
+    method: 'post',
+    data:data
+  })
+}
+
+// 获取指定服务下指定的接口信息
+export function getApiParamForms(params) {
+  return fetch({
+    url: '/admin/service/retrieve/api',
+    method: 'post',
+    params
+  })
+}
 
 
 
