@@ -100,4 +100,10 @@ pre {
 .flod-enter-active{ animation-name:fadeInRight;animation-duration:.4s;} 
 
 
+.fl {
+    float: left;
+}
 
+.fr {
+    float: right;
+}

@@ -5,6 +5,7 @@
 <script>
 import echarts from 'echarts';
 import { debounce } from 'utils';
+import * as api from 'api/generalization/index'
 const animationDuration = 3000;
 export default {
     name:'barChart',
@@ -29,10 +30,12 @@ export default {
     data() {
       return {
         chart: null,
+        titleList:[],
+        barList:[],
       };
     },
     mounted() {
-        this.initChart();
+        this.init()
         if (this.autoResize) {
             this.__resizeHanlder = debounce(() => {
             if (this.chart) {
@@ -45,6 +48,7 @@ export default {
         // 监听侧边栏的变化
         const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
         sidebarElm.addEventListener('transitionend', this.__resizeHanlder)
+
     },
     beforeDestroy() {
         if (!this.chart) {
@@ -61,6 +65,18 @@ export default {
         this.chart = null
     },
     methods: {
+      init(){
+          // 用户订阅量Top5
+          api.userTop5().then(response => {
+              var that = this
+              var dataList = response.data;
+              dataList.forEach(function(item,index){
+                  that.barList.push({value:item.count,name:item.username})
+                  that.titleList.push(item.username)
+              })
+              this.initChart();
+          })
+      },
       initChart() {
         this.chart = echarts.init(this.$el, 'macarons');
         this.chart.setOption({
@@ -95,7 +111,7 @@ export default {
           }],
           yAxis: [{
             type: 'category',
-            data: ['客户A', '客户A', '客户A', '客户A', '客户A'],
+            data: this.titleList,
             axisTick: {
               alignWithLabel: true
             },
@@ -107,40 +123,17 @@ export default {
           }],
           series: [
               {
-                  name: '客户A',
                   type: 'bar',
                   stack: 'vistors',
                   barWidth: '20',
-                  data:[
-                      {
-                          value : 13,
-                          itemStyle:{
-                            color: '#f66b6b',
-                          },
-                      },{
-                          value : 34,
-                          itemStyle:{
-                            color: '#63c249',
-                          }
-                      },{
-                          value : 20,
-                          itemStyle:{
-                            color: '#aa94d2',
-                          }
-                      },{
-                          value : 28,
-                          itemStyle:{
-                            color: '#449afc',
-                          }
-                      }, {
-                          value : 39,
-                          itemStyle:{
-                            color: '#eaedf4',
-                          }
-                      }
-                  ],
+                  data:this.barList,
                   itemStyle:{
-                    barBorderRadius:[0,20,20,0]
+                    barBorderRadius:[0,20,20,0],
+                      //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                    color: function (params){
+                        var colorList = ['#f66b6b','#63c249','#aa94d2','#449afc','#eaedf4'];
+                        return colorList[params.dataIndex];
+                    }
                   },
                   animationDuration
               },

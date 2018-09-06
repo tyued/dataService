@@ -13,9 +13,9 @@ const service = axios.create({
 service.interceptors.request.use(config => {
     //console.log("这里是请求拦截器")
     // Do something before request is sent
-    config.headers['Authorization'] = ''; 
+    config.headers['Authorization'] = store.getters.token; 
     //console.log(config);
-        return config;
+    return config;
 }, error => {
     // Do something with request error
     //console.log(error); // for debug

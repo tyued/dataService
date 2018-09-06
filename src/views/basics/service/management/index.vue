@@ -69,7 +69,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .management {
   // .el-tag {
   //   color: #303133;

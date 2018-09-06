@@ -8,27 +8,27 @@
 					</div>
                     <el-row :gutter="20">
                         <el-col :span="4">
-                            <span class="xtgsdata">1340</span>
+                            <span class="xtgsdata">{{listData.usable?listData.usable:'0'}}</span>
                             <span class="xtgsname">可用服务</span>
                         </el-col>
                         <el-col :span="4">
-                            <span class="xtgsdata">233465</span>
+                            <span class="xtgsdata">{{listData.latest?listData.latest:'0'}}</span>
                             <span class="xtgsname">最新服务</span>
                         </el-col>
                         <el-col :span="4">
-                            <span class="xtgsdata">1078</span>
+                            <span class="xtgsdata">{{listData.auditing?listData.auditing:'0'}}</span>
                             <span class="xtgsname">待审服务</span>
                         </el-col>
                         <el-col :span="4">
-                            <span class="xtgsdata">9999999999+</span>
+                            <span class="xtgsdata">{{listData.stoped?listData.stoped:'0'}}</span>
                             <span class="xtgsname">停用服务</span>
                         </el-col>
                         <el-col :span="4">
-                            <span class="xtgsdata">173</span>
+                            <span class="xtgsdata">{{listData.users?listData.users:'0'}}</span>
                             <span class="xtgsname">授权用户</span>
                         </el-col>
                         <el-col :span="4">
-                            <span class="xtgsdata">9</span>
+                            <span class="xtgsdata">{{listData.newUsers?listData.newUsers:'0'}}</span>
                             <span class="xtgsname">最新用户</span>
                         </el-col>
                     </el-row>
@@ -108,20 +108,17 @@ export default {
     },
     data() {
         return {
-            
+            listData:[],            //系统概况
         }
     },
     created(){
-        // this.init()
+        this.init()
     },
     methods:{
         init(){
-            var data = {
-                pageNo:1,
-                limit:15
-            }
-            api.page(data).then(response => {
-                console.log(res)
+            // 系统概况
+            api.survey().then(response => {
+                this.listData = response.data
             })
         }
     },

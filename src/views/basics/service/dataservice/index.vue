@@ -101,7 +101,8 @@ export default {
                 pageNo: 1,
                 limit: 20,
                 name: undefined,
-                sortName:'time24',
+                // sortName:'time24',
+                sortName:'',
                 sortOrder:'',           //asc  正序   desc 倒序
             },
             total:null,                 //总页数

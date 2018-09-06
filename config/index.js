@@ -29,6 +29,22 @@ module.exports = {
         pathRewrite: {
           '^/admin': '/admin'
         }
+      },
+      '/authz':{
+        // target: 'http://47.96.114.14:8083/dsb',
+        target: 'http://vincent1003.oicp.net:12673/dsb',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/authz': '/authz'
+        }
+      },
+      '/kaptcha':{
+        // target: 'http://47.96.114.14:8083/dsb',
+        target: 'http://vincent1003.oicp.net:12673/dsb',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/kaptcha': '/kaptcha'
+        }
       }
     },
 
@@ -63,7 +79,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: './',
+    assetsPublicPath: './',   
 
     /**
      * Source Maps

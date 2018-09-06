@@ -8,10 +8,19 @@ export function getReviewList (data) {
   })
 }
 
-// 审批服务!发布!申请记录 ???
+// 审批服务!发布!申请记录 
 export function checkPublishRequest (data) {
   return fetch({
     url: '/admin/service/review/review',
+    method: 'post',
+    data
+  })
+}
+
+// 可用的插件扩展实现对象信息
+export function getExtensions (data) {
+  return fetch({
+    url: '/admin/service/plugin/extensions',
     method: 'post',
     data
   })

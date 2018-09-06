@@ -1,27 +1,20 @@
 <template>
   <div>
     <el-table :data="tableDataCheck" style="width: 100%; height: 580px; overflow-y: auto" :default-sort="{prop: 'name', order: 'descending'}">
-      <el-table-column prop="name" label="接口名称" sortable>
+      <el-table-column prop="servName" label="接口名称" sortable>
       </el-table-column>
-      <el-table-column prop="tag" label="所需服务" sortable>
+      <el-table-column prop="servTag" label="所需服务" sortable>
       </el-table-column>
-      <el-table-column prop="belong" label="版本">
+      <el-table-column prop="apiVer" label="版本">
       </el-table-column>
       <el-table-column prop="timestamp" label="申请时间" sortable>
       </el-table-column>
-      <el-table-column prop="state" label="状态">
-        <template slot-scope="scope">
-          <el-button v-if="scope.row.status == 1" size="mini" :type="warning" plain>新建</el-button>
-          <el-button v-if="scope.row.status == 2" size="mini" :type="success" plain>更新</el-button>
-          <el-button v-if="scope.row.status == 0" size="mini" :type="danger" plain>已禁用</el-button>
-        </template>
-      </el-table-column>
       <el-table-column prop="action" label="操作">
-        <template slot-scope="scope">
+        <!-- <template slot-scope="scope">
           <el-button v-if="scope.row.status == 1" size="mini" @click="openChange(scope.row.id, scope.row.userId)">修改</el-button>
           <el-button v-if="scope.row.status == 2" size="mini" @click="openCancel(scope.row.id, scope.row.userId)">撤销审核</el-button>
           <el-button v-if="scope.row.status == 0" size="mini" @click="openStart(scope.row.id, scope.row.userId)" class="activeBtn">启用</el-button>
-        </template>
+        </template> -->
       </el-table-column>
     </el-table>
 
@@ -49,10 +42,7 @@ export default {
     };
   },
   created() {
-    this.getSubscribeList({
-      limit: "10",
-      pageNo: "1"
-    });
+    this.getList();
   },
   methods: {
     openStart(id, userId) {
@@ -92,33 +82,35 @@ export default {
     openCancle(id, userId) {
       console.log("cancel");
     },
-    getSubscribeList(params) {
-      api.getSubscribeList(params).then(res => {
-        const { status, statusText, data } = res;
-        if (status === 200 && statusText === "OK") {
-          this.tableDataCheck = data.rows;
-          this.totalItem = data.total;
-        }
-      });
+    getList(pageNo = 1, limit = 10, pubStatus = "1", apiStatus = "3") {
+      api
+        .getApiList({
+          pageNo,
+          limit,
+          pubStatus,
+          apiStatus
+        })
+        .then(res => {
+          console.log(res);
+          // apiStatus: 服务-接口状态：1:在线|2:暂停|3:下线(用于筛选接口自身的状态)
+          // pubStatus: 服务-接口发布状态：0:待审核|1:已通过（即已发布）|2:已驳回(用于筛选接口审核状态)
+          const { status, data, total } = res;
+          if (status === 200 && data) {
+            this.listLoading = false;
+            this.tableDataCheck = data.rows;
+            this.totalItem = data.total;
+          }
+        });
     },
     handleSizeChange(val) {
-      this.currentPage = 1;
-      this.getSubscribeList({
-        limit: val,
-        pageNo: "1"
-      });
     },
     handleCurrentChange(val) {
-      this.getSubscribeList({
-        limit: "10",
-        pageNo: val
-      });
     }
   }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .change-page {
   overflow: hidden;
 }

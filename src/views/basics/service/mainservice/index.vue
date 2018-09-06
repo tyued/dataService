@@ -20,12 +20,11 @@
                             <div class="fw-part-con">{{item.intro}}</div>
                             <div class="fw-part-foot">
                                 <div class="target">
-                                    <i class=""></i>
-                                    <span>天音智慧教育</span>
+                                    <span>{{item.producer}}</span>
                                 </div>
                                 <div class="count">
                                     <i class="el-icon-view"></i>
-                                    12345
+                                    {{item.evalCount}}
                                 </div>
                             </div>    
                         </el-card>

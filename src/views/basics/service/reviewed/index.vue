@@ -93,50 +93,46 @@
         <el-row>
           <el-col :span="11" class="dialog-innertext">对相应结果非对称加密</el-col>
           <el-col :span="12" :offset="1">
-            <el-switch @change="handleSwitch1" v-model="value1" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+            <el-switch v-model="form.encryptObj" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="11" class="dialog-innertext">是否需要格式转换</el-col>
           <el-col :span="12" :offset="1">
-            <el-switch @change="handleSwitch2" v-model="value2" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+            <el-switch @change="handleSwitch2" v-model="form.translateObj" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="11" class="dialog-innertext">请选择格式转换的适配器</el-col>
           <el-col :span="12" :offset="1">
-            <el-dropdown class="layer-selectbox" trigger="click" @command="handleCommand">
-              <span class="el-dropdown-link">
-                {{ commandMsg }}
-                <i class="el-icon-arrow-down el-icon--right"></i>
-              </span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item :disabled="selectState" command="ComboBox1">ComboBox1</el-dropdown-item>
-                <el-dropdown-item :disabled="selectState" command="ComboBox2">ComboBox2</el-dropdown-item>
-                <el-dropdown-item :disabled="selectState" command="ComboBox3">ComboBox3</el-dropdown-item>
-                <el-dropdown-item :disabled="selectState" command="ComboBox4">ComboBox4</el-dropdown-item>
-                <el-dropdown-item :disabled="selectState" command="ComboBox5">ComboBox5</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+            <el-select v-model="form.extensel" :placeholder="selectState?'空':'请选择'">
+              <el-option  :disabled="selectState" v-for="(item,index) in extensions" :key="index" 
+                  :label="item.pluginName+'('+item.extensionName+')'" 
+                  :value="item.pluginId+':-'+item.extensionId">
+              </el-option>
+            </el-select>
           </el-col>
         </el-row>
         <el-row class="layer-innerbtns">
-          <el-button type="primary" @click="outerVisible = false; innerVisible = false">通 过</el-button>
+          <!--<el-button type="primary" @click="outerVisible = false; innerVisible = false">通 过</el-button> -->
+          <el-button type="primary" @click="handerReviewReq('adopt')">通 过</el-button>
           <el-button @click="innerVisible = false">取 消</el-button>
         </el-row>
       </el-dialog>
       <!-- 驳回弹出层 -->
       <el-dialog class="review-complete-layer" title="驳回申请" width="400px" :visible.sync="innerAnotherVisible" append-to-body>
+        <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="form.opinion"></el-input>
 
-        <VueUEditor :ueditorConfig='editorConfig' @ready="editorReady"></VueUEditor>
+        <!-- <VueUEditor :ueditorConfig='editorConfig' @ready="editorReady"></VueUEditor> -->
 
         <el-row class="layer-innerbtns">
-          <el-button type="danger" @click="outerVisible = false; innerAnotherVisible = false">驳 回</el-button>
+          <el-button type="primary" @click="handerReviewReq('reject')">驳 回</el-button>
+          <!--<el-button type="danger" @click="outerVisible = false; innerAnotherVisible = false">驳 回</el-button> -->
           <el-button @click="innerAnotherVisible = false">取 消</el-button>
         </el-row>
       </el-dialog>
       <el-row class="layer-btns">
-        <el-button type="primary" @click="innerVisible = true">审核通过</el-button>
+        <el-button type="primary" @click="handerReviewVia">审核通过</el-button>
         <el-button type="danger" @click="innerAnotherVisible = true">驳 回</el-button>
       </el-row>
     </el-dialog>
@@ -171,6 +167,7 @@ export default {
           ]
         ]
       },
+      diaData:{},
       commandMsg: "选择适配器",
       selectState: false,
       listLoading: true,
@@ -181,12 +178,10 @@ export default {
       innerAnotherVisible: false,
       outerVisible: false,
       innerVisible: false,
-      value1: true,
-      value2: true,
       listQuery: {
         pageNo: "1",
         limit: "10",
-        pubStatus: "0",
+        pubStatus: "0",      // 0:待审核|1:审核通过|2:审核不通过
         sortOrder: "desc"
       },
       total: null,
@@ -198,16 +193,28 @@ export default {
       ckRow:'',      // 查看数据
       Settings:'',
       expUrl:'',      //接口示例
+      extensions:[],  //格式转换的适配器
+      form:{          //审核操作
+        encryptObj:true,
+        translateObj:true,
+        extensel:'',
+
+      },        
     };
   },
   created() {
     this.getBaseData();
     this.init();
+
+
   },
   methods: {
     init() {
       // this.listLoading = false;
       this.getReviewList();
+      api.getExtensions().then(res => {
+        this.extensions = res.data
+      }) 
     },
     //分页
     handleSizeChange(val) {
@@ -256,53 +263,43 @@ export default {
     },
     openLayerPage(row){
       this.ckRow = row
-
-      console.log(row)   
       this.outerVisible = true;
-      var diaData={
+      this.diaData={
         servId:row.servId,
         type:row.servType,
         apiId:row.apiId
       }
-      api.getApiParamForms(diaData).then(res => {
+      api.getApiParamForms(this.diaData).then(res => {
           const { status, statusText, data } = res;
           this.contentData = data;
               
           var uuid = row.servUuid?row.servUuid:''
+          var reg=new RegExp("\\.","g");
+          var apiVer = row.apiVer.replace(reg,"_")
           if(row.servType==1){      //soap---http   
-            this.expUrl = this.Settings+'/rest/'+uuid+'/'+data.ename+'/V'+row.apiVer
+            this.expUrl = this.Settings+'/rest/'+uuid+'/'+data.ename+'/V'+apiVer
           }
           if(row.servType==2){      //webservice----soap
-            this.expUrl = this.Settings+'/soap/'+uuid+'/'+data.method+'_V'+row.apiVer
+            this.expUrl = this.Settings+'/soap/'+uuid+'/'+data.method+'_V'+apiVer
           }
           if(row.servType==3){      //数据源-----rest
-            this.expUrl = this.Settings+'/rest/'+uuid+'/'+data.ename+'/V'+row.apiVer
+            this.expUrl = this.Settings+'/rest/'+uuid+'/'+data.ename+'/V'+apiVer
           }
           if(row.servType==4){      //第三方
             this.expUrl = this.Settings+'/rest/'+data.ename
-          }
-
-          console.log(this.expUrl)
-
-
-          console.log(this.contentData)         
+          }       
         });
     },
-    handleSwitch1() {
-
-    },
-    handleSwitch2() {
-      if (this.value2 === false) {
+    handleSwitch2(val) {
+      if (val === false) {
         this.selectState = true;
-        this.commandMsg = "无";
-      } else if (this.value2 === true) {
+        this.form.extensel = ''
+      } else if (val === true) {
         this.selectState = false;
-        this.commandMsg = '请选择适配器'
+        this.form.extensel = ''
       }
     },
-    handleCommand(item) {
-      this.commandMsg = item;
-    },
+
     // 富文本编辑器
     editorReady(editorInstance) {
       editorInstance.addListener("contentChange", () => {
@@ -318,6 +315,69 @@ export default {
         }); 
         
     },
+    // 审核通过按钮
+    handerReviewVia(){
+      this.innerVisible = true
+    },
+    // 审核通过按钮--(审核即将完成发布) 
+    handerReviewReq(val){
+      if(val=="adopt"){       //通过
+        this.form.pubStatus = '1';   //已通过
+        this.form.opinion = "";
+      }else if(val=="reject"){      //驳回
+        this.form.pubStatus = '2';   //已驳回
+      }
+      this.form.apiId = this.ckRow.apiId;
+      this.form.encrypt = this.form.encryptObj?"1":"0"
+      var extenselId  = this.form.extensel.split(":-")
+      this.form.extensionId = extenselId[1] || ''
+      this.form.pluginId = extenselId[0] || ''
+      this.form.pubId = this.ckRow.pubId
+      this.form.servId = this.ckRow.servId;
+      this.form.translate = this.form.translateObj?"1":"0"
+
+      this.form.servUseof = this.ckRow.servUseof;
+      var that = this;
+      // console.log({
+      //   apiId: this.form.apiId,
+      //   encrypt: this.form.encrypt,
+      //   extensionId: this.form.extensionId,
+      //   opinion: this.form.opinion,
+      //   pluginId: this.form.pluginId,
+      //   pubId: this.form.pubId,
+      //   pubStatus: this.form.pubStatus,
+      //   servId: this.form.servId,
+      //   translate: this.form.translate,
+      // })
+      // return 
+      api.checkPublishRequest({
+        apiId: this.form.apiId,
+        encrypt: this.form.encrypt,
+        extensionId: this.form.extensionId,
+        opinion: this.form.opinion,
+        pluginId: this.form.pluginId,
+        pubId: this.form.pubId,
+        pubStatus: this.form.pubStatus,
+        servId: this.form.servId,
+        translate: this.form.translate,
+      }).then(res => {
+        if(res.data.status == "success"){
+          this.$notify({title: '成功', message: '审核通过', type: 'success', duration: 2000});
+          this.outerVisible = false; 
+          this.innerVisible = false;
+          this.innerAnotherVisible = false
+          this.listQuery.pageNo = "1"
+          this.getReviewList()
+        }else{
+          this.$notify({title: '失败', message: res.message, type: 'error', duration: 2000});
+        }
+        
+      })
+      // console.log(this.ckRow)
+      // // console.log(this.diaData)
+      // console.log(this.form)
+      
+    }
   }
 };
 </script>

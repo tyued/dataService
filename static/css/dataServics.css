@@ -30,9 +30,8 @@
 
 .el-header{ background: #449afc;}
 .headbar-container{ height: 100%;}
-.headbar-container h1{ height: 60px; line-height: 60px;  padding-left: 14px;}
-.headbar-container h1 img{vertical-align: middle}
-.headbar-container h1 span{ color: #fff; font-size: 20px; font-weight: normal;}
+.headbar-container .el-badge__content.is-fixed {top: 18px;}
+.headbar-container .el-badge__content {border: none;}
 
 /************ 概览 ************/
 .gl-partbox{ height: 410px;}
@@ -42,7 +41,7 @@
 .gl-rowbox .box-card .el-card__header{ color: #000; font-size: 18px; border: none; padding-bottom: 0;} 
 .gl-rowbox .box-card .xtgsdata{ display: block; color: #606266; font-size: 26px;}
 .gl-rowbox .box-card .xtgsname{ display: block; color: #909399; font-size: 16px;}
-.gl-rowbox .el-tag{ height: 24px; line-height: 24px;}
+/* .gl-rowbox .el-tag{ height: 24px; line-height: 24px;} */
 /* 最新服务异常 */
 .gl-rowbox .box-card .more{ font-size: 14px; color: #909399; float: right; line-height: 24px; cursor: pointer;}
 
@@ -143,9 +142,54 @@ div.edui-box{ float: left;}
 .edui-default .edui-editor-iframeholder{ width:100%!important;}
 
 /* 服务接口详情 */
-
 .main .el-tabs__nav{ white-space: normal;}
 .main .el-tabs__nav-scroll{width: 150px;}
 .main .left-box .el-tabs__nav-scroll{width: auto;}
 .main .el-tabs__item{ height: auto; line-height: normal; padding-bottom: 10px}
 .respBox{ padding: 0 20px 20px;}
+
+
+.evalsbox .el-rate__icon{ font-size:14px!important;}
+.evalsbox .el-rate__item{ margin-top: 4px;}
+
+/* 头部导航 */
+.headbar .person-center-link {
+    display: block;
+    margin-top: 14px;
+    line-height: 32px;
+    height: 32px;
+    padding-left: 32px;
+    background: url(../img/person.png) no-repeat left center;
+    background-size: 32px 32px;
+    -webkit-background-size: 32px 32px;
+}
+.headbar .el-input__inner {
+    border-radius: 14px;
+}
+
+.header .icon-message {
+    width: 32px;
+    height: 32px;
+    background: url(../img/message.png) no-repeat center;
+}
+
+/* 登陆页面 */
+.login-container .username-icon {
+    vertical-align: middle;
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    background: url(../img/username.png) no-repeat center;
+    background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+
+.login-container .password-icon {
+    vertical-align: middle;
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    background: url(../img/password.png) no-repeat center;
+    background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}

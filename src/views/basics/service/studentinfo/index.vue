@@ -4,20 +4,18 @@
     <el-row class="top-nav">
       <el-col :span="24">
         <ul>
-          <li>&emsp;服务商：<a href="javascript:;">天音智慧校园</a></li>
+          <li>&emsp;服务商：<a href="javascript:;">{{infoData.producer}}</a></li>
           <li>分&emsp;类:&nbsp;
             <el-tag type="success">{{infoData.tagname}}</el-tag> 
           </li>
-          <li>123456</li>
-          <li>123456</li>
-          <li>123456</li>
+          <li>{{infoData.subCount}}</li>
+          <li>{{infoData.evalCount}}</li>
           <li><el-rate v-model="valRate" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></li>
           <li>返回</li>
           <li>禁用/发布</li>
-          <li>监控</a></li>
+          <li @click="goToMonitor">监控</li>
           <li>&nbsp;订阅/取消</li>
           <li @click="handleList">意见反馈</li>
-          <li>加入收藏</li>
         </ul>
       </el-col>
     </el-row>
@@ -40,10 +38,10 @@
               <el-button type="success" size="small" @click="toStudentInfo(item.type,item.id)">查看</el-button>
             </div>
             <div class="card-item-bottom">
-              <li>天音智慧教育</li>
-              <li>123456</li>
-              <li>123456</li>
-              <li><el-rate v-model="value2" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></li>
+              <li>{{item.producer}}</li>
+              <li>{{item.subCount}}</li>
+              <li>{{item.evalCount}}</li>
+              <li><el-rate v-model="item.evalRank" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></li>
             </div>
           </div>
         </el-card>
@@ -67,7 +65,7 @@
                       <li>接口地址：{{item.url}}</li>
                       <li>返回格式：<el-tag>{{item.resp?item.resp:(type==2?'XML':'空')}}</el-tag></li>
                       <li>请求方式：<el-tag>{{item.method}}</el-tag></li>
-                      <li>请求示例：{{item.example}}</li>
+                      <li>请求示例：{{item.expUrl}}</li>
                       <li>接口备注：{{item.intro}}</li>
                     </ol>
                     <h5>请求参数说明</h5>
@@ -124,78 +122,67 @@
       <el-row class="dialog-topbox">
         <el-col :span="6">
           <h4>评论及评分</h4>
-          <h2>4.5</h2>
+          <h2>{{evalself.alleval}}</h2>
           <span>满分为5分</span>
         </el-col>
-        <el-col :span="18">
+        <el-col :span="18" class="evalsbox">
           <el-row>
             <el-col class="dialog-stars" :span="10">
-              <i class="el-icon-star-on"></i>
-              <i class="el-icon-star-on"></i>
-              <i class="el-icon-star-on"></i>
-              <i class="el-icon-star-on"></i>
-              <i class="el-icon-star-on"></i>
+              <el-rate v-model="evalsinfo.star5" disabled :colors="['#606266', '#606266', '#606266']"></el-rate>
             </el-col>
             <el-col :span="14">
-              <el-progress class="dialog-line" :percentage="100" color="#909399" :show-text="false"></el-progress>
+              <el-progress class="dialog-line" :percentage="evalself.rank5" color="#909399" :show-text="false"></el-progress>
             </el-col>
           </el-row>
           <el-row>
             <el-col class="dialog-stars" :span="10">
-              <i class="el-icon-star-on"></i>
-              <i class="el-icon-star-on"></i>
-              <i class="el-icon-star-on"></i>
-              <i class="el-icon-star-on"></i>
+              <el-rate v-model="evalsinfo.star4" disabled :colors="['#606266', '#606266', '#606266']"></el-rate>
             </el-col>
             <el-col :span="14">
-              <el-progress class="dialog-line" :percentage="80" color="#909399" :show-text="false"></el-progress>
+              <el-progress class="dialog-line" :percentage="evalself.rank4" color="#909399" :show-text="false"></el-progress>
             </el-col>
           </el-row>
           <el-row>
             <el-col class="dialog-stars" :span="10">
-              <i class="el-icon-star-on"></i>
-              <i class="el-icon-star-on"></i>
-              <i class="el-icon-star-on"></i>
+              <el-rate v-model="evalsinfo.star3" disabled :colors="['#606266', '#606266', '#606266']"></el-rate>
             </el-col>
             <el-col :span="14">
-              <el-progress class="dialog-line" :percentage="60" color="#909399" :show-text="false"></el-progress>
+              <el-progress class="dialog-line" :percentage="evalself.rank3" color="#909399" :show-text="false"></el-progress>
             </el-col>
           </el-row>
           <el-row>
             <el-col class="dialog-stars" :span="10">
-              <i class="el-icon-star-on"></i>
-              <i class="el-icon-star-on"></i>
+              <el-rate v-model="evalsinfo.star2" disabled :colors="['#606266', '#606266', '#606266']"></el-rate>
             </el-col>
             <el-col :span="14">
-              <el-progress class="dialog-line" :percentage="40" color="#909399" :show-text="false"></el-progress>
+              <el-progress class="dialog-line" :percentage="evalself.rank2" color="#909399" :show-text="false"></el-progress>
             </el-col>
           </el-row>
           <el-row>
             <el-col class="dialog-stars" :span="10">
-              <i class="el-icon-star-on"></i>
+              <el-rate v-model="evalsinfo.star1" disabled :colors="['#606266', '#606266', '#606266']"></el-rate>
             </el-col>
             <el-col :span="14">
-              <el-progress class="dialog-line" :percentage="20" color="#909399" :show-text="false"></el-progress>
+              <el-progress class="dialog-line" :percentage="evalself.rank1" color="#909399" :show-text="false"></el-progress>
             </el-col>
           </el-row>
         </el-col>
       </el-row>
-
       <el-row class="dialog-middlebox" v-if="isMiddle">
         <el-col :span="12">
-          <a href="javascript:;">&emsp;撰写评论</a>
+          <a href="javascript:;" @click="isMiddle = !isMiddle"><i class="el-icon-edit"></i>&emsp;撰写评论</a>
         </el-col>
         <el-col :span="12">
           <span>给我打分&nbsp;&nbsp;</span>
-          <el-rate v-model="submitParams.rank" class="dialog-stars"></el-rate>
+          <el-rate v-model="submitParams.rank" class="dialog-stars" @change="rateChange"></el-rate>
         </el-col>
       </el-row>
 
-      <section v-if="isBottom">
+      <section v-if="!isMiddle">
         <el-row class="dialog-bottombox">
           <div class="dialog-title">
             <span>&emsp;给我打分&nbsp;&nbsp;</span>
-            <el-rate v-model="submitParams.rank" class="dialog-stars"></el-rate>
+            <el-rate v-model="submitParams.rank" class="dialog-stars" @change="rateChange"></el-rate>
           </div>
 
           <el-form :model="submitParams" :rules="rules" ref="submitParams" label-width="70px" class="demo-ruleForm">
@@ -207,12 +194,11 @@
             </el-form-item>
             <el-form-item>
               <el-button size="small" type="primary" @click="submitForm('submitParams')">确 定</el-button>
-              <el-button size="small" @click="centerDialogVisible = false">取 消</el-button>
+              <el-button size="small" @click="isMiddle = !isMiddle">取 消</el-button>
             </el-form-item>
           </el-form>
 
         </el-row>
-
         <el-row class="dialog-more">
           <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
@@ -220,7 +206,7 @@
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="最有帮助">按最有帮助排序</el-dropdown-item>
+              <!-- <el-dropdown-item command="最有帮助">按最有帮助排序</el-dropdown-item> -->
               <el-dropdown-item command="最高评价">按最高评价排序</el-dropdown-item>
               <el-dropdown-item command="最低评价">按最低评价排序</el-dropdown-item>
               <el-dropdown-item command="最新评价">按最新评价排序</el-dropdown-item>
@@ -229,7 +215,7 @@
           <el-col v-for="(item, index) in accessList" :key="index" :span="24" class="dialog-assessbox">
             <h4>{{item.title}}</h4>
             <div class="dialog-title">
-              <span>某某某 2018年12月12日</span>
+              <span>{{item.userName}}</span>&nbsp;<span>{{item.timestamp}}</span>
               <el-rate v-model="item.rank" class="dialog-stars" disabled></el-rate>
             </div>
             <div class="dialog-message">
@@ -237,11 +223,11 @@
             </div>
           </el-col>
           <el-col :span="24" class="dialog-links">
-            <a v-show="accessList.length == 1" @click="handleMoreMsg" href="javascript:;">更多
-              <i class="el-icon-arrow-down"></i>
-            </a>
-            <a v-show="accessList.length > 1" @click="handleLessMsg" href="javascript:;">收起
+            <a v-if="totalNumber > 5 && accessList.length == totalNumber" @click="handleLessMsg" href="javascript:;">收起
               <i class="el-icon-arrow-up"></i>
+            </a>
+            <a v-if="totalNumber > 5 && accessList.length != totalNumber" @click="handleMoreMsg" href="javascript:;">更多
+              <i class="el-icon-arrow-down"></i>
             </a>
           </el-col>
         </el-row>
@@ -271,21 +257,23 @@ export default {
       apisList:[],            //接口详情
       enjoyList:[],           //猜你喜欢的
       ErrorCode:[],           //服务错误对照信息
+      Settings:'',
+      evalsinfo:{             //评价详情
+        star1: 1,
+        star2: 2,
+        star3: 3,
+        star4: 4,
+        star5: 5,
+      },    
+      evalself:{
+        rank5:0,
+        rank4:0,
+        rank3:0,
+        rank2:0,
+        rank1:0,
+      },      
 
-
-
-      navData: {
-        wifi: 13256,
-        heart: 12321,
-        message: 23365,
-        good: 5
-      },
-      value1: 3.7,
-      value2: 5,
-      value3: 4,
       centerDialogVisible: false,
-      requestTableData: [],
-      responseTableData: [],
       rules: {
         text: [
           {
@@ -302,31 +290,26 @@ export default {
           }
         ]
       },
-      isBottom: false,
       isMiddle: true,
-      isP1: true,
-      isP2: false,
       submitParams: {
-        userId: "001",
-        servId: "1",
         text: "",
         title: "",
-        rank: 5
+        rank: 0
       },
       accessList: [],
-      tmpMessage: []
+      totalNumber: 0,
+      limitNumber: 5,
+      commandNumber: '3', // 一开始就是按最新评论来排序 排序方式：1：最高评价，2：最低评价，3：最新评价
+
     };
   },
   created() {
     this.type =  this.$route.query.type
     this.servId =  this.$route.query.servId
     this.DetailQuery.servId = this.servId
+    this.submitParams.servId = this.servId
     this.getBaseData()
     this.getErrorCode()
-
-
-
-
 
     this.getParamForms();
     this.getRelationForms();
@@ -341,7 +324,11 @@ export default {
         var query = {group:'servType'}
         dicty.getBaseData(query).then(response => {
             this.servTypeList = response.data
-        });         
+        });  
+        // 访问前缀
+        dicty.getSettings().then(response => {
+            this.Settings = response.data.servUrl
+        });        
         
     },
     init(){
@@ -356,14 +343,22 @@ export default {
                         that.infoData.tagname = item.value    
                     }
                 })
+                var uuid = this.infoData.uuid
+                var reg=new RegExp("\\.","g");
+                this.apisList.forEach(function(item,index){
+                  var apiVer = item.version.replace(reg,"_")  
+                  item.expUrl = item.Settings+'/rest/'+uuid+'/'+item.ename+'/V'+apiVer        
+                })
+
                 this.infoData.tagname = this.infoData.tagname ? this.infoData.tagname : '其他'
-                this.listLoading = false               
+                this.listLoading = false    
+                
+                this.valRate = parseInt(this.infoData.evalRank)           
                 this.getEnjoyList()
             });         
         }
         if(this.type=='2'){                 //WebService API(soap)
-            api.getSoap(this.DetailQuery).then(response => {
-              
+            api.getSoap(this.DetailQuery).then(response => {              
                 this.infoData = response.data
                 this.apisList = response.data.apis
                 this.infoData.tagname = ''
@@ -373,12 +368,43 @@ export default {
                         that.infoData.tagname = item.value    
                     }
                 })
+                var uuid = this.infoData.uuid
+                var reg=new RegExp("\\.","g");
+                this.apisList.forEach(function(item,index){
+                  var apiVer = item.version.replace(reg,"_")  
+                  item.expUrl = item.Settings+'/rest/'+uuid+'/'+item.ename+'/V'+apiVer        
+                })
                 this.infoData.tagname = this.infoData.tagname ? this.infoData.tagname : '其他'
                 this.listLoading = false
-                            
+                this.valRate = parseInt(this.infoData.evalRank)     
                 this.getEnjoyList()
 
             });         
+        }
+        if(this.type=='3'){               //数据源 
+            api.getDataset(this.DetailQuery).then(response => {             
+                this.infoData = response.data
+                this.apisList = response.data.apis
+                this.infoData.tagname = ''
+                var that = this
+                this.servTypeList.forEach(function(item,index){
+                    if(that.infoData.tag == item.key){
+                        that.infoData.tagname = item.value    
+                    }
+                })
+                var uuid = this.infoData.uuid
+                var reg=new RegExp("\\.","g");
+                this.apisList.forEach(function(item,index){
+                  var apiVer = item.version.replace(reg,"_")  
+                  item.expUrl = item.Settings+'/rest/'+uuid+'/'+item.ename+'/V'+apiVer        
+                })
+                this.infoData.tagname = this.infoData.tagname ? this.infoData.tagname : '其他'
+                this.listLoading = false
+                this.valRate = parseInt(this.infoData.evalRank)     
+                this.getEnjoyList()
+
+            });      
+
         }
     },
     // 猜你喜欢的
@@ -386,6 +412,9 @@ export default {
       var query={tag:this.infoData.tag}
       api.getEnjoy(query).then(response => {
         this.enjoyList = response.data
+        this.enjoyList.forEach(function(item,index){
+          item.evalRank = parseInt(item.evalRank)
+        })
       });         
 
     },
@@ -399,42 +428,87 @@ export default {
     toStudentInfo (type,id) {
         this.$router.push({ path: '/service/studentinfo', query: { type:type,servId:id} });
     },
-
-
-
-
-
-
-
-
-
-    handledia() {
-      console.log(11);
+    // 意见反馈
+    handleList() {
+      this.centerDialogVisible = true;
+      this.isMiddle = true;
+      // 重置表单
+      this.submitParams.rank = 0
+      this.submitParams.text = ''
+      this.submitParams.title = ''
+      api.getEvalStats({servId: "1"}).then(res => {
+        var rank5 = Number(res.data.rank5)
+        var rank4 = Number(res.data.rank4)
+        var rank3 = Number(res.data.rank3)
+        var rank2 = Number(res.data.rank2)
+        var rank1 = Number(res.data.rank1)
+        var allRank = rank5 + rank4 + rank3 + rank2 + rank1
+        this.evalself.rank5 = (rank5/allRank)*100;
+        this.evalself.rank4 = (rank4/allRank)*100;
+        this.evalself.rank3 = (rank3/allRank)*100;
+        this.evalself.rank2 = (rank2/allRank)*100;
+        this.evalself.rank1 = (rank1/allRank)*100;
+        this.evalself.alleval  = ((rank5*5 + rank4*4 + rank3*3 + rank2*2 + rank1*1) / allRank).toFixed(1)
+      })
+      // 一开始就是按最新排序来展示
+      this.getMoreList(this.commandNumber)
     },
+    getMoreList(sortType, limit = 5, servId = this.servId, pageNo = 1) {
+      api.getEvalSort({
+        servId,
+        pageNo,
+        limit,
+        sortType
+      }).then((res) => {
+        const {data, status, total} = res
+        if (status === 200 && data.rows) {
+          data.rows.forEach((item) => {
+            item.rank = +item.rank
+          })
+          this.accessList = data.rows
+          this.totalNumber = data.total
+        }
+      })
+    },
+    // 意见反馈--打分
+    rateChange(val){
+      // if(this.isMiddle){              //只打分
+      //   // console.log(this.submitParams)
+      //   // this.submitParams.servId = "1"
+      //   api.submitAssess(this.submitParams).then(res => {
+      //       if (res.status === 200) {
+      //         this.$notify({title: '成功', message: '打分成功', type: 'success', duration: 2000});
+      //         this.init();
+      //         this.centerDialogVisible = false;
+      //       }
+      //   })
+      // }
+    },
+    // 意见反馈--提交
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          // 增加一个新的服务评价信息
           api.submitAssess(this.submitParams).then(res => {
             if (res.status === 200) {
-              this.$message({
-                message: res.data.message,
-                type: "success"
-              });
+              this.$notify({title: '成功', message: '提交成功', type: 'success', duration: 2000});
+              this.init();
               this.centerDialogVisible = false;
             }
           });
         } else {
-          this.$message.error("提交失败");
-          this.centerDialogVisible = false;
+          this.$notify({title: '失败', message: '还有未填项', type: 'error', duration: 2000});
           return false;
         }
       });
     },
-    // resetForm(formName) {
-    //   this.$refs[formName].resetFields();
-    // },
-    handleCommand(command) {
+    async handleCommand(command) {
+      let obj = {
+        '最高评价': '1',
+        '最低评价': '2',
+        '最新评价': '3',
+      }
+      this.commandNumber = obj[command]
+      await this.getMoreList(this.commandNumber, this.limitNumber)
       this.$message("已按照" + command + "排序");
     },
     getParamForms() {
@@ -457,38 +531,29 @@ export default {
         this.responseTableData = res.data;
       });
     },
-    handleList() {
-      this.centerDialogVisible = true;
-
-      this.isBottom = true;
-      this.isMiddle = false;
-      // 增加一个新的服务评价信息
-      api
-        .getAssessList({
-          servId: this.submitParams.servId
-        })
-        .then(res => {
-          if (res.status === 200) {
-            res.data.rows.forEach(item => {
-              item.rank = +item.rank;
-            });
-            this.tmpMessage = res.data.rows;
-            this.accessList = res.data.rows.slice(0, 1);
-          }
-        });
-    },
     handleMoreMsg() {
-      this.accessList = this.tmpMessage;
+      this.limitNumber += 5
+      this.getMoreList(this.commandNumber, this.limitNumber)
     },
     handleLessMsg() {
-      this.accessList = this.tmpMessage.slice(0, 1);
+      this.limitNumber = 5
+      this.getMoreList(this.commandNumber, this.limitNumber)
+    },
+    goToMonitor() {
+      this.$router.push({
+        name: 'monitor',
+        params: {
+          // ...数据对象
+        }
+      })
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
-// .container .box-card .el-col{height: 290px;}
+
+
 .container {
   padding: 4px;
   width: 100%;
@@ -497,7 +562,6 @@ export default {
   font-size: 14px;
   line-height: 24px;
   .top-nav {
-    min-width: 1650px;
     .el-rate {
       margin-top: 6px;
     }
@@ -522,37 +586,34 @@ export default {
   ul li:nth-child(n + 3) {
     padding-left: 34px;
   }
-  ul li:nth-child(n + 7) {
+  ul li:nth-child(n + 6) {
     float: right; cursor:pointer;
   }
   ul li:nth-child(3) {
     background: url("./img/info_wifi.png") no-repeat left center;
   }
   ul li:nth-child(4) {
-    background: url("./img/info_heart.png") no-repeat left center;
-  }
-  ul li:nth-child(5) {
     background: url("./img/info_message.png") no-repeat left center;
   }
-  ul li:nth-child(6) {
+  ul li:nth-child(5) {
     background: url("./img/info_good.png") no-repeat left center;
   }
-  ul li:nth-child(7) {
+  ul li:nth-child(6) {
     background: url("./img/info_back.png") no-repeat left center;
   }
-  ul li:nth-child(8) {
+  ul li:nth-child(7) {
     background: url("./img/info_forbidden.png") no-repeat left center;
   }
-  ul li:nth-child(9) {
+  ul li:nth-child(8) {
     background: url("./img/info_watch.png") no-repeat left center;
   }
-  ul li:nth-child(10) {
+  ul li:nth-child(9) {
     background: url("./img/info_wifi.png") no-repeat left center;
   }
-  ul li:nth-child(11) {
+  ul li:nth-child(10) {
     background: url("./img/info_edit.png") no-repeat left center;
   }
-  ul li:nth-child(12) {
+  ul li:nth-child(11) {
     background: url("./img/info_add.png") no-repeat left center;
   }
   /* 卡片 */
@@ -693,7 +754,7 @@ export default {
     line-height: 70px;
     font-size: 12px;
     overflow: hidden;
-    border-bottom: 1px solid #e3e6ec;
+    // border-bottom: 1px solid #e3e6ec;
     a {
       color: #50a1fc;
     }
@@ -752,10 +813,6 @@ export default {
     i {
       color: #50a1fc;
     }
-  }
-  .el-button--small,
-  .el-button--small.is-round {
-    padding: 5px 15px;
   }
 }
 </style>

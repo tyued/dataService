@@ -16,9 +16,22 @@ export default new Router({
         children: [{
             path: '/generalization',
             component: _import('basics/generalization/index')
+        },{
+            name: 'notice', // 通知页
+            path: '/notice',
+            component: _import('basics/notice/index'),
+        },{
+            name: 'monitor', // 监控模块
+            path: '/monitor',
+            component: _import('basics/monitor/index'),
         }]
     }, {
-        path: '/service',
+        path: '/login',
+        component: _import('login/index'),
+        name: '登录',
+        hidden: true,
+    }, {
+        path: '/service', // ？怎么就写到这里了
         component: Layout,
         name: '服务',
         hidden: true,

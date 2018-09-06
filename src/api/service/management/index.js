@@ -1,5 +1,21 @@
 import fetch from 'utils/fetch';
-// 获取已注册服务信息
+/**
+ * 用途：查询已经审批通过的服务订阅记录
+ * 注意：status=1
+ * 说明：如果想完成该功能，应该先完成，应用管理、服务订阅功能
+ * @param {appId} data 服务-调用申请应用ID编号-将要调用申请服务的应用ID (该参数来源于消费者申请调用一个服务的时候，需要选择自己哪个应用来调用，即系统中有应用管理、服务订阅功能没做)
+ * @param {servId} data 服务-信息ID编号
+ * @param {status} data 服务-调用申请状态：0:待审批|1:审批通过|2:审批不通过(用于筛选订阅申请数据)
+ */
+export function getPassSubscribeList (data) {
+  return fetch({
+    url: '/admin/service/subscribe/list',
+    method: 'post',
+    data
+  })
+}
+
+// 获取已订阅 列表
 export function getSubscribeList (data) {
   return fetch({
     url: 'admin/service/retrieve/list',
@@ -26,25 +42,32 @@ export function submitService (data) {
   })
 }
 
-// 获取已注册的服务接口信息
+// 获取已发布的服务接口信息
+export function getPubList (data) {
+  return fetch({
+    url: 'admin/service/retrieve/list',
+    method: 'post',
+    data:data
+  })
+}
+
+// 获取待审核 & 已禁用的服务接口信息
 export function getApiList (data) {
   return fetch({
     url: 'admin/service/retrieve/apiList',
     method: 'post',
-    data:data
+    data
   })
 }
 
 // 获取指定服务下指定的接口信息
 export function getApiParamForms(params) {
   return fetch({
-    url: '/admin/service/retrieve/api',
+    url: '/admin/service/retrieve/apis',
     method: 'post',
     params
   })
 }
-
-
 
 // 禁用服务接口！
 export function forbiddenService (data) {

@@ -77,3 +77,21 @@ export function getAssessList(params) {
     params
   })
 }
+
+// 获取服务评价信息统计
+export function getEvalStats(params) {
+  return fetch({
+    url: 'admin/service/eval/stats',
+    method: 'post',
+    params
+  })
+}
+
+// 意见反馈中的排序功能 
+export function getEvalSort(params) {
+  return fetch({
+    url: '/admin/service/eval/evals',
+    method: 'post',
+    params
+  })
+}

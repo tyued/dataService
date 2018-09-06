@@ -5,6 +5,7 @@
 <script>
 import echarts from 'echarts';
 import { debounce } from 'utils';
+import * as api from 'api/generalization/index'
 
 export default {
     props: {
@@ -27,11 +28,14 @@ export default {
     },
     data() {
         return {
-            chart: null
+            chart: null,
+            lineData:[],
+            titleList:[],
         };
     },
     mounted() {
-        this.initChart();
+        
+        this.init()
         if (this.autoResize) {
             this.__resizeHanlder = debounce(() => {
             if (this.chart) {
@@ -44,6 +48,7 @@ export default {
         // 监听侧边栏的变化
         const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
         sidebarElm.addEventListener('transitionend', this.__resizeHanlder)
+
     },
     beforeDestroy() {
         if (!this.chart) {
@@ -60,14 +65,28 @@ export default {
         this.chart = null
     },
     methods: {
+        init(){
+            var that = this
+            // 服务订阅量Top5
+            api.subTop5().then(response => {
+                var dataList = response.data
+                dataList.forEach(function(item,index){
+                    that.lineData.push({value:item.count,name:item.name})
+                    that.titleList.push(item.name)
+                })
+                this.titleList.push("")
+                this.initChart();
+            })
+        },
         initChart() {
             this.chart = echarts.init(this.$el, 'macarons');
 
             this.chart.setOption({
                 xAxis: {
-                    data: ['学生信息查询', '教师信息查询', '一卡通信息查询', '天气预告', '教师课表查询',''].map(function (str) {
-                            return str.replace('查询', '\n查询')
-                        }),
+                    // data: ['学生信息查询', '教师信息查询',''].map(function (str) {
+                    //         return str.replace('查询', '\n查询')
+                    //     }),
+                    data: this.titleList,
                     axisLabel: {
                         interval:0
                     },
@@ -94,7 +113,7 @@ export default {
                     type: 'line',
                     symbol:'circle',
                     symbolSize:'8',
-                    data: [150, 220, 170, 250, 280,150],
+                    data: this.lineData,
                     itemStyle: {
                         normal: {
                             color: '#a081f2',
