@@ -1,0 +1,451 @@
+<div class="monitor" id="monitor">
+  <el-tabs v-model="activeName" @tab-click="handleTabClick">
+    <el-tab-pane label="系统监控" name="first">
+      <!-- ===========系统监控=========== -->
+      <el-row class="row" :gutter="20">
+        <el-col :span="12">
+          <el-card class="box-card" shadow="hover">
+            <div slot="header" class="clearfix">
+              <span>消息</span>
+            </div>
+            ?????????????????
+            <span style="color:#b5b5b5;">暂无消息</span>
+          </el-card>
+        </el-col>
+        <el-col :span="12">
+          <el-card class="box-card" shadow="hover">
+            <div slot="header" class="clearfix">
+              <span>健康状态</span>
+            </div>
+            <div style="padding: .5em .75em;border-bottom: 1px solid #ebeef5;">
+              <p><span>status： </span><span class="status-ft">{{status}}</span></p>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :span="12">
+          <el-card class="box-card" shadow="hover">
+            <div slot="header" class="clearfix">
+              <span>信息</span>
+            </div>
+            <div class="metadata">
+              <table>
+                <tbody>
+                  <tr v-for="(value, key) in metadata">
+                    <td>{{key}}</td>
+                    <td>{{value}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+
+      <el-row class="row" :gutter="20">
+        <el-col :span="12">
+          <el-card class="box-card" shadow="hover">
+            <div slot="header" class="clearfix">
+              <i class="fa fa-list-ul" style="color:#ff795d;"></i>
+              <span>192.168.0.189</span>
+            </div>
+            <el-row class="tab-circle">
+              <el-col :span="8">
+                <el-progress type="circle" :percentage="0"></el-progress>
+                <p>CPU使用率</p>
+              </el-col>
+              <el-col :span="8">
+                <el-progress type="circle" :percentage="25"></el-progress>
+                <p>非堆内存使用率</p>
+              </el-col>
+              <el-col :span="8">
+                <el-progress type="circle" :percentage="80" color="#8e71c7"></el-progress>
+                <p>非堆内存使用率</p>
+              </el-col>
+            </el-row>
+          </el-card>
+        </el-col>
+      </el-row>
+
+      <el-row class="row" :gutter="20">
+        <el-col :span="12">
+          <el-card class="box-card" shadow="hover">
+            <div slot="header" class="clearfix">
+              <span>进程</span>
+            </div>
+          </el-card>
+          <el-card class="box-card" shadow="hover">
+            <div slot="header" class="clearfix">
+              <span>垃圾回收</span>
+            </div>
+          </el-card>
+        </el-col>
+        <el-col :span="12">
+          <el-card class="box-card" shadow="hover">
+            <div slot="header" class="clearfix">
+              <span>线程</span>
+            </div>
+            <div>
+              <div ref="Threads" class="echarts-line-monitor"></div>
+            </div>
+          </el-card>
+        </el-col>
+      </el-row>
+
+      <el-row class="row" :gutter="20">
+        <el-col :span="12">
+          <el-card class="box-card" shadow="hover">
+            <div slot="header" class="clearfix">
+              <span>堆内存</span>
+            </div>
+            echarts
+          </el-card>
+        </el-col>
+        <el-col :span="12">
+          <el-card class="box-card" shadow="hover">
+            <div slot="header" class="clearfix">
+              <span>非堆内存</span>
+            </div>
+            echarts
+          </el-card>
+        </el-col>
+        <el-col :span="12">
+          <el-card class="box-card" shadow="hover">
+            <div slot="header" class="clearfix">
+              <span>缓存：资源</span>
+            </div>
+            echarts
+          </el-card>
+        </el-col>
+        <el-col :span="12">
+          <el-card class="box-card" shadow="hover">
+            <div slot="header" class="clearfix">
+              <span>缓存：SHIRO</span>
+            </div>
+            echarts
+          </el-card>
+        </el-col>
+      </el-row>
+
+      <el-row class="row">
+        <el-card class="box-card" shadow="hover">
+          <el-row style="margin-bottom: 20px;">
+            <el-radio-group v-model="radio3">
+              <el-radio-button label="当日分时统计"></el-radio-button>
+              <el-radio-button label="7日统计"></el-radio-button>
+              <el-radio-button label="月统计"></el-radio-button>
+            </el-radio-group>
+          </el-row>
+          <el-row>
+            <el-col :span="14">
+              <el-row class="title">
+                <span class="title-span">访问量统计</span>
+              </el-row>
+              <!-- echarts -->
+              <div ref="monitorEcharts" class="echarts-line-monitor"></div>
+            </el-col>
+            <el-col :span="9" :offset="1">
+              <el-row class="title">
+                <span class="title-span">当日服务访问量</span>
+                <el-tag type="danger">TOP5</el-tag>
+              </el-row>
+              <el-table :data="tableData" stripe style="width: 100%">
+                <el-table-column prop="date" label="服务名称">
+                </el-table-column>
+                <el-table-column prop="name" label="服务提供方">
+                </el-table-column>
+                <el-table-column prop="address" label="调用次数">
+                  <template slot-scope="scope">
+                    <el-row>99999</el-row>
+                    <el-row>
+                      <el-progress :percentage="80" color="#8e71c7" :stroke-width="4" :show-text="false"></el-progress>
+                    </el-row>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-col>
+          </el-row>
+        </el-card>
+      </el-row>
+    </el-tab-pane>
+    <el-tab-pane label="服务监控" name="second">
+      <!-- ==========服务监控============ -->
+      <el-row class="row">
+        <el-card class="box-card" shadow="hover" :body-style="{height: '250px'}">
+          <el-row>
+            <el-col class="itembox" :span="7">
+              <div class="name-box">服务名称：天音计算机系统有限公司</div>
+            </el-col>
+            <el-col class="itembox" :span="5">
+              <div class="number-box">
+                <p>订阅用户数</p>
+                <p>
+                  <span>123456</span>
+                </p>
+                <p>七日内新增：
+                  <span>321</span>
+                </p>
+                <p>七日内退订：
+                  <span>567</span>
+                </p>
+              </div>
+            </el-col>
+            <el-col class="itembox" :span="12">
+              <el-table :data="tableData" stripe style="width: 100%" height="210">
+                <el-table-column prop="date" label="数据使用方">
+                </el-table-column>
+                <el-table-column prop="name" label="异常类型">
+                </el-table-column>
+                <el-table-column prop="address" label="错误原因">
+                </el-table-column>
+                <el-table-column prop="address" label="使用时间">
+                </el-table-column>
+              </el-table>
+            </el-col>
+          </el-row>
+        </el-card>
+      </el-row>
+      <el-row class="row" id="monitor-tabbox">
+        <el-tabs tab-position="left">
+          <el-tab-pane label="服务1">
+            <el-card class="tabbox-card">
+              <el-alert title="接口分析仅统计了基础消息接口，暂未统计其他高级接口，请知悉。" type="info" show-icon>
+              </el-alert>
+              <el-row style="margin: 20px 0;">
+                <el-radio-group v-model="tabDateValue">
+                  <el-radio-button label="小时报"></el-radio-button>
+                  <el-radio-button label="日报"></el-radio-button>
+                </el-radio-group>
+              </el-row>
+              <el-row>
+                <el-card shadow="never" :body-style="{padding: '0'}">
+                  <div slot="header" class="clearfix">
+                    <span>昨日关键指标</span>
+                  </div>
+                  <el-row style="padding: 30px 0;">
+                    <el-col class="keybox" :span="6">
+                      <p>调用次数</p>
+                      <h2>31</h2>
+                      <div>
+                        <p>日&emsp;
+                          <span>
+                            <i></i>63.2%</span>
+                        </p>
+                        <p>周&emsp;
+                          <span>
+                            <i></i>46.2%</span>
+                        </p>
+                        <p>月&emsp;--</p>
+                      </div>
+                    </el-col>
+                    <el-col class="keybox" :span="6">
+                      <p>失败率</p>
+                      <h2>0%</h2>
+                      <div>
+                        <p>日&emsp;--</p>
+                        <p>周&emsp;--</p>
+                        <p>月&emsp;--</p>
+                      </div>
+                    </el-col>
+                    <el-col class="keybox" :span="6">
+                      <p>平均耗时(毫秒)</p>
+                      <h2>311.39</h2>
+                      <div>
+                        <p>日&emsp;
+                          <span>
+                            <i></i>6332.2%</span>
+                        </p>
+                        <p>周&emsp;
+                          <span>
+                            <i></i>4623.2%</span>
+                        </p>
+                        <p>月&emsp;--</p>
+                      </div>
+                    </el-col>
+                    <el-col class="keybox" :span="6">
+                      <p>最大耗时(毫秒)</p>
+                      <h2>3166</h2>
+                      <div>
+                        <p>日&emsp;
+                          <span>
+                            <i></i>6332.2%</span>
+                        </p>
+                        <p>周&emsp;
+                          <span>
+                            <i></i>4623.2%</span>
+                        </p>
+                        <p>月&emsp;--</p>
+                      </div>
+                    </el-col>
+                  </el-row>
+                </el-card>
+              </el-row>
+              <el-row>
+                <el-tabs type="border-card">
+                  <el-tab-pane label="关键指标详解">
+                    <el-form label-position="left" label-width="40px" style="overflow:hidden;">
+                      <el-form-item label="时间" class="fl">
+                        <el-button plain>7日</el-button>
+                        <el-button plain>14日</el-button>
+                        <el-button plain>30日</el-button>
+                        <el-date-picker style="margin-left:10px;" v-model="value7" type="daterange" align="right"
+                          unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
+                          :picker-options="pickerOptions2">
+                        </el-date-picker>
+                      </el-form-item>
+                      <el-button type="primary" class="fr">
+                        <i class="el-icon-search"></i> 查询</el-button>
+                    </el-form>
+                    <el-row>
+                      <p class="tab-title">
+                        <i class="el-icon-menu"></i> 趋势图</p>
+                      <!-- echarts here $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$-->
+                      <!-- <div ref="monitorEcharts" class="echarts-line-monitor" style="height:300px;width:100%;margin-top:8px"></div> -->
+                      echarts<br> <br> <br> <br><br><br><br><br><br>
+
+                    </el-row>
+                    <el-row>
+                      <p class="tab-title">
+                        <span class="fl">
+                          <i class="el-icon-menu"></i> 详细数据</span>
+                        <span class="fr">
+                          <el-button type="text" @click="outputExcel">导出Excel</el-button>
+                        </span>
+                      </p>
+                      <el-table id="out-table" :data="tableData" stripe style="width: 100%;margin: 10px 0;">
+                        <el-table-column sortable prop="date" label="时间">
+                        </el-table-column>
+                        <el-table-column sortable prop="name" label="调用次数">
+                        </el-table-column>
+                        <el-table-column sortable prop="address" label="失败次数">
+                        </el-table-column>
+                        <el-table-column sortable prop="address" label="失败率">
+                        </el-table-column>
+                        <el-table-column sortable prop="address" label="总共耗时(毫秒)">
+                        </el-table-column>
+                        <el-table-column sortable prop="address" label="平均耗时(毫秒)">
+                        </el-table-column>
+                        <el-table-column sortable prop="address" label="最大耗时(毫秒)">
+                        </el-table-column>
+                      </el-table>
+                      <!-- 分页 组件-->
+                      <el-row>
+                        分页组件here
+                        <!-- <PageBar :currentpage="CurrentPage" @handlePageSize="handleCurrentPageSize" @handlePage="handleCurrentPage" :total="TotalPage" :currentNumber="currentNumber"></PageBar> -->
+                      </el-row>
+                    </el-row>
+                  </el-tab-pane>
+                  <el-tab-pane label="调用次数">
+                    调用次数
+                  </el-tab-pane>
+                  <el-tab-pane label="失败率">
+                    失败率
+                  </el-tab-pane>
+                  <el-tab-pane label="平均耗时">
+                    平均耗时
+                  </el-tab-pane>
+                  <el-tab-pane label="最大耗时">
+                    最大耗时
+                  </el-tab-pane>
+                </el-tabs>
+              </el-row>
+            </el-card>
+          </el-tab-pane>
+          <el-tab-pane label="服务2">
+            <el-card class="tabbox-card">
+              fdsfsfsdfsd<br> fdsfsfsdfsd
+              <br> fdsfsfsdfsd
+              <br> fdsfsfsdfsd
+              <br> fdsfsfsdfsd
+              <br> fdsfsfsdfsd
+              <br> fdsfsfsdfsd
+              <br> fdsfsfsdfsd
+              <br> fdsfsfsdfsd
+              <br> fdsfsfsdfsd
+              <br> fdsfsfsdfsd
+              <br> fdsfsfsdfsd
+              <br> fdsfsfsdfsd
+              <br>
+            </el-card>
+          </el-tab-pane>
+          <el-tab-pane label="服务13">
+            <el-card class="tabbox-card">
+              fdsfsfsdfsdsdfds
+            </el-card>
+          </el-tab-pane>
+          <el-tab-pane label="服务14">
+            <el-card class="tabbox-card">
+              fdsfsfsdfsdsdfsdfsdfsdfsdfsd
+            </el-card>
+          </el-tab-pane>
+        </el-tabs>
+      </el-row>
+    </el-tab-pane>
+    <el-tab-pane label="系统日志" name="third">
+      <!-- ===========系统日志=========== -->
+      <el-tabs type="border-card">
+        <el-tab-pane label="系统异常">
+          <el-form label-position="left" label-width="60px">
+            <el-form-item label="时间">
+              <el-button plain>全部</el-button>
+              <el-button plain>当日</el-button>
+              <el-button plain>7日内</el-button>
+              <el-button plain>30日内</el-button>
+              <el-date-picker style="margin-left:10px;" v-model="value7" type="daterange" align="right" unlink-panels
+                range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions2">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="组件">
+              <el-button plain>全部</el-button>
+              <el-button plain>适配器</el-button>
+              <el-button plain>moven</el-button>
+              <el-button plain>RabbitMQ</el-button>
+              <el-button plain>服务器</el-button>
+            </el-form-item>
+            <el-form-item label="类别">
+              <el-button plain>全部</el-button>
+              <el-button plain>运行异常</el-button>
+              <el-button plain>运行警告</el-button>
+            </el-form-item>
+            <el-form-item label="关键字">
+              <el-input clearable :maxlength="50" prefix-icon="el-icon-search" placeholder="请输入关键字搜索" v-model="inputValue"
+                style="width: 300px;"></el-input>
+            </el-form-item>
+            <el-button type="primary">
+              <i class="el-icon-search"></i> 查询</el-button>
+          </el-form>
+
+          <el-row style="margin: 10px 0;">
+            <el-table :data="tableData" stripe style="width: 100%">
+              <el-table-column prop="date" label="标题">
+              </el-table-column>
+              <el-table-column prop="name" label="组件">
+              </el-table-column>
+              <el-table-column prop="address" label="时间">
+              </el-table-column>
+              <el-table-column prop="address" label="状态">
+              </el-table-column>
+              <el-table-column label="操作">
+                <template slot-scope="scope">
+                  <el-button size="mini">查看</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-row>
+          <el-row>
+            <!-- 分页组件here -->
+            <!-- <PageBar :currentpage="CurrentPage" @handlePageSize="handleCurrentPageSize" @handlePage="handleCurrentPage" :total="TotalPage" :currentNumber="currentNumber"></PageBar> -->
+          </el-row>
+        </el-tab-pane>
+        <el-tab-pane label="服务异常">
+          服务异常
+        </el-tab-pane>
+        <el-tab-pane label="登录日志">
+          登录日志
+        </el-tab-pane>
+        <el-tab-pane label="操作日志">
+          操作日志
+        </el-tab-pane>
+      </el-tabs>
+    </el-tab-pane>
+  </el-tabs>
+</div>

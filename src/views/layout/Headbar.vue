@@ -8,42 +8,47 @@
       <li>
         <div class="fr">
           <el-dropdown @command="handleCommand">
-            <span class="el-dropdown-link person-center-link">
-              个人中心
+            <div class="el-dropdown-link">
+              <img class="user-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjMiIGhlaWdodD0iNTkiIHZpZXdCb3g9IjAgMCA2MyA1OSIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KPGcgaWQ9IkNhbnZhcyIgZmlsbD0ibm9uZSI+CjxnIGlkPSJkdW90YWktaWNvbiI+CjxnIGlkPSJSZWN0YW5nbGUiPgo8cmVjdCB3aWR0aD0iNDEuMTQwMiIgaGVpZ2h0PSI0Mi4xNDI5IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyMS41OTg3IDE2Ljg1NzEpIiBmaWxsPSIjRkY3MjYyIi8+CjwvZz4KPGcgaWQ9IlZlY3RvciAyIj4KPHBhdGggZD0iTSAwIDI1LjI4NTdMIDIxLjU5ODYgMEwgNDMuMTk3MiAyNS4yODU3TCAwIDI1LjI4NTdaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDMzLjcxNDIpIiBmaWxsPSIjMEFDRjgzIi8+CjwvZz4KPGcgaWQ9IkVsbGlwc2UiPgo8ZWxsaXBzZSBjeD0iMTYuNDU2MSIgY3k9IjE2Ljg1NzIiIHJ4PSIxNi40NTYxIiByeT0iMTYuODU3MiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNS4xNDI0OSAwKSIgZmlsbD0iIzFBQkNGRSIvPgo8L2c+CjwvZz4KPC9nPgo8L3N2Zz4KCg==" alt=""> Winnerwinnerchickdinner个人中心
               <i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
+            </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="a">我的信息</el-dropdown-item>
               <el-dropdown-item command="b">历史记录</el-dropdown-item>
-              <el-dropdown-item command="e" divided @click="handleLogOut">退出</el-dropdown-item>
+              <el-dropdown-item command="e" divided>退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
       </li>
       <li>
-      </li>
-      <li>
         <el-dropdown>
           <span class="el-dropdown-link">
             <el-badge :value="12" class="item">
-              <!-- <div class="icon-message">dfs</div> -->
-              <i class="el-icon-message" @click="$router.push('/notice')"></i>
+              <i class="el-icon-bell" @click="$router.push('/notice')"></i>
             </el-badge>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕sdffsdafasdfasd</el-dropdown-item>
-            <el-dropdown-item>狮子头fsadfsfsdfafasdfsdfsdafsaf</el-dropdown-item>
-            <el-dropdown-item>螺蛳粉s狮子头fsadfsfsdfafasdfsdfsdafsaf</el-dropdown-item>
-            <el-dropdown-item disabled>双皮奶狮子头fsadfsfsdfafasdfsdfsdafsaf</el-dropdown-item>
-            <el-dropdown-item divided>蚵仔煎狮子头fsadfsfsdfafasdfsdfsdafsaf</el-dropdown-item>
+            <el-dropdown-item>
+              <el-alert title="成功提示的文案" type="success" description="文字说明文字说明文字说明文字说明文字说明文字说明" show-icon>
+              </el-alert>
+            </el-dropdown-item>
+            <el-dropdown-item>
+              <el-alert title="消息提示的文案" type="info" description="文字说明文字说明文字说明文字说明文字说明文字说明" show-icon>
+              </el-alert>
+            </el-dropdown-item>
+            <el-dropdown-item disabled>
+              <el-alert title="错误提示的文案" type="error" description="文字说明文字说明文字说明文字说明文字说明文字说明" show-icon>
+              </el-alert>
+            </el-dropdown-item>
+            <el-dropdown-item divided>
+              <el-alert title="警告提示的文案" type="warning" description="文字说明文字说明文字说明文字说明文字说明文字说明" show-icon>
+              </el-alert>
+            </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </li>
       <li>
-
-      </li>
-      <li>
-        <el-autocomplete prefix-icon="el-icon-search" size="mini" v-model="state4" :fetch-suggestions="querySearchAsync" placeholder="服务检索" @select="handleSelect"></el-autocomplete>
+        <el-autocomplete :maxlength="50" prefix-icon="el-icon-search" size="mini" v-model="state4" :fetch-suggestions="querySearchAsync" placeholder="服务检索" @select="handleSelect"></el-autocomplete>
       </li>
     </ul>
   </div>
@@ -51,6 +56,7 @@
 </template>
 
 <script>
+import * as api from "api/login";
 export default {
   data() {
     return {
@@ -87,24 +93,6 @@ export default {
         {
           value: "茶芝兰（奶茶，手抓饼）",
           address: "上海市普陀区同普路1435号"
-        },
-        { value: "十二泷町", address: "上海市北翟路1444弄81号B幢-107" },
-        { value: "星移浓缩咖啡", address: "上海市嘉定区新郁路817号" },
-        { value: "阿姨奶茶/豪大大", address: "嘉定区曹安路1611号" },
-        { value: "新麦甜四季甜品炸鸡", address: "嘉定区曹安公路2383弄55号" },
-        {
-          value: "Monica摩托主题咖啡店",
-          address: "嘉定区江桥镇曹安公路2409号1F，2383弄62号1F"
-        },
-        {
-          value: "浮生若茶（凌空soho店）",
-          address: "上海长宁区金钟路968号9号楼地下一层"
-        },
-        { value: "NONO JUICE  鲜榨果汁", address: "上海市长宁区天山西路119号" },
-        { value: "CoCo都可(北新泾店）", address: "上海市长宁区仙霞西路" },
-        {
-          value: "快乐柠檬（神州智慧店）",
-          address: "上海市长宁区天山西路567号1层R117号店铺"
         },
         {
           value: "Merci Paul cafe",
@@ -204,12 +192,16 @@ export default {
       console.log(item);
     },
     handleCommand(command) {
-      this.$message("click on item " + command);
-    },
-    handleLogOut() {
-      this.$store.dispatch('logOut').then(() => {
-        this.$router.push('/login')
-      })
+      switch (command) {
+        case "e":
+          this.$store.dispatch("logOut").then(() => {
+            this.$router.push("/login");
+          });
+          break;
+
+        default:
+          break;
+      }
     }
   }
 };
@@ -234,7 +226,7 @@ h1 {
 }
 .header-li li {
   line-height: 60px;
-  padding: 0 10px;
+  padding: 0 14px;
   float: right;
   height: 60px;
   & > div {
@@ -249,13 +241,20 @@ h1 {
 .el-icon-arrow-down {
   font-size: 12px;
 }
-.el-icon-message {
+.el-icon-bell {
   color: #fff;
-  font-size: 1.8em;
+  font-size: 1.6em;
   vertical-align: middle;
   cursor: pointer;
 }
 .el-badge .el-badge__content.is-fixed {
   bottom: 18px;
+}
+.user-icon {
+  vertical-align: middle;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
 }
 </style>

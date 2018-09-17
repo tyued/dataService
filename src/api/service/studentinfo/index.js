@@ -3,7 +3,7 @@ import fetch from 'utils/fetch';
 // 数据源服务查询
 export function getDataset(query) {
   return fetch({
-    url: 'admin/service/retrieve/dataset',
+    url: '/dsb/admin/service/retrieve/dataset',
     method: 'post',
     params: query
   })
@@ -11,7 +11,7 @@ export function getDataset(query) {
 // Rest服务查询
 export function getRest(query) {
   return fetch({
-    url: 'admin/service/retrieve/rest',
+    url: '/dsb/admin/service/retrieve/rest',
     method: 'post',
     params: query
   })
@@ -19,7 +19,7 @@ export function getRest(query) {
 // Soap服务查询
 export function getSoap(query) {
   return fetch({
-    url: 'admin/service/retrieve/soap',
+    url: '/dsb/admin/service/retrieve/soap',
     method: 'post',
     params: query
   })
@@ -28,7 +28,7 @@ export function getSoap(query) {
 // 猜你喜欢服务信息
 export function getEnjoy(query) {
   return fetch({
-    url: 'admin/service/retrieve/enjoy',
+    url: '/dsb/admin/service/retrieve/enjoy',
     method: 'post',
     params: query
   })
@@ -37,7 +37,7 @@ export function getEnjoy(query) {
 // 服务错误对照信息
 export function getErrorCode(query) {
   return fetch({
-    url: 'platform/dataset/error-codes',
+    url: '/dsb/platform/dataset/error-codes',
     method: 'post',
     params: query
   })
@@ -46,7 +46,7 @@ export function getErrorCode(query) {
 // 参数来源列表集合
 export function getParamForms(data) {
   return fetch({
-    url: 'platform/dataset/paramFroms',
+    url: '/dsb/platform/dataset/paramFroms',
     method: 'post',
     data
   })
@@ -54,7 +54,7 @@ export function getParamForms(data) {
 // 条件与条件值关系信息
 export function getRelationForms(data) {
   return fetch({
-    url: 'platform/dataset/relations',
+    url: '/dsb/platform/dataset/relations',
     method: 'post',
     data
   })
@@ -63,7 +63,7 @@ export function getRelationForms(data) {
 // 增加一个新的服务评价信息
 export function submitAssess(data) {
   return fetch({
-    url: 'admin/service/eval/submit',
+    url: '/dsb/admin/service/eval/submit',
     method: 'post',
     data
   })
@@ -72,7 +72,7 @@ export function submitAssess(data) {
 // 查询服务评价信息集合
 export function getAssessList(params) {
   return fetch({
-    url: 'admin/service/eval/evalList',
+    url: '/dsb/admin/service/eval/evalList',
     method: 'post',
     params
   })
@@ -81,7 +81,7 @@ export function getAssessList(params) {
 // 获取服务评价信息统计
 export function getEvalStats(params) {
   return fetch({
-    url: 'admin/service/eval/stats',
+    url: '/dsb/admin/service/eval/stats',
     method: 'post',
     params
   })
@@ -90,7 +90,7 @@ export function getEvalStats(params) {
 // 意见反馈中的排序功能 
 export function getEvalSort(params) {
   return fetch({
-    url: '/admin/service/eval/evals',
+    url: '/dsb/admin/service/eval/evals',
     method: 'post',
     params
   })

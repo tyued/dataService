@@ -3,7 +3,7 @@ import fetch from 'utils/fetch';
 // 查询数据源类型信息
 export function getdbTypes(obj) {
     return fetch({
-        url: 'platform/dataset/dbTypes',
+        url: '/dsb/platform/dataset/dbTypes',
         method: 'post',
         data: obj
     });
@@ -11,7 +11,7 @@ export function getdbTypes(obj) {
 // 基础数据
 export function getBaseData(query) {
     return fetch({
-        url: 'platform/dataset/basedata',
+        url: '/dsb/platform/dataset/basedata',
         method: 'post',
         params: query
     });
@@ -19,7 +19,7 @@ export function getBaseData(query) {
 // 查询数据源操作类型信息
 export function getOptTypes(obj) {
     return fetch({
-        url: 'platform/dataset/optTypes',
+        url: '/dsb/platform/dataset/optTypes',
         method: 'post',
         data: obj
     });
@@ -27,7 +27,7 @@ export function getOptTypes(obj) {
 // 数据源信息
 export function getDatasources(obj) {
     return fetch({
-        url: 'platform/dataset/datasources',
+        url: '/dsb/platform/dataset/datasources',
         method: 'post',
         data: obj
     });
@@ -35,7 +35,7 @@ export function getDatasources(obj) {
 // 数据表信息
 export function getTables(query) {
     return fetch({
-        url: 'platform/dataset/tables',
+        url: '/dsb/platform/dataset/tables',
         method: 'post',
         params: query
     });
@@ -43,7 +43,7 @@ export function getTables(query) {
 // 视图信息
 export function getViews(query) {
     return fetch({
-        url: 'platform/dataset/views',
+        url: '/dsb/platform/dataset/views',
         method: 'post',
         params: query
     });
@@ -51,7 +51,7 @@ export function getViews(query) {
 // 列信息数据
 export function getColumns(query) {
     return fetch({
-        url: 'platform/dataset/columns',
+        url: '/dsb/platform/dataset/columns',
         method: 'post',
         params: query
     });
@@ -59,7 +59,7 @@ export function getColumns(query) {
 // 条件与条件值关系信息
 export function getRelations(query) {
     return fetch({
-        url: 'platform/dataset/relations',
+        url: '/dsb/platform/dataset/relations',
         method: 'post',
         params: query
     });
@@ -67,7 +67,7 @@ export function getRelations(query) {
 // 数据服务总线服务配置信息
 export function getSettings(query) {
     return fetch({
-        url: 'platform/dataset/settings',
+        url: '/dsb/platform/dataset/settings',
         method: 'post',
         params: query
     });

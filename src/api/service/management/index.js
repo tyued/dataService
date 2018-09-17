@@ -9,7 +9,7 @@ import fetch from 'utils/fetch';
  */
 export function getPassSubscribeList (data) {
   return fetch({
-    url: '/admin/service/subscribe/list',
+    url: '/dsb/admin/service/subscribe/list',
     method: 'post',
     data
   })
@@ -18,7 +18,7 @@ export function getPassSubscribeList (data) {
 // 获取已订阅 列表
 export function getSubscribeList (data) {
   return fetch({
-    url: 'admin/service/retrieve/list',
+    url: '/dsb/admin/service/retrieve/list',
     method: 'post',
     data
   })
@@ -27,7 +27,7 @@ export function getSubscribeList (data) {
 // 待审批服务发布申请    0:待审核|1:审核通过|2:审核不通过
 export function getReviewTG (data) {
   return fetch({
-    url: 'admin/service/review/list',
+    url: '/dsb/admin/service/review/list',
     method: 'post',
     data:data
   })
@@ -36,7 +36,7 @@ export function getReviewTG (data) {
 // 增加一个新的服务发布申请记录 提交服务发布申请
 export function submitService (data) {
   return fetch({
-    url: 'admin/service/publish/submit',
+    url: '/dsb/admin/service/publish/submit',
     method: 'post',
     data
   })
@@ -45,7 +45,7 @@ export function submitService (data) {
 // 获取已发布的服务接口信息
 export function getPubList (data) {
   return fetch({
-    url: 'admin/service/retrieve/list',
+    url: '/dsb/admin/service/retrieve/list',
     method: 'post',
     data:data
   })
@@ -54,7 +54,7 @@ export function getPubList (data) {
 // 获取待审核 & 已禁用的服务接口信息
 export function getApiList (data) {
   return fetch({
-    url: 'admin/service/retrieve/apiList',
+    url: '/dsb/admin/service/retrieve/apiList',
     method: 'post',
     data
   })
@@ -63,7 +63,7 @@ export function getApiList (data) {
 // 获取指定服务下指定的接口信息
 export function getApiParamForms(params) {
   return fetch({
-    url: '/admin/service/retrieve/apis',
+    url: '/dsb/admin/service/retrieve/apis',
     method: 'post',
     params
   })
@@ -72,7 +72,7 @@ export function getApiParamForms(params) {
 // 禁用服务接口！
 export function forbiddenService (data) {
   return fetch({
-    url: 'admin/service/mgmt/pause',
+    url: '/dsb/admin/service/mgmt/pause',
     method: 'post',
     data
   })
@@ -81,7 +81,7 @@ export function forbiddenService (data) {
 // 启用服务接口！
 export function runService (data) {
   return fetch({
-    url: 'admin/service/mgmt/deploy',
+    url: '/dsb/admin/service/mgmt/deploy',
     method: 'post',
     data
   })
@@ -90,7 +90,7 @@ export function runService (data) {
 // 服务撤销！
 export function cancelService (data) {
   return fetch({
-    url: 'admin/service/mgmt/undeploy',
+    url: '/dsb/admin/service/mgmt/undeploy',
     method: 'post',
     data
   })

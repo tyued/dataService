@@ -8,10 +8,12 @@ router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     next()
   } else {
+    // next()
     if (store.getters.token) {
       next()
     } else {
-      next('/login')
+      next('/login')  
+      NProgress.done() // 结束Progress
     }
   }
 })

@@ -14,7 +14,11 @@
     box-sizing: border-box;
 }
 
-.el-aside,.el-aside .el-menu{ background: #354357;}
+.row+.row {
+    margin-top: 20px;
+}
+
+.el-aside,.el-aside .el-menu{ background: #354357;border:none;}
 .el-aside .el-menu-item{ color: #fff; text-align: center;}
 .el-aside .el-menu-item.is-active{ color: #fff; background: #4a5769;}
 .el-aside .el-menu-item:hover{ background: #414e61;}
@@ -167,12 +171,6 @@ div.edui-box{ float: left;}
     border-radius: 14px;
 }
 
-.header .icon-message {
-    width: 32px;
-    height: 32px;
-    background: url(../img/message.png) no-repeat center;
-}
-
 /* 登陆页面 */
 .login-container .username-icon {
     vertical-align: middle;
@@ -192,4 +190,21 @@ div.edui-box{ float: left;}
     background: url(../img/password.png) no-repeat center;
     background-size: 100% 100%;
     -webkit-background-size: 100% 100%;
+}
+
+/* 监控页面 */
+#monitor .el-tabs__content {
+    overflow: visible;
+}
+
+#monitor-tabbox .el-tabs__nav-wrap::after {
+    background-color: transparent;
+}
+
+#monitor-tabbox .el-tabs--left .el-tabs__header.is-left {
+    margin-right: 0;
+}
+
+#monitor-tabbox .el-tabs--left {
+    overflow: visible;
 }

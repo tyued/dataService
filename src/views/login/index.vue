@@ -14,8 +14,8 @@
         </span>
         <el-input clearable :maxlength="50" name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="密码"></el-input>
       </el-form-item>
-      <el-form-item prop="captcha" v-if="false">
-        <el-input name="captcha" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.captcha"></el-input>
+      <el-form-item prop="captcha" v-if="captchaFlag">
+        <el-input :maxlength="4" name="captcha" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.captcha"></el-input>
         <img @load="imgLoading = true;" ref="captchaImgBox" class="captcha-img" :src="imgSrc" alt="">
         <el-button type="text" @click="handleImg">换一张</el-button>
       </el-form-item>
@@ -36,13 +36,15 @@ export default {
   name: "login",
   data() {
     return {
+      captchaFlag: "",
       loginTip: "",
-      imgSrc: "/kaptcha",
+      imgSrc: "http://vincent1003.oicp.net:12673/dsb/kaptcha",
       imgLoading: true,
       loginForm: {
         username: "",
         password: "",
-        captcha: ""
+        captcha: "",
+        failureRetries: 0
       },
       loginRules: {
         username: [
@@ -71,11 +73,11 @@ export default {
       showDialog: false
     };
   },
-  created() {},
+  created() {
+    // this.captchaFlag = JSON.parse(window.localStorage.getItem('captchaFlag')) || ''
+  },
   mounted() {
-    // this.$refs.captchaImgBox.addEventListener("load", () => {
-    //   this.imgLoading = true;
-    // });
+    // three.js
     container = document.createElement("div");
     this.$refs.can.appendChild(container);
 
@@ -128,24 +130,28 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true;
+
           this.$store
             .dispatch("userLogin", {
               username: this.loginForm.username.trim(),
               password: Base64.encode(this.loginForm.password),
-              captcha: Base64.encode(this.loginForm.captcha)
+              captcha: this.loginForm.captcha,
+              failureRetries: this.loginForm.failureRetries++ // 用于后台判断是否显示验证码的字段
             })
             .then(data => {
               this.loading = false;
-              console.log(data);
 
-              const { message, status } = data;
+              const { message, status, captcha } = data;
               switch (status) {
                 case "success":
-                console.log('success')
                   this.$router.push('/');
                   break;
 
                 default:
+                  if (captcha) {
+                    this.captchaFlag = 'active'
+                    // window.localStorage.setItem('captchaFlag', JSON.stringify('active'))
+                  }
                   this.loginTip = message;
                   break;
               }
@@ -163,7 +169,8 @@ export default {
       if (this.imgLoading) {
         // 刷新图片
         this.imgLoading = false; // 防止多次点击频繁刷新
-        this.imgSrc = "/kaptcha?" + Math.random();
+        this.imgSrc =
+          "http://vincent1003.oicp.net:12673/dsb/kaptcha?" + Math.random();
       }
     }
   }

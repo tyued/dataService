@@ -1,6 +1,6 @@
 <template>
   <el-menu 
-  default-active="/" 
+  :default-active="activePath" 
   @select="handleClick" 
   class="el-menu-vertical-demo" 
   @open="handleOpen" 
@@ -19,19 +19,22 @@
       <i class="menuico menu_jk"></i>
       <span slot="title">监控</span>
     </el-menu-item>
-
     <el-menu-item index="/setting">
       <i class="menuico menu_set"></i>
       <span slot="title">设置</span>
     </el-menu-item>
-
   </el-menu>
 </template>
 
 <script>
 export default {
   data() {
-    return {};
+    return {
+      activePath: '',
+    };
+  },
+  created() {
+    this.activePath = this.$route.path
   },
   methods: {
     handleOpen(key, keyPath) {
@@ -41,7 +44,7 @@ export default {
       console.log(key, keyPath);
     },
     handleClick(index, indexPath) {
-      console.log(index, indexPath);
+      // console.log(index, indexPath);
     }
   }
 };

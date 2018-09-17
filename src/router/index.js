@@ -24,6 +24,14 @@ export default new Router({
             name: 'monitor', // 监控模块
             path: '/monitor',
             component: _import('basics/monitor/index'),
+        },{
+            name: 'monitor-detail', // 监控详情模块
+            path: '/detail',
+            component: _import('basics/detail/index')
+        },{
+            name: 'setting', // 设置模块
+            path: '/setting',
+            component: _import('basics/setting/index'),
         }]
     }, {
         path: '/login',
