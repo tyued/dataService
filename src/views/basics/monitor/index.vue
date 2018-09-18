@@ -21,7 +21,7 @@ import * as api from "api/monitor";
 export default {
   // name: "monitor-main",
   created() {
-    this.getAllInstance()
+    this.getInstance()
   },
   data() {
     return {
@@ -31,8 +31,8 @@ export default {
     };
   },
   methods: {
-    getAllInstance() {
-      api.getAllInstance().then(res => {
+    getInstance() {
+      api.getInstance().then(res => {
         console.log(res);
         const {status, data} = res
         if (status === 200 && data) {

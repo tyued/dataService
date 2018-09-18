@@ -1,19 +1,11 @@
 // 系统监控接口：
 import fetch from 'utils/fetch';
 
-// 所有节点实例信息
-export function getAllInstance() {
-  return fetch({
-    url: 'dsb/admin/instances',
-    method: 'get'
-  });
-}
-
 /**
- * 单个节点实例信息
+ * 节点实例信息
  * @param id by id
  */
-export function getOneInstance(params) {
+export function getInstance(params) {
   return fetch({
     url: 'dsb/admin/instances',
     method: 'get',
@@ -21,14 +13,13 @@ export function getOneInstance(params) {
   });
 }
 
-// Garbage Collection Pauses 垃圾回收
-export function getGc(params) {
+// detail信息获取
+export function getDetail(params) {
   return fetch({
-    url: `dsb/admin/instances/${params.id}/actuator/metrics/jvm.gc.pause`,
+    url: `dsb/admin/instances/${params.id}/actuator/metrics/${params.type}`,
     method: 'get'
   });
 }
-
 
 
 

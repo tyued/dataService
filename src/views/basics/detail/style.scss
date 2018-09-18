@@ -113,3 +113,11 @@
     padding: .5em .75em;
   }
 }
+
+.inlinebox {
+  text-align: center;
+  p {
+    line-height: 2em;
+    font-size: 14px;
+  }
+}

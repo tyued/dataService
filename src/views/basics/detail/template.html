@@ -50,15 +50,15 @@
             </div>
             <el-row class="tab-circle">
               <el-col :span="8">
-                <el-progress type="circle" :percentage="0"></el-progress>
+                <el-progress type="circle" :percentage="parseInt(systermCPUUsage * 100)"></el-progress>
                 <p>CPU使用率</p>
               </el-col>
               <el-col :span="8">
-                <el-progress type="circle" :percentage="25"></el-progress>
-                <p>非堆内存使用率</p>
+                <!-- <el-progress type="circle" percentage="??"></el-progress> -->
+                <p>堆内存使用率</p>
               </el-col>
               <el-col :span="8">
-                <el-progress type="circle" :percentage="80" color="#8e71c7"></el-progress>
+                <!-- <el-progress type="circle" percentage="??" color="#8e71c7"></el-progress> -->
                 <p>非堆内存使用率</p>
               </el-col>
             </el-row>
@@ -72,11 +72,47 @@
             <div slot="header" class="clearfix">
               <span>进程</span>
             </div>
+            <el-row class="inlinebox">
+              <el-col style="width:20%;">
+                <p>PID</p>
+                ????????????
+              </el-col>
+              <el-col style="width:20%;">
+                <p>UPTIME</p>
+                ???????????????
+              </el-col>
+              <el-col style="width:20%;">
+                <p>PROCESS CPU USAGE</p>
+                <p>{{processCPUUsage}}</p>
+              </el-col>
+              <el-col style="width:20%;">
+                <p>SYSTEM CPU USAGE</p>
+                <p>{{systermCPUUsage}}</p>
+              </el-col>
+              <el-col style="width:20%;">
+                <p>CPU数量</p>
+                <p>？？？？？？？？？</p>
+              </el-col>
+            </el-row>
           </el-card>
           <el-card class="box-card" shadow="hover">
             <div slot="header" class="clearfix">
               <span>垃圾回收</span>
             </div>
+            <el-row class="inlinebox">
+              <el-col :span="8">
+                <p>回收次数</p>
+                <p>{{gcObj.count}}</p>
+              </el-col>
+              <el-col :span="8">
+                <p>总消耗时间</p>
+                <p>{{gcObj.total}}</p>
+              </el-col>
+              <el-col :span="8">
+                <p>最大消耗时间</p>
+                <p>{{gcObj.max}}</p>
+              </el-col>
+            </el-row>
           </el-card>
         </el-col>
         <el-col :span="12">
@@ -85,7 +121,7 @@
               <span>线程</span>
             </div>
             <div>
-              <div ref="Threads" class="echarts-line-monitor"></div>
+              <AreaChart :arr="threadsArr" :types="['LIVE','DAEMON','PEAK LIVE']" />
             </div>
           </el-card>
         </el-col>
@@ -97,7 +133,12 @@
             <div slot="header" class="clearfix">
               <span>堆内存</span>
             </div>
-            echarts
+            <div>
+              <el-alert :closable="false" title="Fetching memory metrics failed." type="error" description="Request failed with status code 502"
+                show-icon>
+              </el-alert>
+              <AreaChart point="MB" :arr="heapArr" :types="['USED','SIZE','MAX']" />
+            </div>
           </el-card>
         </el-col>
         <el-col :span="12">
@@ -105,15 +146,21 @@
             <div slot="header" class="clearfix">
               <span>非堆内存</span>
             </div>
-            echarts
+            <div>
+              <AreaChart point="MB" :arr="nonHeapArr" :types="['METASPACE','USED','SIZE','MAX']" />
+            </div>
           </el-card>
         </el-col>
+      </el-row>
+      <el-row class="row" :gutter="20">
         <el-col :span="12">
           <el-card class="box-card" shadow="hover">
             <div slot="header" class="clearfix">
               <span>缓存：资源</span>
             </div>
-            echarts
+            <div>
+              <AreaChart :arr="RESOURCESArr" :types="['HITS','MISSES','HIT RATIO']" />
+            </div>
           </el-card>
         </el-col>
         <el-col :span="12">
@@ -121,7 +168,9 @@
             <div slot="header" class="clearfix">
               <span>缓存：SHIRO</span>
             </div>
-            echarts
+            <div>
+              <AreaChart :arr="SHIROArr" :types="['HITS','MISSES','HIT RATIO']" />
+            </div>
           </el-card>
         </el-col>
       </el-row>
@@ -141,7 +190,9 @@
                 <span class="title-span">访问量统计</span>
               </el-row>
               <!-- echarts -->
-              <div ref="monitorEcharts" class="echarts-line-monitor"></div>
+              <div>
+                <!-- <AreaChart height="300px" /> -->
+              </div>
             </el-col>
             <el-col :span="9" :offset="1">
               <el-row class="title">

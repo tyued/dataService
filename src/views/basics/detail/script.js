@@ -1,35 +1,48 @@
-import echarts from "echarts";
 import PageBar from "components/PageBar/index"; // 分页组件
+import AreaChart from 'components/AreaChart/index'; // echart组件
 import * as api from 'api/monitor'
-import FileSaver from "file-saver";
-import XLSX from "xlsx";
-import { debounce } from 'utils';
+import FileSaver from "file-saver"; // 导出Excel
+import XLSX from "xlsx"; // Excel
 export default {
   name: "monitor",
   components: {
-    PageBar
+    PageBar,
+    AreaChart
   },
-  async created() {
-    this.id = this.$route.query.id
-    let res = await api.getOneInstance({
+  created() {
+    this.id = this.$route.query.id // 获取传过来的服务ID
+    api.getInstance({  // 信息列表的显示
       id: this.id
+    }).then((res) => {
+      const { status, data } = res
+      if (status === 200 && data) {
+        this.metadata = data[0].registration.metadata
+        this.status = data[0].statusInfo.status
+      }
     })
-    const {status, data} = res
-    if (status === 200 && data) {
-      this.metadata = data[0].registration.metadata
-      this.status = data[0].statusInfo.status
-    }
-    await this.circleData()
+
+    this.circleData() // 页面初始化调用一次，之后循环调用
   },
   data() {
     return {
       id: '', // 服务id
       status: '', // 服务状态
       metadata: [], // 信息数组
-      gcList: [], // 垃圾回收
+      gcObj: { // 垃圾回收
+        count: '',
+        total: '',
+        max: '',
+      },
+      threadsArr: [null, null, null],
+      heapArr: [null, null, null],
+      nonHeapArr: [null, null, null, null],
+      RESOURCESArr: [null, null, null],
+      SHIROArr: [null, null, null],
+      processCPUUsage: 0, // 进程CPU使用率
+      systermCPUUsage: 0, // 系统CPU使用率
       tabDateValue: "日报",
       currentPage4: 4,
-      pickerOptions2: {
+      pickerOptions2: { // 日期选择器数据
         shortcuts: [
           {
             text: "最近一周",
@@ -94,116 +107,196 @@ export default {
       ],
     };
   },
-  mounted() {
-    this.init();
-    if (this.autoResize) {
-      this.__resizeHanlder = debounce(() => {
-      if (this.chart) {
-          this.chart.resize()
-      }
-      }, 100)
-      window.addEventListener('resize', this.__resizeHanlder)
-    }
 
-    // 监听侧边栏的变化
-    const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
-    sidebarElm.addEventListener('transitionend', this.__resizeHanlder)
-  },
-  beforeDestroy() {
-    // 解除echarts调用
-    if (!this.chart) {
-      return
-    }
-    if (this.autoResize) {
-        window.removeEventListener('resize', this.__resizeHanlder)
-    }
 
-    const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
-    sidebarElm.removeEventListener('transitionend', this.__resizeHanlder)
-
-    this.chart.dispose()
-    this.chart = null
-  },
   methods: {
-    async circleData() {
+    circleData() {
       // 初始化数据
       // 垃圾回收
-      let res = await api.getGc({
-        id: this.id
+      api.getDetail({
+        id: this.id,
+        type: 'jvm.gc.pause'
+      }).then((res) => {
+        const { data, status } = res
+        if (status === 200 && data) {
+          this.gcObj.count = data.measurements[0].value
+          this.gcObj.total = data.measurements[1].value.toFixed(2) + 's'
+          this.gcObj.max = data.measurements[2].value.toFixed(2) + 's'
+        }
+      }).catch((error) => {
+        console.dir(error)
       })
-      const {data, status} = res
-      if (status === 200 && data) {
-        this.gcList = data.measurements
-      }
-      // 
-    },
-    init() {
-      // 所有echarts初始化
+      // 进程信息
+      api.getDetail({
+        id: this.id,
+        type: 'process.cpu.usage'
+      }).then((res) => {
+        const { data, status } = res
+        if (status === 200 && data) {
+          this.processCPUUsage = data.measurements[0].value.toFixed(2)
+        }
+      })
+      api.getDetail({
+        id: this.id,
+        type: 'system.cpu.usage'
+      }).then((res) => {
+        const { data, status } = res
+        if (status === 200 && data) {
+          this.systermCPUUsage = data.measurements[0].value.toFixed(2)
+        }
+      })
+      // 线程信息
+      api.getDetail({
+        id: this.id,
+        type: 'jvm.threads.live'
+      }).then((res) => {
+        const { data, status } = res
+        if (status === 200 && data) {
+          this.$set(this.threadsArr, 0, data.measurements[0].value)
+        }
+      })
+      api.getDetail({
+        id: this.id,
+        type: 'jvm.threads.daemon'
+      }).then((res) => {
+        const { data, status } = res
+        if (status === 200 && data) {
+          this.$set(this.threadsArr, 1, data.measurements[0].value)
+        }
+      })
+      api.getDetail({
+        id: this.id,
+        type: 'jvm.threads.peak'
+      }).then((res) => {
+        const { data, status } = res
+        if (status === 200 && data) {
+          this.$set(this.threadsArr, 2, data.measurements[0].value)
+        }
+      })
 
-      this.initChart();
+      // 堆内存信息
+      api.getDetail({
+        id: this.id,
+        type: 'jvm.memory.used?tag=area:heap'
+      }).then((res) => {
+        const { data, status } = res
+        if (status === 200 && data) {
+          this.$set(this.heapArr, 0, Number((data.measurements[0].value / 10e8).toFixed(2)))
+        }
+      })
+      api.getDetail({
+        id: this.id,
+        type: 'jvm.memory.committed?tag=area:heap'
+      }).then((res) => {
+        const { data, status } = res
+        if (status === 200 && data) {
+          this.$set(this.heapArr, 1, Number((data.measurements[0].value / 10e8).toFixed(2)))
+        }
+      })
+      api.getDetail({
+        id: this.id,
+        type: 'jvm.memory.max?tag=area:heap'
+      }).then((res) => {
+        const { data, status } = res
+        if (status === 200 && data) {
+          this.$set(this.heapArr, 2, Number((data.measurements[0].value / 10e8).toFixed(2)))
+        }
+      })
+      // 非堆内存信息
+      api.getDetail({
+        id: this.id,
+        type: 'jvm.memory.used?tag=area:nonheap&id=Metaspace'
+      }).then((res) => {  
+        const {data, status} = res
+        if (status === 200 && data) {
+          this.$set(this.nonHeapArr, 0, Number((data.measurements[0].value / 10e8).toFixed(2)))
+        }
+      })
+      api.getDetail({
+        id: this.id,
+        type: 'jvm.memory.used?tag=area:nonheap'
+      }).then((res) => {  
+        const {data, status} = res
+        if (status === 200 && data) {
+          this.$set(this.nonHeapArr, 1, Number((data.measurements[0].value / 10e8).toFixed(2)))
+        }
+      })
+      api.getDetail({
+        id: this.id,
+        type: 'jvm.memory.committed?tag=area:nonheap'
+      }).then((res) => {  
+        const {data, status} = res
+        if (status === 200 && data) {
+          this.$set(this.nonHeapArr, 2, Number((data.measurements[0].value / 10e8).toFixed(2)))
+        }
+      })
+      api.getDetail({
+        id: this.id,
+        type: 'jvm.memory.max?tag=area:nonheap'
+      }).then((res) => {  
+        const {data, status} = res
+        if (status === 200 && data) {
+          this.$set(this.nonHeapArr, 3, Number((data.measurements[0].value / 10e8).toFixed(2)))
+        }
+      })
+      // 缓存 RESOURCES
+      api.getDetail({
+        id: this.id,
+        type: 'cache.gets?tag=name:RESOURCES,result:hit'
+      }).then((res) => {  
+        const {data, status} = res
+        if (status === 200 && data) {
+          this.$set(this.RESOURCESArr, 0, data.measurements[0].value)
+        }
+      })
+      api.getDetail({
+        id: this.id,
+        type: 'cache.gets?tag=name:RESOURCES,result:miss'
+      }).then((res) => {  
+        const {data, status} = res
+        if (status === 200 && data) {
+          this.$set(this.RESOURCESArr, 1, data.measurements[0].value)
+        }
+      })
+      api.getDetail({
+        id: this.id,
+        type: 'cache.size?tag=name:RESOURCES'
+      }).then((res) => {
+        const {data, status} = res
+        if (status === 200 && data) {
+          this.$set(this.RESOURCESArr, 2, data.measurements[0].value)
+        }
+      })
+      // 缓存 SHIRO
+      api.getDetail({
+        id: this.id,
+        type: 'cache.gets?tag=name:SHIRO,result:hit'
+      }).then((res) => {  
+        const {data, status} = res
+        if (status === 200 && data) {
+          this.$set(this.SHIROArr, 0, data.measurements[0].value)
+        }
+      })
+      api.getDetail({
+        id: this.id,
+        type: 'cache.gets?tag=name:SHIRO,result:miss'
+      }).then((res) => {  
+        const {data, status} = res
+        if (status === 200 && data) {
+          this.$set(this.SHIROArr, 1, data.measurements[0].value)
+        }
+      })
+      api.getDetail({
+        id: this.id,
+        type: 'cache.size?tag=name:SHIRO'
+      }).then((res) => {
+        const {data, status} = res
+        if (status === 200 && data) {
+          this.$set(this.SHIROArr, 2, data.measurements[0].value)
+        }
+      })
     },
-    initChart() {
-      this.chart = echarts.init(this.$refs.monitorEcharts, "macarons");
-      this.chart.setOption({
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "cross",
-            label: {
-              backgroundColor: "#6a7985"
-            }
-          }
-        },
-        color: ["#209cee", "#42d3a5", "#ffdd57"],
-        legend: {
-          data: ["LIVE: 63", "DAEMON: 63", "PEAK LIVE: 63"]
-        },
-        grid: {
-          left: "3%",
-          right: "4%",
-          bottom: "3%",
-          containLabel: true
-        },
-        xAxis: [
-          {
-            type: "category",
-            boundaryGap: false,
-            data: ["14:00:00", "14:30:00", "15:00:00", "15:30:00", "16:00:00"]
-          }
-        ],
-        yAxis: [
-          {
-            type: "value"
-          }
-        ],
-        series: [
-          {
-            name: "LIVE: 63",
-            type: "line",
-            stack: "总量",
-            areaStyle: { normal: {} },
-            // smooth: true,
-            data: [120, 132, 101, 134, 90, 230, 210]
-          },
-          {
-            name: "DAEMON: 63",
-            type: "line",
-            stack: "总量",
-            areaStyle: { normal: {} },
-            // smooth: true,
-            data: [220, 182, 191, 234, 290, 330, 310]
-          },
-          {
-            name: "PEAK LIVE: 63",
-            type: "line",
-            stack: "总量",
-            areaStyle: { normal: {} },
-            // smooth: true,
-            data: [150, 232, 201, 154, 190, 330, 410]
-          }
-        ]
-      });
-    },
+
     handleCurrentPage(number) {
       // 点击页码
       this.getPublicBookList(number);

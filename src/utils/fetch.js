@@ -6,7 +6,7 @@ import { Message, MessageBox } from 'element-ui';
 const service = axios.create({
   //baseURL: process.env.BASE_API, // api的base_url
   // baseURL: 'http://vincent1003.oicp.net:12673',
-  timeout: 20000 // 请求超时时间
+  // timeout: 20000 // 请求超时时间
 });
 
 // request拦截器
