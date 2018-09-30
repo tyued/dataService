@@ -14,9 +14,11 @@
     box-sizing: border-box;
 }
 
-.row+.row {
-    margin-top: 20px;
-}
+.row+.row {margin-top: 20px;}
+.smallscroll::-webkit-scrollbar-track {background: #eaedf4;border-radius: 2px;}
+.smallscroll::-webkit-scrollbar-thumb {background: #ccc;border-radius: 2px;}
+.smallscroll::-webkit-scrollbar-button {display: none;}
+.smallscroll::-webkit-scrollbar {height: 10px;width: 4px;}
 
 .el-aside,.el-aside .el-menu{ background: #354357;border:none;}
 .el-aside .el-menu-item{ color: #fff; text-align: center;}
@@ -32,7 +34,7 @@
     display: none;
 }
 
-.el-header{ background: #449afc;}
+.el-header{ background: #449afc;overflow: hidden;}
 .headbar-container{ height: 100%;}
 .headbar-container .el-badge__content.is-fixed {top: 18px;}
 .headbar-container .el-badge__content {border: none;}
@@ -149,7 +151,8 @@ div.edui-box{ float: left;}
 .main .el-tabs__nav{ white-space: normal;}
 .main .el-tabs__nav-scroll{width: 150px;}
 .main .left-box .el-tabs__nav-scroll{width: auto;}
-.main .el-tabs__item{ height: auto; line-height: normal; padding-bottom: 10px}
+.main .el-tabs__item{ height: auto; line-height: normal; padding-left: 0;padding-bottom: 10px}  
+.exact .el-tabs__item{padding: 0 20px;height: 40px;line-height: 40px;}
 .respBox{ padding: 0 20px 20px;}
 
 
@@ -157,54 +160,45 @@ div.edui-box{ float: left;}
 .evalsbox .el-rate__item{ margin-top: 4px;}
 
 /* 头部导航 */
-.headbar .person-center-link {
-    display: block;
-    margin-top: 14px;
-    line-height: 32px;
-    height: 32px;
-    padding-left: 32px;
-    background: url(../img/person.png) no-repeat left center;
-    background-size: 32px 32px;
-    -webkit-background-size: 32px 32px;
-}
-.headbar .el-input__inner {
-    border-radius: 14px;
-}
+.header-li .person-center-link {display: block;margin-top: 14px;line-height: 32px;height: 32px;padding-left: 32px;background: url(../img/person.png) no-repeat left center;background-size: 32px 32px;-webkit-background-size: 32px 32px;}
+.header-li .el-input__inner {border-radius: 14px;}
 
 /* 登陆页面 */
-.login-container .username-icon {
-    vertical-align: middle;
-    display: inline-block;
-    width: 26px;
-    height: 26px;
-    background: url(../img/username.png) no-repeat center;
-    background-size: 100% 100%;
-    -webkit-background-size: 100% 100%;
+.login-container .username-icon {vertical-align: middle;display: inline-block;width: 26px;height: 26px;background: url(../img/username.png) no-repeat center;background-size: 100% 100%;-webkit-background-size: 100% 100%;
 }
-
-.login-container .password-icon {
-    vertical-align: middle;
-    display: inline-block;
-    width: 26px;
-    height: 26px;
-    background: url(../img/password.png) no-repeat center;
-    background-size: 100% 100%;
-    -webkit-background-size: 100% 100%;
+.login-container .password-icon {vertical-align: middle;display: inline-block;width: 26px;height: 26px;background: url(../img/password.png) no-repeat center;background-size: 100% 100%;-webkit-background-size: 100% 100%;
 }
 
 /* 监控页面 */
-#monitor .el-tabs__content {
-    overflow: visible;
-}
+#monitor .el-tabs__content {overflow: visible;}
+#monitor-tabbox .el-tabs__nav-wrap::after {background-color: transparent;}
+#monitor-tabbox .el-tabs--left .el-tabs__header.is-left {margin-right: 0;}
+#monitor-tabbox .el-tabs--left {overflow: visible;}
+/* 分页组件 BUG 了 */
+.page-bar .el-input__icon {line-height: 14px;}
 
-#monitor-tabbox .el-tabs__nav-wrap::after {
-    background-color: transparent;
-}
 
-#monitor-tabbox .el-tabs--left .el-tabs__header.is-left {
-    margin-right: 0;
+/* 上传头像组件样式 */
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
 }
-
-#monitor-tabbox .el-tabs--left {
-    overflow: visible;
+.avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+}
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px !important;
+    text-align: center;
+}
+.avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
 }

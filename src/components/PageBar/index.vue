@@ -1,5 +1,4 @@
 <template>
-
   <el-pagination
     class="page-bar"
     @size-change="handleSizeChange"
@@ -14,35 +13,20 @@
 <script>
   export default {
     name: 'PageBar',
-    props: ['total', 'currentNumber', 'currentpage'],
-    data () {
-      return {
-        
-      }
-    },
-    created () {
-      // console.log(this.total)
-      
-    },
-    
-    updated () {
-      // console.log(this.currentpage, 'cur')
-    },
+    props: ['total', 'currentpage'],
     methods: {
       handlePage(number) {
         this.$emit('handlePage', number)
       },
       handleSizeChange(number) {
         this.$emit('handlePageSize', number)
-        
       }
     }
   }
 </script>
-
 <style scoped>
 .page-bar {
-  margin-top: 6px;
+  margin-top: 10px;
 }
 </style>
 

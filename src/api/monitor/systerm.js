@@ -21,6 +21,14 @@ export function getDetail(params) {
   });
 }
 
+// PID
+export function getPID(params) {
+  return fetch({
+    url: `dsb/admin/instances/${params.id}/actuator/env/PID`,
+    method: 'get'
+  });
+}
+
 
 
 

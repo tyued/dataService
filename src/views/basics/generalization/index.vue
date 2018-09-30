@@ -2,7 +2,7 @@
     <div class="gl-container">
         <el-row class="gl-rowbox">
             <el-col :span="24">
-                <el-card shadow="hover" class="box-card">
+                <el-card  class="box-card">
                     <div slot="header" class="box-card-header">
                         系统概述
 					</div>
@@ -37,7 +37,7 @@
         </el-row>
         <el-row class="gl-rowbox gl-partbox" :gutter="20">
             <el-col :span="8">
-                <el-card shadow="hover" class="box-card">
+                <el-card  class="box-card">
                     <div slot="header" class="box-card-header">
                         用户订阅量
                         <el-tag type="danger">TOP5</el-tag>
@@ -46,7 +46,7 @@
                 </el-card>
             </el-col>
             <el-col :span="8">
-                <el-card shadow="hover" class="box-card">
+                <el-card  class="box-card">
                     <div slot="header" class="box-card-header">
                         服务访问量
                         <el-tag type="danger">TOP5</el-tag>
@@ -55,7 +55,7 @@
                 </el-card>
             </el-col>
             <el-col :span="8">
-                <el-card shadow="hover" class="box-card">
+                <el-card  class="box-card">
                     <div slot="header" class="box-card-header">
                         服务订阅量
                         <el-tag type="danger">TOP5</el-tag>
@@ -66,16 +66,16 @@
         </el-row>
         <el-row class="gl-rowbox gl-partbox" :gutter="20">
             <el-col :span="12">
-                <el-card shadow="hover" class="box-card">
+                <el-card  class="box-card">
                     <div slot="header" class="box-card-header">
                         最新服务异常
-                        <span class="more">更多</span>
+                        <!-- <span class="more">更多</span> -->
 					</div>
                     <zxfwyc-table></zxfwyc-table>
                 </el-card>
             </el-col>
             <el-col :span="12">
-                <el-card shadow="hover" class="box-card">
+                <el-card  class="box-card">
                     <div slot="header" class="box-card-header">
                         异常类型汇总
 					</div>
@@ -85,10 +85,10 @@
         </el-row>      
         <el-row class="gl-rowbox gl-partbox">
             <el-col :span="24   ">
-                <el-card shadow="hover" class="box-card">
+                <el-card  class="box-card">
                     <div slot="header" class="box-card-header">
                         申请接入列表
-                        <span class="more">更多</span>
+                        <!-- <span class="more">更多</span> -->
 					</div>
                     <sqjrlist-table></sqjrlist-table>
                 </el-card>

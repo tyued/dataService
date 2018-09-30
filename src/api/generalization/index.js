@@ -8,18 +8,18 @@ import fetch from 'utils/fetch';
 //     });
 // }
 
-// 最新服务访问异常数据--------接口有问题
+// 最新服务访问异常数据
 export function errorLastest(obj) {
     return fetch({
-        url: '/dsb/platform/service/metirc/errorLastest',
+        url: '/dsb/admin/service/stats/errorLastest',
         method: 'post',
         data: obj
     });
 }
-// 异常类型汇总--------接口有问题
+// 异常类型汇总
 export function errorRatio(obj) {
     return fetch({
-        url: '/dsb/platform/service/metirc/errorRatio',
+        url: '/dsb/admin/service/stats/errorRatio',
         method: 'post',
         data: obj
     });
@@ -32,26 +32,29 @@ export function metircs(obj) {
         data: obj
     });
 }
-// 最近10条服务发布申请记录--------接口有问题
+
+
+// ===============================================================
+// 最近10条服务发布申请记录
 export function pubTop10(obj) {
     return fetch({
-        url: '/dsb/platform/service/metirc/pubTop10',
+        url: '/dsb/admin/service/stats/pubTop10',
         method: 'post',
         data: obj
     });
 }
-// 服务访问量Top5--------接口有问题
+// 服务访问量Top5
 export function pvTop5(obj) {
     return fetch({
-        url: '/dsb/platform/service/metirc/pvTop5',
+        url: '/dsb/admin/service/stats/pvTop5',
         method: 'post',
         data: obj
     });
 }
-// 服务订阅量Top5--------接口有问题
+// 服务订阅量Top5
 export function subTop5(obj) {
     return fetch({
-        url: '/dsb/platform/service/metirc/subTop5',
+        url: '/dsb/admin/service/stats/subTop5',
         method: 'post',
         data: obj
     });
@@ -59,16 +62,25 @@ export function subTop5(obj) {
 // 系统概况
 export function survey(obj) {
     return fetch({
-        url: '/dsb/platform/service/metirc/survey',
+        url: '/dsb/admin/service/stats/survey',
         method: 'post',
         data: obj
     });
 }
-// 用户订阅量Top5--------接口有问题
+// 用户订阅量Top5
 export function userTop5(obj) {
     return fetch({
-        url: '/dsb/platform/service/metirc/userTop5',
+        url: '/dsb/admin/service/stats/userTop5',
         method: 'post',
         data: obj
+    });
+}
+
+
+// 申请接入列表查看按钮  params: subId
+export function showServiceDetail(params) {
+    return fetch({
+        url: `/dsb/admin/service/subscribe/${params.subId}`,
+        method: 'post',
     });
 }

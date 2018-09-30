@@ -47,7 +47,7 @@ export function getPubList (data) {
   return fetch({
     url: '/dsb/admin/service/retrieve/list',
     method: 'post',
-    data:data
+    data
   })
 }
 
@@ -66,6 +66,15 @@ export function getApiParamForms(params) {
     url: '/dsb/admin/service/retrieve/apis',
     method: 'post',
     params
+  })
+}
+
+// 已发布-修改按钮
+export function editApi(data) {
+  return fetch({
+    url: '/dsb/admin/service/retrieve/api',
+    method: 'post',
+    data
   })
 }
 
@@ -94,4 +103,13 @@ export function cancelService (data) {
     method: 'post',
     data
   })
+}
+
+// 获取接口list by 服务id
+export function postApisListById(data) {
+  return fetch({
+    url: 'dsb/admin/service/retrieve/apis',
+    method: 'post',
+    data
+  });
 }

@@ -11,7 +11,7 @@
         <el-table-column prop="apiVer" label="版本"></el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">           
-            <el-tag type="success">{{scope.row.apiStatus==1?'在线':(scope.row.apiStatus==2?'暂停':'下线')}}</el-tag> 
+            <el-tag type="success" size="small">{{scope.row.apiStatus==1?'在线':(scope.row.apiStatus==2?'暂停':'下线')}}</el-tag> 
           </template>
         </el-table-column>
         <el-table-column label="操作" width="150">

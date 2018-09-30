@@ -1,0 +1,43 @@
+.metadata {
+  overflow: auto;
+  table {
+    width: 100%;
+  }
+  tr {
+    border-bottom: 1px solid #ebeef5;
+  }
+  td {
+    padding: .5em .75em;
+  }
+}
+
+.inlinebox {
+  text-align: center;
+  p {
+    line-height: 2em;
+    font-size: 14px;
+  }
+}
+
+.tabbox {
+  text-align: center;
+  p {
+    line-height: 2em;
+    font-size: 14px;
+  }
+  margin-bottom: 10px;
+}
+
+.flexbox {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  &>div {
+    display: inline-block;
+    width: 20%;
+  }
+}
+
+.box-card {
+  margin-bottom: 20px;
+}

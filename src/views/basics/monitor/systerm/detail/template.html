@@ -1,0 +1,260 @@
+<!-- ===========系统监控=========== -->
+<div class="detail">
+  <el-row :gutter="20">
+    <el-col :lg="12" :sm="24">
+      <el-card class="box-card"  :body-style="{'min-height':'78px'}">
+        <div slot="header" class="clearfix">
+          <span>消息</span>
+        </div>
+        <span style="color:#b5b5b5;line-height: 38px;">暂无消息</span>
+      </el-card>
+    </el-col>
+    <el-col :lg="12" :sm="24">
+
+      <el-card class="box-card" >
+        <div slot="header" class="clearfix">
+          <span>健康状态</span>
+        </div>
+        <div style="padding: .5em .75em;border-bottom: 1px solid #ebeef5;">
+          <p>
+            <span>状态： </span>
+            <span class="status-ft" :style="{color: status === 'UP' ? 'rgb(19, 206, 102)' : 'rgb(255, 73, 73)'}">{{status}}</span>
+          </p>
+        </div>
+      </el-card>
+    </el-col>
+  </el-row>
+
+  <el-row :gutter="20">
+
+    <el-col :span="24">
+      <el-card class="box-card" >
+        <div slot="header" class="clearfix">
+          <span>信息</span>
+        </div>
+        <div class="metadata">
+          <table>
+            <tbody>
+              <tr><td>详情：</td><td>{{metadata.detail}}</td></tr>
+              <tr><td>版本：</td><td>{{metadata.version}}</td></tr>
+              <tr><td>开始时间：</td><td>{{metadata.startup}}</td></tr>
+              <tr><td>介绍：</td><td>{{metadata.intro}}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </el-card>
+    </el-col>
+  </el-row>
+
+  <el-row :gutter="20">
+    <el-col :lg="12" :sm="24">
+      <el-card class="box-card"  :body-style="{'height': '130px','overflow':'auto'}">
+        <div slot="header" class="clearfix">
+          <span>进程</span>
+        </div>
+        <el-alert v-if="errorObj.process.show" :closable="false" :title="errorObj.process.title" type="error"
+          :description="errorObj.process.message" show-icon>
+        </el-alert>
+        <el-row class="inlinebox flexbox">
+          <el-col>
+            <p>进程ID</p>
+            <p>{{PID}}</p>
+          </el-col>
+          <el-col>
+            <p>更新时间</p>
+            <p>{{UPTIME}}</p>
+          </el-col>
+          <el-col>
+            <p>进程CPU使用率</p>
+            <p>{{processCPUUsage}}</p>
+          </el-col>
+          <el-col>
+            <p>系统CPU使用率</p>
+            <p>{{systermCPUUsage}}</p>
+          </el-col>
+          <el-col>
+            <p>CPU数量</p>
+            <p>{{CPUCOUNT}}</p>
+          </el-col>
+        </el-row>
+      </el-card>
+      <el-card style="margin-top:20px;" class="box-card" >
+        <div slot="header" class="clearfix">
+          <span>垃圾回收</span>
+        </div>
+        <el-alert v-if="errorObj.gc.show" :closable="false" :title="errorObj.gc.title" type="error" :description="errorObj.gc.message"
+          show-icon>
+        </el-alert>
+        <el-row class="inlinebox">
+          <el-col :span="8">
+            <p>计数</p>
+            <p>{{gcObj.count}}</p>
+          </el-col>
+          <el-col :span="8">
+            <p>总消耗时间</p>
+            <p>{{gcObj.total}}</p>
+          </el-col>
+          <el-col :span="8">
+            <p>最大消耗时间</p>
+            <p>{{gcObj.max}}</p>
+          </el-col>
+        </el-row>
+      </el-card>
+    </el-col>
+    <el-col :lg="12" :sm="24">
+      <el-card class="box-card" >
+        <div slot="header" class="clearfix">
+          <span>线程</span>
+        </div>
+        <div>
+          <el-alert v-if="errorObj.threads.show" :closable="false" :title="errorObj.threads.title" type="error"
+            :description="errorObj.threads.message" show-icon>
+          </el-alert>
+          <el-row class="tabbox">
+            <el-col :span="8">
+              <p>
+                <i style="color:#ffdd57" class="fa fa-square"></i> 活跃线程</p>
+              <p>{{threadsArr[0]}}</p>
+            </el-col>
+            <el-col :span="8">
+              <p>
+                <i style="color:#209cee" class="fa fa-square"></i> 守护线程</p>
+              <p>{{threadsArr[1]}}</p>
+            </el-col>
+            <el-col :span="8">
+              <p>最大活跃</p>
+              <p>{{threadsArr[2]}}</p>
+            </el-col>
+          </el-row>
+          <AreaChart :arr="threadsArr" :types="['活跃线程','守护线程','最大活跃']" />
+        </div>
+      </el-card>
+    </el-col>
+  </el-row>
+
+  <el-row :gutter="20">
+    <el-col :lg="12" :sm="24">
+      <el-card class="box-card" >
+        <div slot="header" class="clearfix">
+          <span>堆内存</span>
+        </div>
+        <div>
+          <el-alert v-if="errorObj.heap.show" :closable="false" :title="errorObj.heap.title" type="error" :description="errorObj.heap.message"
+            show-icon>
+          </el-alert>
+          <el-row class="tabbox">
+            <el-col :span="8">
+              <p>
+                <i style="color:#ffdd57" class="fa fa-square"></i> 已用</p>
+              <p>{{threadsArr[0]}}</p>
+            </el-col>
+            <el-col :span="8">
+              <p>
+                <i style="color:#209cee" class="fa fa-square"></i> 可用</p>
+              <p>{{threadsArr[1]}}</p>
+            </el-col>
+            <el-col :span="8">
+              <p>最大</p>
+              <p>{{threadsArr[2]}}</p>
+            </el-col>
+          </el-row>
+          <AreaChart point="MB" :arr="heapArr" :types="['已用','可用','最大']" />
+        </div>
+      </el-card>
+    </el-col>
+    <el-col :lg="12" :sm="24">
+      <el-card class="box-card" >
+        <div slot="header" class="clearfix">
+          <span>非堆内存</span>
+        </div>
+        <div>
+          <el-alert v-if="errorObj.noHeap.show" :closable="false" :title="errorObj.noHeap.title" type="error"
+            :description="errorObj.noHeap.message" show-icon>
+          </el-alert>
+          <el-row class="tabbox">
+            <el-col :span="6">
+              <p>
+                <i style="color:#ffdd57" class="fa fa-square"></i> 元空间</p>
+              <p>{{threadsArr[0]}}</p>
+            </el-col>
+            <el-col :span="6">
+              <p>
+                <i style="color:#209cee" class="fa fa-square"></i> 已用</p>
+              <p>{{threadsArr[0]}}</p>
+            </el-col>
+            <el-col :span="6">
+              <p>
+                <i style="color:#42d3a5" class="fa fa-square"></i> 可用</p>
+              <p>{{threadsArr[1]}}</p>
+            </el-col>
+            <el-col :span="6">
+              <p>最大可用</p>
+              <p>{{threadsArr[2]}}</p>
+            </el-col>
+          </el-row>
+          <AreaChart point="MB" :arr="nonHeapArr" :types="['元空间','已用','可用','最大可用']" />
+        </div>
+      </el-card>
+    </el-col>
+  </el-row>
+  <!-- <el-row :gutter="20">
+    <el-col :lg="12" :sm="24">
+      <el-card class="box-card" >
+        <div slot="header" class="clearfix">
+          <span>缓存：资源</span>
+        </div>
+        <div>
+          <el-alert v-if="errorObj.resources.show" :closable="false" :title="errorObj.resources.title" type="error"
+            :description="errorObj.resources.message" show-icon>
+          </el-alert>
+          <el-row class="tabbox">
+            <el-col :span="8">
+              <p>
+                <i style="color:#ffdd57" class="fa fa-square"></i> HITS</p>
+              <p>{{threadsArr[0]}}</p>
+            </el-col>
+            <el-col :span="8">
+              <p>
+                <i style="color:#209cee" class="fa fa-square"></i> MISSES</p>
+              <p>{{threadsArr[1]}}</p>
+            </el-col>
+            <el-col :span="8">
+              <p>HIT RATIO</p>
+              <p>{{threadsArr[2]}}</p>
+            </el-col>
+          </el-row>
+          <AreaChart :arr="RESOURCESArr" :types="['HITS','MISSES','HIT RATIO']" />
+        </div>
+      </el-card>
+    </el-col>
+    <el-col :lg="12" :sm="24">
+      <el-card class="box-card" >
+        <div slot="header" class="clearfix">
+          <span>缓存：SHIRO</span>
+        </div>
+        <div>
+          <el-alert v-if="errorObj.shiro.show" :closable="false" :title="errorObj.shiro.title" type="error"
+            :description="errorObj.shiro.message" show-icon>
+          </el-alert>
+          <el-row class="tabbox">
+            <el-col :span="8">
+              <p>
+                <i style="color:#ffdd57" class="fa fa-square"></i> HITS</p>
+              <p>{{threadsArr[0]}}</p>
+            </el-col>
+            <el-col :span="8">
+              <p>
+                <i style="color:#209cee" class="fa fa-square"></i> MISSES</p>
+              <p>{{threadsArr[1]}}</p>
+            </el-col>
+            <el-col :span="8">
+              <p>HIT RATIO</p>
+              <p>{{threadsArr[2]}}</p>
+            </el-col>
+          </el-row>
+          <AreaChart :arr="SHIROArr" :types="['HITS','MISSES','HIT RATIO']" />
+        </div>
+      </el-card>
+    </el-col>
+  </el-row> -->
+</div>

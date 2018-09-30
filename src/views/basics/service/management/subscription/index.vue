@@ -13,16 +13,16 @@
       </el-table-column>
       <el-table-column prop="tag" label="分类">
         <template slot-scope="scope">
-          <el-button size="mini" type="success" plain>{{scope.row.tag}}</el-button>
+          <el-tag size="small" type="success" plain>{{scope.row.tag}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="action" label="操作" width="260">
         <template slot-scope="scope">
-          <el-button size="mini">查看</el-button>
-          <el-button size="mini" type="danger" @click="openForbidden">禁用</el-button>
-          <!-- <el-button size="mini">
+          <el-button size="small">查看</el-button>
+          <el-button size="small" type="danger" @click="openForbidden">禁用</el-button>
+          <!-- <el-button size="small">
             <i class="el-icon-download"></i>下载私钥</el-button> -->
-          <el-button size="mini" @click="dialogTableVisible = true">授权管理</el-button>
+          <el-button size="small" @click="dialogTableVisible = true">授权管理</el-button>
         </template>
       </el-table-column>
     </el-table>

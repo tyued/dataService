@@ -10,27 +10,34 @@ export default new Router({
     routes: [{
         path: '/',
         component: Layout,
-        redirect: '/generalization',
+        redirect: 'generalization',
         name: '概览',
         hidden: true,
         children: [{
-            path: '/generalization',
+            path: 'generalization',
             component: _import('basics/generalization/index')
-        },{
+        }, {
+            path: 'notice',
             name: 'notice', // 通知页
-            path: '/notice',
             component: _import('basics/notice/index'),
-        },{
-            name: 'monitor', // 监控模块
-            path: '/monitor',
+        }, {
+            path: 'monitor',
+            name: 'monitor',
+            redirect: '/monitor/main',
             component: _import('basics/monitor/index'),
-        },{
-            name: 'monitor-detail', // 监控详情模块
-            path: '/detail',
-            component: _import('basics/detail/index')
-        },{
+            children: [
+                {
+                    path: 'main',
+                    component: _import('basics/monitor/systerm/main/index')
+                },
+                {
+                    path: 'detail',
+                    component: _import('basics/monitor/systerm/detail/index')
+                },
+            ]
+        }, {
             name: 'setting', // 设置模块
-            path: '/setting',
+            path: 'setting',
             component: _import('basics/setting/index'),
         }]
     }, {
@@ -39,41 +46,40 @@ export default new Router({
         name: '登录',
         hidden: true,
     }, {
-        path: '/service', // ？怎么就写到这里了
+        path: '/service',
         component: Layout,
-        name: '服务',
         hidden: true,
         children: [{
-            path: '/service',
+            path: '/',
             component: _import('basics/service/index'),
             name: '服务数据'
         }, {
-            path: '/service/reviewed',
+            path: 'reviewed',
             component: _import('basics/service/reviewed/index'),
             name: '审核'
         }, {
-            path: '/service/management',
+            path: 'management',
             component: _import('basics/service/management/index'),
             name: '管理',
             children: [{
-                path: '/service/management/subscription',
+                path: 'subscription',
                 component: _import('basics/service/management/subscription/index'),
                 name: '已订阅'
             }, {
-                path: '/service/management/publication',
+                path: 'publication',
                 component: _import('basics/service/management/publication/index'),
                 name: '已发布'
             }, {
-                path: '/service/management/checked',
+                path: 'checked',
                 component: _import('basics/service/management/checked/index'),
                 name: '待审核'
             }, {
-                path: '/service/management/forbidden',
+                path: 'forbidden',
                 component: _import('basics/service/management/forbidden/index'),
                 name: '已禁用'
             }]
         }, {
-            path: '/service/studentinfo',
+            path: 'studentinfo',
             component: _import('basics/service/studentinfo/index'),
             name: '学生信息'
         }]

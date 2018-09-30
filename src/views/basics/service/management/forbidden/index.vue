@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table :data="tableDataCheck" style="width: 100%; height: 580px; overflow-y: auto" :default-sort="{prop: 'name', order: 'descending'}">
+    <el-table v-loading.body="listLoading" :data="tableDataCheck" style="width: 100%; height: 580px; overflow-y: auto" :default-sort="{prop: 'name', order: 'descending'}">
       <el-table-column prop="servName" label="接口名称" sortable>
       </el-table-column>
       <el-table-column prop="servTag" label="所需服务" sortable>
@@ -11,9 +11,9 @@
       </el-table-column>
       <el-table-column prop="action" label="操作">
         <!-- <template slot-scope="scope">
-          <el-button v-if="scope.row.status == 1" size="mini" @click="openChange(scope.row.id, scope.row.userId)">修改</el-button>
-          <el-button v-if="scope.row.status == 2" size="mini" @click="openCancel(scope.row.id, scope.row.userId)">撤销审核</el-button>
-          <el-button v-if="scope.row.status == 0" size="mini" @click="openStart(scope.row.id, scope.row.userId)" class="activeBtn">启用</el-button>
+          <el-button size="small" v-if="scope.row.status == 1" size="mini" @click="openChange(scope.row.id, scope.row.userId)">修改</el-button>
+          <el-button size="small" v-if="scope.row.status == 2" size="mini" @click="openCancel(scope.row.id, scope.row.userId)">撤销审核</el-button>
+          <el-button size="small" v-if="scope.row.status == 0" size="mini" @click="openStart(scope.row.id, scope.row.userId)" class="activeBtn">启用</el-button>
         </template> -->
       </el-table-column>
     </el-table>
@@ -38,7 +38,8 @@ export default {
       warning: "warning",
       success: "success",
       danger: "danger",
-      currentPage: 1
+      currentPage: 1,
+      listLoading: true
     };
   },
   created() {
@@ -91,7 +92,6 @@ export default {
           apiStatus
         })
         .then(res => {
-          console.log(res);
           // apiStatus: 服务-接口状态：1:在线|2:暂停|3:下线(用于筛选接口自身的状态)
           // pubStatus: 服务-接口发布状态：0:待审核|1:已通过（即已发布）|2:已驳回(用于筛选接口审核状态)
           const { status, data, total } = res;
@@ -102,10 +102,8 @@ export default {
           }
         });
     },
-    handleSizeChange(val) {
-    },
-    handleCurrentChange(val) {
-    }
+    handleSizeChange(val) {},
+    handleCurrentChange(val) {}
   }
 };
 </script>

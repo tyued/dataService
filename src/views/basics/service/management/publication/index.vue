@@ -6,15 +6,15 @@
       <el-table-column prop="timestamp" label="申请时间"></el-table-column>
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
-          <el-tag v-show="scope.row.status == '0'" type="info">待上线</el-tag>
-          <el-tag v-show="scope.row.status == '1'" type="success">在线</el-tag>
-          <el-tag v-show="scope.row.status == '2'" type="warning ">暂停</el-tag>
-          <el-tag v-show="scope.row.status == '3'" type="danger">下线</el-tag>
+          <el-tag size="small" v-show="scope.row.status == '0'" type="info">待上线</el-tag>
+          <el-tag size="small" v-show="scope.row.status == '1'" type="success">在线</el-tag>
+          <el-tag size="small" v-show="scope.row.status == '2'" type="warning ">暂停</el-tag>
+          <el-tag size="small" v-show="scope.row.status == '3'" type="danger">下线</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" @click="openChange(scope.row)">修改</el-button>
+          <el-button size="small" @click="openChange(scope.row)">修改</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -150,7 +150,6 @@ export default {
           sortOrder
         })
         .then(res => {
-          console.log(res)
           const { status, data } = res;
           if (status === 200 && data) {
             this.listLoading = false;

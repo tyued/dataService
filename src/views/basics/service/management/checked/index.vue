@@ -11,16 +11,16 @@
       </el-table-column>
       <el-table-column prop="pubStatus" label="状态">
         <template slot-scope="scope">
-          <el-button size="mini" v-show="scope.row.pubStatus == '0'" type="primary" plain>待审核</el-button>
-          <el-button size="mini" v-show="scope.row.pubStatus == '1'" type="success" plain>已发布</el-button>
-          <el-button size="mini" v-show="scope.row.pubStatus == '2'" type="warning" plain>已驳回</el-button>
+          <el-tag size="small" v-show="scope.row.pubStatus == '0'" type="primary" plain>待审核</el-tag>
+          <el-tag size="small" v-show="scope.row.pubStatus == '1'" type="success" plain>已发布</el-tag>
+          <el-tag size="small" v-show="scope.row.pubStatus == '2'" type="warning" plain>已驳回</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="pubStatus" label="操作">
         <template slot-scope="scope">
-          <!-- <el-button v-if="scope.row.status == 1" size="mini" @click="openChange(scope.row.id, scope.row.userId)">修改</el-button> -->
-          <el-button v-if="scope.row.pubStatus == '1'" size="mini" @click="openCancel(scope.row.id, scope.row.userId)">撤销审核</el-button>
-          <el-button v-if="scope.row.pubStatus == '0'" size="mini" @click="openStart(scope.row.id, scope.row.userId)" class="activeBtn">启用</el-button>
+          <!-- <el-button v-if="scope.row.status == 1" size="small" @click="openChange(scope.row.id, scope.row.userId)">修改</el-button> -->
+          <el-button v-if="scope.row.pubStatus == '1'" size="small" @click="openCancel(scope.row.id, scope.row.userId)">撤销审核</el-button>
+          <el-button v-if="scope.row.pubStatus == '0'" size="small" @click="openStart(scope.row.id, scope.row.userId)" class="activeBtn">启用</el-button>
         </template>
       </el-table-column>
     </el-table>

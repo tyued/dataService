@@ -23,28 +23,29 @@ export default {
       required: true
     },
     point: {
-      type: String
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
       // show: false
-      time: []
+      time: [],
+      dataArr: []
     };
   },
-  computed: {
-    dataArr() {
-      return this.types.map(item => {
-        return {
-          name: item, // 类型数据
-          type: "line",
-          stack: "总量",
-          areaStyle: { normal: {} },
-          // smooth: true,
-          data: [] // 实时数据
-        };
-      });
-    }
+  computed: {},
+  created() {
+    this.dataArr = this.types.slice(0, -1).map((item, index) => {
+      return {
+        name: item, // 类型数据
+        type: "line",
+        stack: "总量",
+        areaStyle: { normal: {} },
+        // smooth: true,
+        data: [] // 实时数据
+      };
+    });
   },
   watch: {
     arr() {
@@ -57,13 +58,9 @@ export default {
       // this.show = true
       this.dataArr.map((item, index) => {
         item.data.push(this.arr[index]);
-        // this.types[index] = this.types[index] + 'item'
       });
       this.time.push(moment().format("h:mm:ss")); // 更新时间数组
       this.chart.setOption({
-        // legend: {
-        //   data: this.types // 类型数据
-        // },
         xAxis: [
           {
             data: this.time // 时间数据
@@ -87,13 +84,14 @@ export default {
           }
           // formatter: '{a0}{c0}万'
         },
-        color: ["#209cee", "#42d3a5", "#ffdd57"],
+        color: ["#ffdd57", "#209cee","#42d3a5"],
         legend: {
           data: this.types // 类型数据
         },
         grid: {
+          top: "17%",
           left: "3%",
-          right: "4%",
+          right: "3%",
           bottom: "3%",
           containLabel: true
         },
@@ -106,30 +104,30 @@ export default {
           }
         ],
         yAxis: {
-          type: "value"
-          // axisLabel: {
-          //   formatter: "{value} MB"
-          // }
+          type: "value",
+          axisLabel: {
+            formatter: `{value} ${this.point}`
+          }
         },
         series: this.dataArr
       });
-      if (this.point) {
-        this.chart.setOption({
-          yAxis: {
-            type: "value",
-            axisLabel: {
-              formatter: (value, index) => {
-                // let txt = `{value} ${this.point}`;
-                let txt = this.point;
-                if (index === this.types.length - 1) {
-                  txt = 'GB'
-                }
-                return txt;
-              }
-            }
-          }
-        });
-      }
+      // if (this.point) {
+      //   this.chart.setOption({
+      //     yAxis: {
+      //       type: "value",
+      //       // axisLabel: {
+      //       //   formatter: (value, index) => {
+      //       //     // let txt = `{value} ${this.point}`;
+      //       //     let txt = this.point;
+      //       //     if (index === this.types.length - 1) {
+      //       //       txt = "GB";
+      //       //     }
+      //       //     return txt;
+      //       //   }
+      //       // }
+      //     }
+      //   });
+      // }
     }
   },
   mounted() {
@@ -147,7 +145,6 @@ export default {
     sidebarElm.addEventListener("transitionend", this.__resizeHanlder);
   },
   beforeDestroy() {
-    console.log("beforeDestroy echarts");
     // 解除echarts调用
     if (!this.chart) {
       return;

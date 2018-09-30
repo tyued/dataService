@@ -1,25 +1,103 @@
 <template>
   <div class="notice">
-    <el-row class="gl-rowbox">
-      <el-card class="box-card">
-        通知中心
-      </el-card>
-    </el-row>
-    <el-row class="gl-rowbox">
-      <el-card class="box-card">
-        <div v-if="noticeList.length === 0" class="empty-tips">
-          暂无通知
-        </div>
-      </el-card>
-    </el-row>
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>通知中心</span>
+        <el-button @click="handleReadAll" style="float: right; padding: 3px 0" type="text">全部已读</el-button>
+      </div>
+      <el-collapse @change="handleTabClick" v-model="activeName" accordion>
+        <el-collapse-item v-for="(item, index) in noticeList" :key="index" :name="index">
+          <template slot="title">
+            <span :class="{already: item.status === '1'}">一致性 Consistency
+              <span class="fr">{{item.timestamp}}&emsp;</span>
+            </span>
+          </template>
+          <div class="detail" :class="{already: item.status === '1'}">{{item.detail}}</div>
+        </el-collapse-item>
+      </el-collapse>
+      <PageBar :total="total" :currentpage="current" @handlePage="handlePage" @handlePageSize="handlePageSize" />
+      <div v-if="noticeList.length === 0" class="empty-tips">
+        暂无通知
+      </div>
+    </el-card>
   </div>
 </template>
 
 <script>
+import * as api from "api/login";
+import PageBar from "components/PageBar/index";
 export default {
+  name: "notice",
+  components: {
+    PageBar
+  },
+  created() {
+    this.getList();
+  },
   data() {
     return {
-      noticeList: []
+      activeName: 0,
+      noticeList: [],
+      total: 0,
+      current: 0,
+      size: 10 // 缓存一下每页大小
+    };
+  },
+  methods: {
+    getList(pageNo = 1, limit = 10) {
+      api
+        .postNoticeList({
+          limit,
+          pageNo
+        })
+        .then(res => {
+          const { data, status } = res;
+          if (status === 200 && data) {
+            this.noticeList = data.rows;
+            this.total = parseInt(data.total);
+            this.current = parseInt(data.current);
+          }
+        });
+    },
+    handlePage(number) {
+      // 分页
+      this.getList(number);
+      this.current = number;
+    },
+    handlePageSize(number) {
+      this.size = number;
+      this.getList(1, number);
+      this.current = 1;
+    },
+    handleTabClick(i) {
+      if (typeof i !== "number") {
+        return;
+      }
+      const { status, userid } = this.noticeList[i];
+      if (status === "0") {
+        api
+          .postRead({
+            id: userid
+          })
+          .then(res => {
+            if (res.status === 200 && res.data.status === "success") {
+              this.getList(this.current, this.size);
+            }
+          });
+      }
+    },
+    handleReadAll() {
+      this.$confirm("确定要标记为全部已读吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        api.postReadAll().then(res => {
+          if (res.status === 200 && res.data.status === "success") {
+            this.getList(this.current, this.size);
+          }
+        });
+      });
     }
   }
 };
@@ -30,6 +108,13 @@ export default {
   padding: 100px 0;
   text-align: center;
   font-size: 14px;
+  color: #9a9a9a;
+}
+.detail {
+  padding-top: 12px;
+  line-height: 2em;
+}
+.already {
   color: #9a9a9a;
 }
 </style>

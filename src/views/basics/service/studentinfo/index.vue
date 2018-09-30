@@ -1,17 +1,19 @@
 <template>
-  <div class="container"  v-loading.body="listLoading">
+  <div class="container" v-loading.body="listLoading">
     <h1>{{infoData.name}}</h1>
     <el-row class="top-nav">
       <el-col :span="24">
         <ul>
           <li>&emsp;服务商：<a href="javascript:;">{{infoData.producer}}</a></li>
           <li>分&emsp;类:&nbsp;
-            <el-tag type="success">{{infoData.tagname}}</el-tag> 
+            <el-tag type="success">{{infoData.tagname}}</el-tag>
           </li>
           <li>{{infoData.subCount}}</li>
           <li>{{infoData.evalCount}}</li>
-          <li><el-rate v-model="valRate" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></li>
-          <li>返回</li>
+          <li>
+            <el-rate v-model="valRate" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate>
+          </li>
+          <li @click="$router.back()">返回</li>
           <li>禁用/发布</li>
           <li @click="goToMonitor">监控</li>
           <li>&nbsp;订阅/取消</li>
@@ -20,13 +22,13 @@
       </el-col>
     </el-row>
     <el-row :gutter="12">
-      <el-col :span="15">
-        <el-card shadow="always" class="card-item">
+      <el-col :span="14">
+        <el-card shadow="always" class="card-item" :body-style="{'height': '392px'}">
           <h5>服务简介</h5>
           <section>{{infoData.detail}}</section>
         </el-card>
       </el-col>
-      <el-col :span="9">
+      <el-col :span="10">
         <el-card shadow="always" class="card-item">
           <div class="card-item-title">
             <h5>猜你喜欢</h5>
@@ -37,12 +39,14 @@
               <span>{{item.name}}</span>
               <el-button type="success" size="small" @click="toStudentInfo(item.type,item.id)">查看</el-button>
             </div>
-            <div class="card-item-bottom">
-              <li>{{item.producer}}</li>
-              <li>{{item.subCount}}</li>
-              <li>{{item.evalCount}}</li>
-              <li><el-rate v-model="item.evalRank" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate></li>
-            </div>
+            <el-row class="card-item-bottom">
+              <el-col class="li" :span="5">{{item.producer}}</el-col>
+              <el-col class="li" :span="5">{{item.subCount}}</el-col>
+              <el-col class="li" :span="5">{{item.evalCount}}</el-col>
+              <el-col class="li" :span="9">
+                <el-rate v-model="item.evalRank" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate>
+              </el-col>
+            </el-row>
           </div>
         </el-card>
       </el-col>
@@ -63,50 +67,52 @@
                     <h5>基本信息</h5>
                     <ol>
                       <li>接口地址：{{item.url}}</li>
-                      <li>返回格式：<el-tag>{{item.resp?item.resp:(type==2?'XML':'空')}}</el-tag></li>
-                      <li>请求方式：<el-tag>{{item.method}}</el-tag></li>
+                      <li>返回格式：<el-tag>{{item.resp?item.resp:(type==2?'XML':'空')}}</el-tag>
+                      </li>
+                      <li>请求方式：<el-tag>{{item.method}}</el-tag>
+                      </li>
                       <li>请求示例：{{item.expUrl}}</li>
                       <li>接口备注：{{item.intro}}</li>
                     </ol>
                     <h5>请求参数说明</h5>
-                    <el-tabs type="border-card">
-                        <el-tab-pane label="输入参数">
-                            <el-table :data="item.params" style="width: 100%">
-                                <el-table-column prop="name" label="名称"></el-table-column>
-                                <el-table-column prop="required" label="必填">
-                                  <template slot-scope="scope">
-                                    {{scope.row.required=="1"?'是':'否'}}
-                                  </template> 
-                                </el-table-column>
-                                <el-table-column prop="type" label="类型"></el-table-column>
-                                <el-table-column prop="desc" label="说明"></el-table-column>
-                            </el-table>
-                        </el-tab-pane>
-                        <el-tab-pane label="输出参数">
-                            <el-table :data="item.responses" style="width: 100%">
-                                <el-table-column prop="name" label="名称"></el-table-column>
-                                <el-table-column prop="key" label="类型"></el-table-column>
-                                <el-table-column prop="desc" label="说明"></el-table-column>
-                            </el-table> 
-                        </el-tab-pane>
+                    <el-tabs class="exact" type="border-card">
+                      <el-tab-pane label="输入参数">
+                        <el-table :data="item.params" style="width: 100%">
+                          <el-table-column prop="name" label="名称"></el-table-column>
+                          <el-table-column prop="required" label="必填">
+                            <template slot-scope="scope">
+                              {{scope.row.required=="1"?'是':'否'}}
+                            </template>
+                          </el-table-column>
+                          <el-table-column prop="type" label="类型"></el-table-column>
+                          <el-table-column prop="desc" label="说明"></el-table-column>
+                        </el-table>
+                      </el-tab-pane>
+                      <el-tab-pane label="输出参数">
+                        <el-table :data="item.responses" style="width: 100%">
+                          <el-table-column prop="name" label="名称"></el-table-column>
+                          <el-table-column prop="key" label="类型"></el-table-column>
+                          <el-table-column prop="desc" label="说明"></el-table-column>
+                        </el-table>
+                      </el-tab-pane>
                     </el-tabs>
                   </el-col>
                   <el-col :span="12" class="right-box">
-                    <h5 >&emsp;{{item.resp?item.resp:(type==2?'XML':'空')}}返回示例</h5>
+                    <h5>&emsp;{{item.resp?item.resp:(type==2?'XML':'空')}}返回示例</h5>
                     <div class="respBox" v-html="item.example"></div>
                   </el-col>
                 </el-row>
                 <el-row v-else>
                   <el-col :span="24">
-                    <h5>服务级错误码参照</h5>                  
+                    <h5>服务级错误码参照</h5>
                     <el-table :data="item.errors" style="width: 100%">
-                        <el-table-column prop="code" label="错误码"></el-table-column>
-                        <el-table-column prop="text" label="说明"></el-table-column>
+                      <el-table-column prop="code" label="错误码"></el-table-column>
+                      <el-table-column prop="text" label="说明"></el-table-column>
                     </el-table>
-                    <h5>系统级错误码参照</h5>                  
+                    <h5>系统级错误码参照</h5>
                     <el-table :data="ErrorCode" style="width: 100%">
-                        <el-table-column prop="code" label="错误码"></el-table-column>
-                        <el-table-column prop="text" label="说明"></el-table-column>
+                      <el-table-column prop="code" label="错误码"></el-table-column>
+                      <el-table-column prop="text" label="说明"></el-table-column>
                     </el-table>
                   </el-col>
                 </el-row>
@@ -223,7 +229,7 @@
             </div>
           </el-col>
           <el-col :span="24" class="dialog-links">
-            <a v-if="totalNumber > 5 && accessList.length == totalNumber" @click="handleLessMsg" href="javascript:;">收起
+            <a v-if="lessControll" @click="handleLessMsg" href="javascript:;">收起
               <i class="el-icon-arrow-up"></i>
             </a>
             <a v-if="totalNumber > 5 && accessList.length != totalNumber" @click="handleMoreMsg" href="javascript:;">更多
@@ -238,40 +244,42 @@
 </template>
 
 <script>
-import * as api from 'api/service/studentinfo/index';
-import * as dicty from 'api/dictionary';
+import * as api from "api/service/studentinfo/index";
+import * as dicty from "api/dictionary";
 export default {
   data() {
     return {
       listLoading: true,
-      type:'',                //1. HTTP API(rest)  2. WebService API   3.  通过数据源发布
-      servId:'',
-      detail:true,
-      DetailQuery:{
-          detail: true
+      lessControll: false, // 控制收起按钮的显示
+      type: "", //1. HTTP API(rest)  2. WebService API   3.  通过数据源发布
+      servId: "",
+      detail: true,
+      DetailQuery: {
+        detail: true
       },
-      infoData:[],            //详细信息
-      servTypeList:[],        //服务分类
-      valRate: 0,             //评分
+      infoData: [], //详细信息
+      servTypeList: [], //服务分类
+      valRate: 0, //评分
       tabPosition: "left",
-      apisList:[],            //接口详情
-      enjoyList:[],           //猜你喜欢的
-      ErrorCode:[],           //服务错误对照信息
-      Settings:'',
-      evalsinfo:{             //评价详情
+      apisList: [], //接口详情
+      enjoyList: [], //猜你喜欢的
+      ErrorCode: [], //服务错误对照信息
+      Settings: "",
+      evalsinfo: {
+        //评价详情
         star1: 1,
         star2: 2,
         star3: 3,
         star4: 4,
-        star5: 5,
-      },    
-      evalself:{
-        rank5:0,
-        rank4:0,
-        rank3:0,
-        rank2:0,
-        rank1:0,
-      },      
+        star5: 5
+      },
+      evalself: {
+        rank5: 0,
+        rank4: 0,
+        rank3: 0,
+        rank2: 0,
+        rank1: 0
+      },
 
       centerDialogVisible: false,
       rules: {
@@ -299,179 +307,210 @@ export default {
       accessList: [],
       totalNumber: 0,
       limitNumber: 5,
-      commandNumber: '3', // 一开始就是按最新评论来排序 排序方式：1：最高评价，2：最低评价，3：最新评价
-
+      commandNumber: "3" // 一开始就是按最新评论来排序 排序方式：1：最高评价，2：最低评价，3：最新评价
     };
   },
   created() {
-    this.type =  this.$route.query.type
-    this.servId =  this.$route.query.servId
-    this.DetailQuery.servId = this.servId
-    this.submitParams.servId = this.servId
-    this.getBaseData()
-    this.getErrorCode()
+    this.type = this.$route.query.type;
+    this.servId = this.$route.query.servId;
+    this.DetailQuery.servId = this.servId;
+    this.submitParams.servId = this.servId;
+    this.getBaseData();
+    this.getErrorCode();
 
     this.getParamForms();
     this.getRelationForms();
   },
   mounted() {
-    this.init()  
-
+    this.init();
   },
   methods: {
     // 获取服务分类
-    getBaseData(){
-        var query = {group:'servType'}
-        dicty.getBaseData(query).then(response => {
-            this.servTypeList = response.data
-        });  
-        // 访问前缀
-        dicty.getSettings().then(response => {
-            this.Settings = response.data.servUrl
-        });        
-        
+    getBaseData() {
+      var query = { group: "servType" };
+      dicty.getBaseData(query).then(response => {
+        this.servTypeList = response.data;
+      });
+      // 访问前缀
+      dicty.getSettings().then(response => {
+        this.Settings = response.data.servUrl;
+      });
     },
-    init(){
-        if(this.type=='1'){                 //HTTP API(rest)
-            api.getRest(this.DetailQuery).then(response => {
-                this.infoData = response.data
-                this.apisList = response.data.apis
-                this.infoData.tagname = ''
-                var that = this
-                this.servTypeList.forEach(function(item,index){
-                    if(that.infoData.tag == item.key){
-                        that.infoData.tagname = item.value    
-                    }
-                })
-                var uuid = this.infoData.uuid
-                var reg=new RegExp("\\.","g");
-                this.apisList.forEach(function(item,index){
-                  var apiVer = item.version.replace(reg,"_")  
-                  item.expUrl = item.Settings+'/rest/'+uuid+'/'+item.ename+'/V'+apiVer        
-                })
+    init() {
+      if (this.type == "1") {
+        //HTTP API(rest)
+        api.getRest(this.DetailQuery).then(response => {
+          this.infoData = response.data;
+          this.apisList = response.data.apis;
+          this.infoData.tagname = "";
+          var that = this;
+          this.servTypeList.forEach(function(item, index) {
+            if (that.infoData.tag == item.key) {
+              that.infoData.tagname = item.value;
+            }
+          });
+          var uuid = this.infoData.uuid;
+          var reg = new RegExp("\\.", "g");
+          this.apisList.forEach(function(item, index) {
+            var apiVer = item.version.replace(reg, "_");
+            item.expUrl =
+              item.Settings +
+              "/rest/" +
+              uuid +
+              "/" +
+              item.ename +
+              "/V" +
+              apiVer;
+          });
 
-                this.infoData.tagname = this.infoData.tagname ? this.infoData.tagname : '其他'
-                this.listLoading = false    
-                
-                this.valRate = parseInt(this.infoData.evalRank)           
-                this.getEnjoyList()
-            });         
-        }
-        if(this.type=='2'){                 //WebService API(soap)
-            api.getSoap(this.DetailQuery).then(response => {              
-                this.infoData = response.data
-                this.apisList = response.data.apis
-                this.infoData.tagname = ''
-                var that = this
-                this.servTypeList.forEach(function(item,index){
-                    if(that.infoData.tag == item.key){
-                        that.infoData.tagname = item.value    
-                    }
-                })
-                var uuid = this.infoData.uuid
-                var reg=new RegExp("\\.","g");
-                this.apisList.forEach(function(item,index){
-                  var apiVer = item.version.replace(reg,"_")  
-                  item.expUrl = item.Settings+'/rest/'+uuid+'/'+item.ename+'/V'+apiVer        
-                })
-                this.infoData.tagname = this.infoData.tagname ? this.infoData.tagname : '其他'
-                this.listLoading = false
-                this.valRate = parseInt(this.infoData.evalRank)     
-                this.getEnjoyList()
+          this.infoData.tagname = this.infoData.tagname
+            ? this.infoData.tagname
+            : "其他";
+          this.listLoading = false;
 
-            });         
-        }
-        if(this.type=='3'){               //数据源 
-            api.getDataset(this.DetailQuery).then(response => {             
-                this.infoData = response.data
-                this.apisList = response.data.apis
-                this.infoData.tagname = ''
-                var that = this
-                this.servTypeList.forEach(function(item,index){
-                    if(that.infoData.tag == item.key){
-                        that.infoData.tagname = item.value    
-                    }
-                })
-                var uuid = this.infoData.uuid
-                var reg=new RegExp("\\.","g");
-                this.apisList.forEach(function(item,index){
-                  var apiVer = item.version.replace(reg,"_")  
-                  item.expUrl = item.Settings+'/rest/'+uuid+'/'+item.ename+'/V'+apiVer        
-                })
-                this.infoData.tagname = this.infoData.tagname ? this.infoData.tagname : '其他'
-                this.listLoading = false
-                this.valRate = parseInt(this.infoData.evalRank)     
-                this.getEnjoyList()
-
-            });      
-
-        }
+          this.valRate = parseInt(this.infoData.evalRank);
+          this.getEnjoyList();
+        });
+      }
+      if (this.type == "2") {
+        //WebService API(soap)
+        api.getSoap(this.DetailQuery).then(response => {
+          this.infoData = response.data;
+          this.apisList = response.data.apis;
+          this.infoData.tagname = "";
+          var that = this;
+          this.servTypeList.forEach(function(item, index) {
+            if (that.infoData.tag == item.key) {
+              that.infoData.tagname = item.value;
+            }
+          });
+          var uuid = this.infoData.uuid;
+          var reg = new RegExp("\\.", "g");
+          this.apisList.forEach(function(item, index) {
+            var apiVer = item.version.replace(reg, "_");
+            item.expUrl =
+              item.Settings +
+              "/rest/" +
+              uuid +
+              "/" +
+              item.ename +
+              "/V" +
+              apiVer;
+          });
+          this.infoData.tagname = this.infoData.tagname
+            ? this.infoData.tagname
+            : "其他";
+          this.listLoading = false;
+          this.valRate = parseInt(this.infoData.evalRank);
+          this.getEnjoyList();
+        });
+      }
+      if (this.type == "3") {
+        //数据源
+        api.getDataset(this.DetailQuery).then(response => {
+          this.infoData = response.data;
+          this.apisList = response.data.apis;
+          this.infoData.tagname = "";
+          var that = this;
+          this.servTypeList.forEach(function(item, index) {
+            if (that.infoData.tag == item.key) {
+              that.infoData.tagname = item.value;
+            }
+          });
+          var uuid = this.infoData.uuid;
+          var reg = new RegExp("\\.", "g");
+          this.apisList.forEach(function(item, index) {
+            var apiVer = item.version.replace(reg, "_");
+            item.expUrl =
+              item.Settings +
+              "/rest/" +
+              uuid +
+              "/" +
+              item.ename +
+              "/V" +
+              apiVer;
+          });
+          this.infoData.tagname = this.infoData.tagname
+            ? this.infoData.tagname
+            : "其他";
+          this.listLoading = false;
+          this.valRate = parseInt(this.infoData.evalRank);
+          this.getEnjoyList();
+        });
+      }
     },
     // 猜你喜欢的
-    getEnjoyList(){
-      var query={tag:this.infoData.tag}
+    getEnjoyList() {
+      var query = { tag: this.infoData.tag };
       api.getEnjoy(query).then(response => {
-        this.enjoyList = response.data
-        this.enjoyList.forEach(function(item,index){
-          item.evalRank = parseInt(item.evalRank)
-        })
-      });         
-
+        this.enjoyList = response.data;
+        this.enjoyList.forEach(function(item, index) {
+          item.evalRank = parseInt(item.evalRank);
+        });
+      });
     },
     //服务错误对照信息
-    getErrorCode(){
+    getErrorCode() {
       api.getErrorCode().then(response => {
-        this.ErrorCode = response.data
-      }); 
+        this.ErrorCode = response.data;
+      });
     },
     // 猜你喜欢的查看
-    toStudentInfo (type,id) {
-        this.$router.push({ path: '/service/studentinfo', query: { type:type,servId:id} });
+    toStudentInfo(type, id) {
+      this.$router.push({
+        path: "/service/studentinfo",
+        query: { type: type, servId: id }
+      });
     },
     // 意见反馈
     handleList() {
       this.centerDialogVisible = true;
       this.isMiddle = true;
       // 重置表单
-      this.submitParams.rank = 0
-      this.submitParams.text = ''
-      this.submitParams.title = ''
-      api.getEvalStats({servId: "1"}).then(res => {
-        var rank5 = Number(res.data.rank5)
-        var rank4 = Number(res.data.rank4)
-        var rank3 = Number(res.data.rank3)
-        var rank2 = Number(res.data.rank2)
-        var rank1 = Number(res.data.rank1)
-        var allRank = rank5 + rank4 + rank3 + rank2 + rank1
-        this.evalself.rank5 = (rank5/allRank)*100;
-        this.evalself.rank4 = (rank4/allRank)*100;
-        this.evalself.rank3 = (rank3/allRank)*100;
-        this.evalself.rank2 = (rank2/allRank)*100;
-        this.evalself.rank1 = (rank1/allRank)*100;
-        this.evalself.alleval  = ((rank5*5 + rank4*4 + rank3*3 + rank2*2 + rank1*1) / allRank).toFixed(1)
-      })
+      this.submitParams.rank = 0;
+      this.submitParams.text = "";
+      this.submitParams.title = "";
+      api.getEvalStats({ servId: "1" }).then(res => {
+        var rank5 = Number(res.data.rank5);
+        var rank4 = Number(res.data.rank4);
+        var rank3 = Number(res.data.rank3);
+        var rank2 = Number(res.data.rank2);
+        var rank1 = Number(res.data.rank1);
+        var allRank = rank5 + rank4 + rank3 + rank2 + rank1;
+        this.evalself.rank5 = (rank5 / allRank) * 100;
+        this.evalself.rank4 = (rank4 / allRank) * 100;
+        this.evalself.rank3 = (rank3 / allRank) * 100;
+        this.evalself.rank2 = (rank2 / allRank) * 100;
+        this.evalself.rank1 = (rank1 / allRank) * 100;
+        this.evalself.alleval = (
+          (rank5 * 5 + rank4 * 4 + rank3 * 3 + rank2 * 2 + rank1 * 1) /
+          allRank
+        ).toFixed(1);
+      });
       // 一开始就是按最新排序来展示
-      this.getMoreList(this.commandNumber)
+      this.getMoreList(this.commandNumber);
     },
     getMoreList(sortType, limit = 5, servId = this.servId, pageNo = 1) {
-      api.getEvalSort({
-        servId,
-        pageNo,
-        limit,
-        sortType
-      }).then((res) => {
-        const {data, status, total} = res
-        if (status === 200 && data.rows) {
-          data.rows.forEach((item) => {
-            item.rank = +item.rank
-          })
-          this.accessList = data.rows
-          this.totalNumber = data.total
-        }
-      })
+      api
+        .getEvalSort({
+          servId,
+          pageNo,
+          limit,
+          sortType
+        })
+        .then(res => {
+          const { data, status, total } = res;
+          if (status === 200 && data.rows) {
+            data.rows.forEach(item => {
+              item.rank = +item.rank;
+            });
+            this.accessList = data.rows;
+            this.totalNumber = data.total;
+          }
+        });
     },
     // 意见反馈--打分
-    rateChange(val){
+    rateChange(val) {
       // if(this.isMiddle){              //只打分
       //   // console.log(this.submitParams)
       //   // this.submitParams.servId = "1"
@@ -490,25 +529,35 @@ export default {
         if (valid) {
           api.submitAssess(this.submitParams).then(res => {
             if (res.status === 200) {
-              this.$notify({title: '成功', message: '提交成功', type: 'success', duration: 2000});
+              this.$notify({
+                title: "成功",
+                message: "提交成功",
+                type: "success",
+                duration: 2000
+              });
               this.init();
               this.centerDialogVisible = false;
             }
           });
         } else {
-          this.$notify({title: '失败', message: '还有未填项', type: 'error', duration: 2000});
+          this.$notify({
+            title: "失败",
+            message: "还有未填项",
+            type: "error",
+            duration: 2000
+          });
           return false;
         }
       });
     },
     async handleCommand(command) {
       let obj = {
-        '最高评价': '1',
-        '最低评价': '2',
-        '最新评价': '3',
-      }
-      this.commandNumber = obj[command]
-      await this.getMoreList(this.commandNumber, this.limitNumber)
+        最高评价: "1",
+        最低评价: "2",
+        最新评价: "3"
+      };
+      this.commandNumber = obj[command];
+      await this.getMoreList(this.commandNumber, this.limitNumber);
       this.$message("已按照" + command + "排序");
     },
     getParamForms() {
@@ -532,28 +581,29 @@ export default {
       });
     },
     handleMoreMsg() {
-      this.limitNumber += 5
-      this.getMoreList(this.commandNumber, this.limitNumber)
+      this.lessControll = true;
+      this.limitNumber += 5;
+
+      this.getMoreList(this.commandNumber, this.limitNumber);
     },
     handleLessMsg() {
-      this.limitNumber = 5
-      this.getMoreList(this.commandNumber, this.limitNumber)
+      this.lessControll = false;
+      this.limitNumber = 5;
+      this.getMoreList(this.commandNumber, this.limitNumber);
     },
     goToMonitor() {
       this.$router.push({
-        name: 'monitor',
+        name: "monitor",
         params: {
           // ...数据对象
         }
-      })
+      });
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
-
-
 .container {
   padding: 4px;
   width: 100%;
@@ -587,7 +637,8 @@ export default {
     padding-left: 34px;
   }
   ul li:nth-child(n + 6) {
-    float: right; cursor:pointer;
+    float: right;
+    cursor: pointer;
   }
   ul li:nth-child(3) {
     background: url("./img/info_wifi.png") no-repeat left center;
@@ -618,8 +669,8 @@ export default {
   }
   /* 卡片 */
   .card-item {
-    min-width: 530px;
-    height: 408px;
+    // min-width: 530px;
+    // height: 408px;
     h5 {
       line-height: 52px;
     }
@@ -658,34 +709,30 @@ export default {
       }
       .el-button {
         float: right;
-        margin-top: 10px;
+        margin-top: 6px;
       }
     }
     .card-item-bottom {
-      height: 76px;
+      padding: 22px 10px;
       .el-rate {
         margin-top: 6px;
       }
-      li {
-        float: left;
-        padding: 20px 0;
-        margin-left: 14px;
-        box-sizing: content-box;
+      .li {
+        vertical-align: middle;
+        box-sizing: border-box;
         line-height: 32px;
         height: 32px;
       }
-      li:first-child {
-        margin-left: 10px;
-      }
-      li:nth-child(2) {
+      .li:nth-child(2) {
         padding-left: 30px;
         background: url("./img/info_wifi.png") no-repeat left center;
       }
-      li:nth-child(3) {
+      .li:nth-child(3) {
         padding-left: 30px;
         background: url("./img/info_message.png") no-repeat left center;
       }
-      li:nth-child(4) {
+      .li:nth-child(4) {
+        // min-width: 160px;
         padding-left: 30px;
         background: url("./img/info_good.png") no-repeat left center;
       }
@@ -715,14 +762,14 @@ export default {
       color: #606266;
     }
     .left-box {
-      // margin-bottom: -20000px;
-      // padding-bottom: 20000px;
+      margin-bottom: -3000px;
+      padding-bottom: 3000px;
     }
     .right-box {
-      // margin-bottom: -20000px;
-      // padding-bottom: 20000px;
-      height: inherit;
-      min-height: 520px;
+      margin-bottom: -3000px;
+      padding-bottom: 3000px;
+      // height: inherit;
+      // min-height: 520px;
       background-color: #e3e6ec;
     }
   }

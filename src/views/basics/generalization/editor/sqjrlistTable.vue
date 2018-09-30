@@ -1,5 +1,5 @@
 <template>
-    <el-table  :data="tableData" style="width: 100%" height="340">
+    <el-table  :data="tableData" style="width: 100%" height="333">
         <el-table-column prop="name" label="服务名称" width="120"></el-table-column>
         <el-table-column prop="producer" label="服务提供方" width="120"></el-table-column>
         <el-table-column label="数据分类" width="120">
@@ -10,10 +10,9 @@
         <el-table-column prop="type" label="接口协议" width="80"></el-table-column>
         <el-table-column prop="way" label="返回模式" width="80"></el-table-column>        
         <el-table-column prop="timestamp" label="请求时间"></el-table-column>
-        <el-table-column label="操作" width="150">
+        <el-table-column label="操作" width="100">
             <template slot-scope="scope">
-                <el-button size="small" type="success">编辑</el-button>
-                <el-button size="small" type="danger">删除</el-button>
+                <el-button @click="showDetail(scope.row.id)" size="small" type="primary">查看</el-button>
             </template> 
         </el-table-column>
     
@@ -64,6 +63,13 @@ export default {
                 })
             })
         },
+        showDetail(id) {
+            api.showServiceDetail({
+                subId: id
+            }).then((res) => {  
+                console.log(res)
+            })
+        }
     },
 }
 </script>
