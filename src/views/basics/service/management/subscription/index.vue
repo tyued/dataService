@@ -185,7 +185,6 @@ export default {
     // 获取列表
     getSubscribeList(params) {
       api.getSubscribeList(params).then(res => {
-        console.log(res);
         const { status, statusText, data } = res;
         if (status === 200 && statusText === "OK") {
           this.listLoading = false;

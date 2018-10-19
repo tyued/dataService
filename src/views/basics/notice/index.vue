@@ -1,14 +1,21 @@
 <template>
   <div class="notice">
-    <el-card class="box-card">
+    <el-card v-if="noticeList.length === 0" class="box-card">
+      <div class="empty-tips">
+        暂无通知
+      </div>
+    </el-card>
+    <el-card v-else class="box-card">
       <div slot="header" class="clearfix">
         <span>通知中心</span>
         <el-button @click="handleReadAll" style="float: right; padding: 3px 0" type="text">全部已读</el-button>
       </div>
-      <el-collapse @change="handleTabClick" v-model="activeName" accordion>
+      <el-collapse @change="handleTabClick" accordion>
         <el-collapse-item v-for="(item, index) in noticeList" :key="index" :name="index">
           <template slot="title">
-            <span :class="{already: item.status === '1'}">一致性 Consistency
+            <span class="title" :class="{already: item.status === '1'}">
+              <i v-show="item.status !== '1'"></i>
+              一致性 Consistency
               <span class="fr">{{item.timestamp}}&emsp;</span>
             </span>
           </template>
@@ -16,9 +23,6 @@
         </el-collapse-item>
       </el-collapse>
       <PageBar :total="total" :currentpage="current" @handlePage="handlePage" @handlePageSize="handlePageSize" />
-      <div v-if="noticeList.length === 0" class="empty-tips">
-        暂无通知
-      </div>
     </el-card>
   </div>
 </template>
@@ -82,6 +86,7 @@ export default {
           .then(res => {
             if (res.status === 200 && res.data.status === "success") {
               this.getList(this.current, this.size);
+              this.changeNoticeNumber();
             }
           });
       }
@@ -95,9 +100,13 @@ export default {
         api.postReadAll().then(res => {
           if (res.status === 200 && res.data.status === "success") {
             this.getList(this.current, this.size);
+            this.changeNoticeNumber();
           }
         });
       });
+    },
+    changeNoticeNumber() {
+      this.$store.dispatch("getNoticeNumber");
     }
   }
 };
@@ -105,16 +114,33 @@ export default {
 
 <style lang="scss" scoped>
 .empty-tips {
-  padding: 100px 0;
+  padding: 200px 0;
   text-align: center;
   font-size: 14px;
   color: #9a9a9a;
 }
 .detail {
   padding-top: 12px;
+  padding-left: 12px;
   line-height: 2em;
 }
 .already {
   color: #9a9a9a;
+}
+.title {
+  position: relative;
+  padding-left: 12px;
+  i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    // top: 50%;
+    // transform: translateY(-50%);
+    // -webkit-transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: #f56c6c;
+    border-radius: 50%;
+  }
 }
 </style>

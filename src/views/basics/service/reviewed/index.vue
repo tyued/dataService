@@ -3,8 +3,8 @@
     <el-card class="box-card">
       <!--<el-button icon="el-icon-tickets">筛选</el-button>-->
       <el-table v-loading.body="listLoading" :data="tableData" height="620px">
-        <el-table-column prop="servName" label="接口名称"></el-table-column>
-        <el-table-column prop="_servType" label="所属服务"></el-table-column>
+        <el-table-column prop="servName" label="服务名称"></el-table-column>
+        <el-table-column prop="_servType" label="服务类型"></el-table-column>
         <el-table-column label="是否公开">
           <template slot-scope="scope">{{scope.row.servUseof==1?'否':'是'}}</template>
         </el-table-column>
@@ -45,7 +45,7 @@
               <el-tag size="small">{{ contentData.method }}</el-tag> 
             </li>
             <li>请求示例：{{expUrl}}</li>
-            <li>接口备注：{{ contentData.intro }}</li>
+            <li>接口备注：<span v-html="contentData.intro"></span></li>
           </ol>
           <h3>参数说明</h3>
           <el-tabs type="border-card">
@@ -304,7 +304,7 @@ export default {
     editorReady(editorInstance) {
       editorInstance.addListener("contentChange", () => {
         // this.editableTabs[this.curEditTabs].intro = editorInstance.getContent();
-        console.log(editorInstance.getContent().replace(/<[^<]+>/g, ''))
+        // console.log(editorInstance.getContent().replace(/<[^<]+>/g, ''))
       });
     },
     // 获取服务分类

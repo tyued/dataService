@@ -115,7 +115,7 @@
 
     <!-- 接口的弹出层 -->
     <el-dialog width="76%" title="接口信息" :visible.sync="dialogIOVisible">
-      <TabService :servId="servId" :servType="servType" />
+      <TabService :servId="servId" :servType="servType" ref="tab-service" />
     </el-dialog>
     <!-- /接口的弹出层 -->
   </div>
@@ -124,7 +124,7 @@
 import * as api from "api/monitor";
 import TabService from "./tabservice/index";
 import PageBar from "components/PageBar/index";
-import formatData from 'utils/formatData'
+import formatData from "utils/formatData";
 
 export default {
   name: "service",
@@ -162,9 +162,9 @@ export default {
         .then(res => {
           const { status, data } = res;
           if (status === 200 && data) {
-            this.loading = false
+            this.loading = false;
             data.rows.forEach(item => {
-              formatData(item)
+              formatData(item);
             });
             this.tabData = data.rows;
             this.total = parseInt(data.total);
@@ -174,8 +174,12 @@ export default {
     },
     showIOList(servId, servType) {
       this.servId = servId; // 挂起服务id，弹层根据此id来查询接口
-      this.servType = servType
+      this.servType = servType;
       this.dialogIOVisible = true;
+
+      if (this.$refs["tab-service"]) {
+        this.$refs["tab-service"].init();
+      }
     },
     handlePage(number) {
       // 分页

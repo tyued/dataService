@@ -14,12 +14,16 @@
     box-sizing: border-box;
 }
 
+.el-header{ background: #409eff;overflow: hidden;}
+.headbar-container{ height: 100%;}
+.headbar-container .el-badge__content.is-fixed {top: 18px;}
+.headbar-container .el-badge__content {border: none;}
+
 .row+.row {margin-top: 20px;}
 .smallscroll::-webkit-scrollbar-track {background: #eaedf4;border-radius: 2px;}
 .smallscroll::-webkit-scrollbar-thumb {background: #ccc;border-radius: 2px;}
 .smallscroll::-webkit-scrollbar-button {display: none;}
 .smallscroll::-webkit-scrollbar {height: 10px;width: 4px;}
-
 .el-aside,.el-aside .el-menu{ background: #354357;border:none;}
 .el-aside .el-menu-item{ color: #fff; text-align: center;}
 .el-aside .el-menu-item.is-active{ color: #fff; background: #4a5769;}
@@ -30,14 +34,11 @@
 .menu_fw{ background: url(../img/menu_fw.png) no-repeat center 20px;}
 .menu_jk{ background: url(../img/menu_jk.png) no-repeat center 20px;}
 .menu_set{ background: url(../img/menu_set.png) no-repeat center 20px;}
+.menu_right{ background: url(../img/menu_right.png) no-repeat center 20px;}
 .el-aside::-webkit-scrollbar {
     display: none;
 }
 
-.el-header{ background: #449afc;overflow: hidden;}
-.headbar-container{ height: 100%;}
-.headbar-container .el-badge__content.is-fixed {top: 18px;}
-.headbar-container .el-badge__content {border: none;}
 
 /************ 概览 ************/
 .gl-partbox{ height: 410px;}
@@ -201,4 +202,12 @@ div.edui-box{ float: left;}
     width: 178px;
     height: 178px;
     display: block;
+}
+
+.role .el-checkbox+.el-checkbox {
+    margin-left: 0;
+}
+
+.role .el-checkbox {
+    margin-right: 30px;
 }

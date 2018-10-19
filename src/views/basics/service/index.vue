@@ -1,7 +1,7 @@
 <template>
     <div class="fw-container">
-        <el-row class="fw-rowbox fw-rowbox-part" :gutter="20">
-            <el-col :span="4">
+        <el-row v-if="isLastOne" class="fw-rowbox fw-rowbox-part" :gutter="20" type="flex" justify="space-between">
+            <el-col v-if="rightInfoObj['serv-home']">
                 <div @click="clickIndex" :class="{'on':fuwindex_on}">
                     <el-card class="box-card">
                         <i class="fuwindex-ico fw-topico"></i>
@@ -9,7 +9,7 @@
                     </el-card>
                 </div>
             </el-col>
-            <el-col :span="5">
+            <el-col v-if="rightInfoObj['serv-audit']">
                 <div @click="clickReview" :class="{'on':shenh_on}">
                     <el-card class="box-card">
                         <i class="shenh-ico fw-topico"></i>
@@ -17,7 +17,7 @@
                     </el-card>
                 </div>
             </el-col>
-            <el-col :span="5">
+            <el-col v-if="rightInfoObj['serv-register']">
                 <div @click="clickRegister" :class="{'on':zhuc_on}">
                     <el-card class="box-card">
                         <i class="zhuc-ico fw-topico"></i>
@@ -25,7 +25,7 @@
                     </el-card>
                 </div>
             </el-col>
-            <el-col :span="5">
+            <el-col v-if="rightInfoObj['serv-mgr']">
                 <div @click="clickManegement" :class="{'on':guanl_on}">
                     <el-card class="box-card">
                         <i class="guanl-ico fw-topico"></i>
@@ -33,7 +33,7 @@
                     </el-card>
                 </div>
             </el-col>
-            <el-col :span="5">
+            <el-col v-if="rightInfoObj['serv-ds']">
                 <div @click="clickDataservice" :class="{'on':shujuy_on}">
                     <el-card class="box-card">
                         <i class="shujuy-ico fw-topico"></i>
@@ -80,8 +80,12 @@ export default {
     },
     computed: {
         ...mapGetters([
-            'getfuwindex_on'
-        ])
+            'getfuwindex_on',
+            'rightInfoObj'
+        ]),
+        isLastOne() {
+            return this.rightInfoObj['serv-home'] && this.rightInfoObj['serv-audit'] && this.rightInfoObj['serv-register'] && this.rightInfoObj['serv-mgr'] && this.rightInfoObj['serv-ds']
+        }
     },
     watch:{
         getfuwindex_on(){

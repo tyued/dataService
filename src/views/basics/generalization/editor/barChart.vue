@@ -1,5 +1,5 @@
 <template>
-    <div :class="className" :style="{height:height,width:width}"></div>
+    <div :ref="className" :style="{height:height,width:width}"></div>
 </template>
 
 <script>
@@ -8,7 +8,7 @@ import { debounce } from 'utils';
 import * as api from 'api/generalization/index'
 const animationDuration = 3000;
 export default {
-    name:'barChart',
+    name:'BarChart',
     props: {
       className: {
         type: String,
@@ -46,7 +46,7 @@ export default {
         }
 
         // 监听侧边栏的变化
-        const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
+        const sidebarElm = this.$refs[this.className]
         sidebarElm.addEventListener('transitionend', this.__resizeHanlder)
 
     },
@@ -58,7 +58,7 @@ export default {
             window.removeEventListener('resize', this.__resizeHanlder)
         }
 
-        const sidebarElm = document.getElementsByClassName('sidebar-container')[0]
+        const sidebarElm = this.$refs[this.className]
         sidebarElm.removeEventListener('transitionend', this.__resizeHanlder)
 
         this.chart.dispose()

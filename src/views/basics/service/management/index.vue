@@ -1,10 +1,10 @@
 <template>
   <el-card class="box-card management">
     <el-row>
-      <el-button :class="{activeBtn:isActive1}" @click="goSubscription">已订阅(34)</el-button>
-      <el-button :class="{activeBtn:isActive2}" @click="goPublication">已发布(34)</el-button>
-      <el-button :class="{activeBtn:isActive3}" @click="goChecked">待审核(15)</el-button>
-      <el-button :class="{activeBtn:isActive4}" @click="goForbidden">已禁用(15)</el-button>
+      <el-button v-if="rightInfoObj['serv-subscribe']" :class="{activeBtn:isActive1}" @click="goSubscription">已订阅(34)</el-button>
+      <el-button v-if="rightInfoObj['serv-release']" :class="{activeBtn:isActive2}" @click="goPublication">已发布(34)</el-button>
+      <el-button v-if="rightInfoObj['serv-auditing']" :class="{activeBtn:isActive3}" @click="goChecked">待审核(15)</el-button>
+      <el-button v-if="rightInfoObj['serv-disabled']" :class="{activeBtn:isActive4}" @click="goForbidden">已禁用(15)</el-button>
     </el-row>
 
     <component :is="listId"></component>
@@ -17,7 +17,7 @@ import subscription from "./subscription/index";
 import publication from "./publication/index";
 import checked from "./checked/index";
 import forbidden from "./forbidden/index";
-
+import { mapGetters } from "vuex";
 export default {
   name: "pageManagement",
   components: {
@@ -25,6 +25,9 @@ export default {
     publication,
     checked,
     forbidden
+  },
+  computed: {
+    ...mapGetters(["rightInfoObj"])
   },
   data() {
     return {

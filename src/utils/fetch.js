@@ -35,17 +35,21 @@ service.interceptors.response.use(function (res) {
       this.$message.error('token无效');
       break;
     case 'expiry': // be:我可以额外给你加个特殊标记 免得和其他请求数据分不清
-      MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
-        confirmButtonText: '重新登录',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        store.dispatch('logOut')
-          .then(() => {
-            location.reload(); // 为了重新实例化vue-router对象 避免bug
-            return 
-          })
-      })
+      if (!store.getters.isOut) {
+        store.commit('SET_ISOUT', true)
+        MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
+          confirmButtonText: '重新登录',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          store.dispatch('logOut')
+            .then(() => {
+              location.reload(); // 为了重新实例化vue-router对象 避免bug
+              return 
+            })
+        })
+      }
+      
       break;
   }
   return res;

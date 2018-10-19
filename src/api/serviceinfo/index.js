@@ -95,3 +95,30 @@ export function getEvalSort(params) {
     params
   })
 }
+
+
+// 订阅
+export function subscribe(data) {
+  return fetch({
+    url: '/dsb/customer/service/available/subscribe',
+    method: 'post',
+    data
+  })
+}
+
+// 取消订阅
+export function unSubscribe(params) {
+  return fetch({
+    url: '/dsb/customer/service/available/unsubscribe',
+    method: 'post',
+    params
+  })
+}
+
+// 不分页获取应用列表
+export function getAppList() {
+  return fetch({
+    url: '/dsb/customer/myapp/values',
+    method: 'post',
+  })
+}

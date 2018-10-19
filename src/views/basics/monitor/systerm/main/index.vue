@@ -65,13 +65,15 @@ export default {
     getInstance() {
       api.getInstance().then(res => {
         const { status, data } = res;
-        if (data.length === 0) {
-          this.empty = true;
+        if (status === 200 && data) {
+          if (data.length === 0) {
+            this.empty = true;
+          }
+          data.forEach(item => {
+            this.circleData(item);
+          });
+          this.list = data;
         }
-        data.forEach(item => {
-          this.circleData(item);
-        });
-        this.list = data;
       });
     },
     circleData(item) {

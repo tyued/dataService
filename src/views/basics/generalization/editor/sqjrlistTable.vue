@@ -24,7 +24,7 @@
 import * as api from 'api/generalization/index'
 import * as dicty from 'api/dictionary'
 export default {
-    name:'sqjrlistTable',
+    name:'SqjrlistTable',
     data() {
         return {
             tableData:[],
@@ -67,7 +67,7 @@ export default {
             api.showServiceDetail({
                 subId: id
             }).then((res) => {  
-                console.log(res)
+                console.log(res, 'showServiceDetail')
             })
         }
     },

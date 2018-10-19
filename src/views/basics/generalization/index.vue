@@ -2,10 +2,10 @@
     <div class="gl-container">
         <el-row class="gl-rowbox">
             <el-col :span="24">
-                <el-card  class="box-card">
+                <el-card class="box-card">
                     <div slot="header" class="box-card-header">
                         系统概述
-					</div>
+                    </div>
                     <el-row :gutter="20">
                         <el-col :span="4">
                             <span class="xtgsdata">{{listData.usable?listData.usable:'0'}}</span>
@@ -37,60 +37,60 @@
         </el-row>
         <el-row class="gl-rowbox gl-partbox" :gutter="20">
             <el-col :span="8">
-                <el-card  class="box-card">
+                <el-card class="box-card">
                     <div slot="header" class="box-card-header">
                         用户订阅量
                         <el-tag type="danger">TOP5</el-tag>
-					</div>
-                    <bar-chart></bar-chart>
+                    </div>
+                    <BarChart></BarChart>
                 </el-card>
             </el-col>
             <el-col :span="8">
-                <el-card  class="box-card">
+                <el-card class="box-card">
                     <div slot="header" class="box-card-header">
                         服务访问量
                         <el-tag type="danger">TOP5</el-tag>
-					</div>
-                    <fwfwl-table></fwfwl-table>
+                    </div>
+                    <FwfwlTable></FwfwlTable>
                 </el-card>
             </el-col>
             <el-col :span="8">
-                <el-card  class="box-card">
+                <el-card class="box-card">
                     <div slot="header" class="box-card-header">
                         服务订阅量
                         <el-tag type="danger">TOP5</el-tag>
-					</div>
-                    <line-chart></line-chart>
+                    </div>
+                    <LineChart></LineChart>
                 </el-card>
             </el-col>
         </el-row>
         <el-row class="gl-rowbox gl-partbox" :gutter="20">
             <el-col :span="12">
-                <el-card  class="box-card">
+                <el-card class="box-card">
                     <div slot="header" class="box-card-header">
                         最新服务异常
                         <!-- <span class="more">更多</span> -->
-					</div>
-                    <zxfwyc-table></zxfwyc-table>
+                    </div>
+                    <ZxfwycTable></ZxfwycTable>
                 </el-card>
             </el-col>
             <el-col :span="12">
-                <el-card  class="box-card">
+                <el-card class="box-card">
                     <div slot="header" class="box-card-header">
                         异常类型汇总
-					</div>
-                    <pie-chart></pie-chart>
+                    </div>
+                    <PieChart></PieChart>
                 </el-card>
             </el-col>
-        </el-row>      
+        </el-row>
         <el-row class="gl-rowbox gl-partbox">
             <el-col :span="24   ">
-                <el-card  class="box-card">
+                <el-card class="box-card">
                     <div slot="header" class="box-card-header">
                         申请接入列表
                         <!-- <span class="more">更多</span> -->
-					</div>
-                    <sqjrlist-table></sqjrlist-table>
+                    </div>
+                    <SqjrlistTable></SqjrlistTable>
                 </el-card>
             </el-col>
         </el-row>
@@ -98,30 +98,41 @@
 </template>
 
 <script>
-import { barChart , fwfwlTable , lineChart , zxfwycTable , pieChart , sqjrlistTable } from 'views/basics/generalization';
-import * as api from 'api/generalization/index'
+import {
+  BarChart,
+  FwfwlTable,
+  LineChart,
+  ZxfwycTable,
+  PieChart,
+  SqjrlistTable
+} from "views/basics/generalization";
+import * as api from "api/generalization/index";
 
 export default {
-    name:'generalization',
-    components: {
-        barChart,fwfwlTable,lineChart,zxfwycTable,pieChart,sqjrlistTable
-    },
-    data() {
-        return {
-            listData:[],            //系统概况
-        }
-    },
-    created(){
-        this.init()
-    },
-    methods:{
-        init(){
-            // 系统概况
-            api.survey().then(response => {
-                this.listData = response.data
-            })
-        }
-    },
-
-}
+  name: "generalization",
+  components: {
+    BarChart,
+    FwfwlTable,
+    LineChart,
+    ZxfwycTable,
+    PieChart,
+    SqjrlistTable
+  },
+  data() {
+    return {
+      listData: [] //系统概况
+    };
+  },
+  created() {
+    this.init();
+  },
+  methods: {
+    init() {
+      // 系统概况
+      api.survey().then(response => {
+        this.listData = response.data;
+      });
+    }
+  }
+};
 </script>

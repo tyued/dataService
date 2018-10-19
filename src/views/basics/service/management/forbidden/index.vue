@@ -78,10 +78,8 @@ export default {
         });
     },
     openChange(id, userId) {
-      console.log("change");
     },
     openCancle(id, userId) {
-      console.log("cancel");
     },
     getList(pageNo = 1, limit = 10, pubStatus = "1", apiStatus = "3") {
       api

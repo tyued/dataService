@@ -14,7 +14,7 @@
 <script>
 import * as api from 'api/generalization/index'
 export default {
-    name:'zxfwycTable',
+    name:'ZxfwycTable',
     data() {
         return {
             tableData:[],

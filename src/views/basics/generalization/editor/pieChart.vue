@@ -7,6 +7,7 @@ import echarts from 'echarts';
 import * as api from 'api/generalization/index'
 
 export default {
+    name: 'PieChart',
     props: {
         className: {
             type: String,

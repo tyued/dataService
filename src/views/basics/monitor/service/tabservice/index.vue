@@ -96,16 +96,16 @@
                 <Key :servId="servId" :apiId="apiId" :byType="byType" />
               </el-tab-pane> -->
             <el-tab-pane label="调用次数" name="0">
-              <Uses :tabName="tabName" :servId="servId" :apiId="apiId" :byType="byType" />
+              <Uses ref="uses" :tabName="tabName" :servId="servId" :apiId="apiId" :byType="byType" />
             </el-tab-pane>
             <el-tab-pane label="失败率" name="1">
-              <Fail :tabName="tabName" :servId="servId" :apiId="apiId" :byType="byType" />
+              <Fail ref="fail" :tabName="tabName" :servId="servId" :apiId="apiId" :byType="byType" />
             </el-tab-pane>
             <el-tab-pane label="平均耗时" name="2">
-              <Avg :tabName="tabName" :servId="servId" :apiId="apiId" :byType="byType" />
+              <Avg ref="avg" :tabName="tabName" :servId="servId" :apiId="apiId" :byType="byType" />
             </el-tab-pane>
             <el-tab-pane label="最大耗时" name="3">
-              <Max :tabName="tabName" :servId="servId" :apiId="apiId" :byType="byType" />
+              <Max ref="max" :tabName="tabName" :servId="servId" :apiId="apiId" :byType="byType" />
             </el-tab-pane>
           </el-tabs>
         </el-row>
@@ -161,7 +161,7 @@ import XLSX from "xlsx"; // Excel
 
 export default {
   name: "tabservice",
-  props: ["servId", "servType"], // 服务的id和服务的类型
+  props: ["servId", "servType", 'date'], // 服务的id和服务的类型
   components: {
     // Key,
     Uses,
@@ -171,13 +171,13 @@ export default {
     PageBar
   },
   created() {
-    this.init();
+    this.init()
   },
   watch: {
     servId(id) {
-      // 更新试图   重复点击同一个服务不会更新弹层，切换服务才会重新拉去服务器信息
+      // 更新试图   切换服务重新拉去服务器信息
       this.init();
-    }
+    },
   },
   computed: {
     byType() {
@@ -221,7 +221,7 @@ export default {
           this.initTab(data[0].id);
         });
       // // 重置tabs为第一个
-      // this.activeNameTable = "0";
+      this.activeNameTable = "0";
     },
     changeTab(item) {
       // 改变接口tab
@@ -235,16 +235,26 @@ export default {
       item.active = true
       let id = item.id;
       this.initTab(id);
+      
+      
+    },
+    initEcharts() {
+      this.$refs.uses.init()
+      this.$refs.max.init()
+      this.$refs.fail.init()
+      this.$refs.avg.init()
     },
     initTab(id) {
       // 每个接口tab的初始化及切换
       this.apiId = id;
       // // 改变小时和日报
-      // this.tabDateValue = "日报"; // 重置默认为日报 改变type
+      this.tabDateValue = "日报"; // 重置默认为日报 改变type
       // 昨日信息
       this.getYesterday(id);
       // 获取下面表格
       this.getTable();
+      // 获取4 个 echarts
+      this.initEcharts()
     },
     getYesterday(id) {
       // 昨日信息

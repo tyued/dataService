@@ -647,6 +647,7 @@ export default {
                 })
                 if(this.selSerType==1){                 //rest---http api
                     this.editableTabs.forEach(function(item,index){
+                        submitD.apis[index].example = item.example  //接口返回示例    
                         submitD.apis[index].url = item.url  //接口地址           
                         submitD.apis[index].method = item.method  //请求方式         
                         submitD.apis[index].resp = item.resp  //返回格式     
@@ -654,7 +655,6 @@ export default {
                     })
                     if(judge){                   
                         api.putRest(submitD).then(res => {
-                            console.log(res)
                             if(res.status=="200"){
                                 this.$notify({title: '成功', message: '创建成功', type: 'success', duration: 2000});
                                 this.servId = res.data.servId
@@ -691,7 +691,7 @@ export default {
                         this.$message({ type: 'warning', message: '请完整填写条件!' });
                     }
                 }
-                if(this.selSerType==3){                 //rest---webservice
+                if(this.selSerType==3){                 //rest---数据源
                     var that =this
                     this.editableTabs.forEach(function(item,index){
                         submitD.apis[index].example = item.example  //接口返回示例    

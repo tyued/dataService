@@ -69,7 +69,6 @@ export default {
           pubStatus
         })
         .then(res => {
-          console.log(res);
           // pubStatus   0:待审核|1:已通过（即已发布）|2:已驳回
           const { status, data, total } = res;
           if (status === 200 && data) {
@@ -115,10 +114,8 @@ export default {
         });
     },
     openChange(id, userId) {
-      console.log("change");
     },
     openCancle(id, userId) {
-      console.log("cancel");
     }
   }
 };

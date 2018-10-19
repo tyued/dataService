@@ -16,7 +16,7 @@
 <script>
 import * as api from 'api/generalization/index'
 export default {
-    name:'fwfwlTable',
+    name:'FwfwlTable',
     data() {
       return {
         tableData:[],

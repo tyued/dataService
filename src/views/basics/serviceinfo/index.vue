@@ -4,8 +4,8 @@
     <el-row class="top-nav">
       <el-col :span="24">
         <ul>
-          <li>&emsp;服务商：<a href="javascript:;">{{infoData.producer}}</a></li>
-          <li>分&emsp;类:&nbsp;
+          <li><span>&emsp;服务商：</span><a href="javascript:;">{{infoData.producer}}</a></li>
+          <li><span>分&emsp;类：</span>
             <el-tag type="success">{{infoData.tagname}}</el-tag>
           </li>
           <li>{{infoData.subCount}}</li>
@@ -13,11 +13,17 @@
           <li>
             <el-rate v-model="valRate" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate>
           </li>
-          <li @click="$router.back()">返回</li>
-          <li>禁用/发布</li>
-          <li @click="goToMonitor">监控</li>
-          <li>&nbsp;订阅/取消</li>
-          <li @click="handleList">意见反馈</li>
+          <li class="nav-back" @click="$router.back()">返回</li>
+          <!-- <li class="nav-forbidden" v-if="$store.getters.userInfoObj.roleId === '1'">
+            <span v-if="sub === '0'">禁用</span>
+            <span v-else>发布</span>
+          </li> -->
+          <li class="nav-monitor" v-if="$store.getters.userInfoObj.roleId === '1'" @click="goToMonitor">&nbsp;监控</li>
+          <li class="nav-sub">
+            <span v-if="sub === '0'" @click="subscribe">订阅</span>
+            <span v-else @click="unSubscribe">取消订阅</span>
+          </li>
+          <li class="nav-res" @click="handleList">意见反馈</li>
         </ul>
       </el-col>
     </el-row>
@@ -25,7 +31,7 @@
       <el-col :span="14">
         <el-card shadow="always" class="card-item" :body-style="{'height': '392px'}">
           <h5>服务简介</h5>
-          <section>{{infoData.detail}}</section>
+          <section v-html="infoData.detail"></section>
         </el-card>
       </el-col>
       <el-col :span="10">
@@ -62,17 +68,22 @@
             </el-radio-group>
             <el-tabs :tab-position="tabPosition">
               <el-tab-pane v-for="item in apisList" :key="item.id" :label="item.name">
-                <el-row :gutter="12" v-if='tabPosition=="left"'>
+                <el-row :gutter="14" v-if='tabPosition=="left"'>
                   <el-col :span="12" class="left-box">
                     <h5>基本信息</h5>
                     <ol>
-                      <li>接口地址：{{item.url}}</li>
-                      <li>返回格式：<el-tag>{{item.resp?item.resp:(type==2?'XML':'空')}}</el-tag>
+                      <li><span class="li-title">接口地址：</span><span class="li-cont">{{item.url}}</span></li>
+                      <li><span class="li-title">返回格式：</span><span class="li-cont">
+                          <el-tag>{{item.resp?item.resp:(type==2?'XML':'空')}}</el-tag>
+                        </span>
                       </li>
-                      <li>请求方式：<el-tag>{{item.method}}</el-tag>
+                      <li><span class="li-title">请求方式：</span><span class="li-cont">
+                          <el-tag>{{item.method}}</el-tag>
+                        </span>
                       </li>
-                      <li>请求示例：{{item.expUrl}}</li>
-                      <li>接口备注：{{item.intro}}</li>
+                      <li><span class="li-title">请求示例：</span><span class="li-cont">{{item.expUrl}}</span></li>
+                      <li><span class="li-title">接口备注：</span><span class="li-cont" v-html="item.intro"></span>
+                      </li>
                     </ol>
                     <h5>请求参数说明</h5>
                     <el-tabs class="exact" type="border-card">
@@ -124,7 +135,7 @@
     </el-row>
 
     <!-- 对话框 -->
-    <el-dialog title="意见反馈" :visible.sync="centerDialogVisible" width="450px" center>
+    <el-dialog title="意见反馈" :visible.sync="centerDialogVisible" width="600px" center>
       <el-row class="dialog-topbox">
         <el-col :span="6">
           <h4>评论及评分</h4>
@@ -239,17 +250,67 @@
         </el-row>
       </section>
     </el-dialog>
+
+    <!-- 接口的弹出层 -->
+    <el-dialog width="76%" title="接口监控信息" :visible.sync="dialogIOVisible">
+      <TabService :servId="servId" :servType="type" ref="tab-service" />
+    </el-dialog>
+    <!-- /接口的弹出层 -->
+
+    <!-- 订阅弹出层 -->
+    <el-dialog width="40%" title="选择要订阅的应用" :visible.sync="dialogIOVisibleSub">
+
+      <el-form ref="form" :rules="rulesApp" :model="form" label-width="80px">
+
+        <el-form-item label="应用" prop="appId">
+          <el-select v-model="form.appId" placeholder="请选择应用">
+            <el-option v-for="(item, index) in appArr" :key="index" :label="item.value" :value="item.key"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="描述" prop="desc">
+          <el-input type="textarea" v-model="form.desc"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="subscribeDone('form')">确定</el-button>
+          <el-button>取消</el-button>
+        </el-form-item>
+
+      </el-form>
+    </el-dialog>
   </div>
 
 </template>
 
 <script>
-import * as api from "api/service/studentinfo/index";
+import * as api from "api/serviceinfo/index";
 import * as dicty from "api/dictionary";
+import TabService from "../monitor/service/tabservice/index";
 export default {
+  name: "serviceinfo",
+  components: {
+    TabService
+  },
   data() {
     return {
+      form: {
+        appId: "",
+        desc: ""
+      },
+      rulesApp: {
+        desc: [
+          { required: true, message: "请输入描述内容", trigger: "blur" },
+          {
+            min: 1,
+            max: 500,
+            message: "长度在 1 到 500 个字符",
+            trigger: "blur"
+          }
+        ],
+        appId: [{ required: true, message: "请选择应用", trigger: "change" }]
+      },
       listLoading: true,
+      dialogIOVisibleSub: false,
+      dialogIOVisible: false,
       lessControll: false, // 控制收起按钮的显示
       type: "", //1. HTTP API(rest)  2. WebService API   3.  通过数据源发布
       servId: "",
@@ -265,6 +326,7 @@ export default {
       enjoyList: [], //猜你喜欢的
       ErrorCode: [], //服务错误对照信息
       Settings: "",
+      appArr: [],
       evalsinfo: {
         //评价详情
         star1: 1,
@@ -307,12 +369,14 @@ export default {
       accessList: [],
       totalNumber: 0,
       limitNumber: 5,
+      sub: "",
       commandNumber: "3" // 一开始就是按最新评论来排序 排序方式：1：最高评价，2：最低评价，3：最新评价
     };
   },
   created() {
     this.type = this.$route.query.type;
     this.servId = this.$route.query.servId;
+    // this.sub = this.$route.query.sub;
     this.DetailQuery.servId = this.servId;
     this.submitParams.servId = this.servId;
     this.getBaseData();
@@ -341,6 +405,7 @@ export default {
         //HTTP API(rest)
         api.getRest(this.DetailQuery).then(response => {
           this.infoData = response.data;
+          this.sub = response.data.subscribed;
           this.apisList = response.data.apis;
           this.infoData.tagname = "";
           var that = this;
@@ -351,10 +416,10 @@ export default {
           });
           var uuid = this.infoData.uuid;
           var reg = new RegExp("\\.", "g");
-          this.apisList.forEach(function(item, index) {
+          this.apisList.forEach((item, index) => {
             var apiVer = item.version.replace(reg, "_");
             item.expUrl =
-              item.Settings +
+              this.Settings +
               "/rest/" +
               uuid +
               "/" +
@@ -376,6 +441,7 @@ export default {
         //WebService API(soap)
         api.getSoap(this.DetailQuery).then(response => {
           this.infoData = response.data;
+          this.sub = response.data.subscribed;
           this.apisList = response.data.apis;
           this.infoData.tagname = "";
           var that = this;
@@ -409,6 +475,7 @@ export default {
         //数据源
         api.getDataset(this.DetailQuery).then(response => {
           this.infoData = response.data;
+          this.sub = response.data.subscribed;
           this.apisList = response.data.apis;
           this.infoData.tagname = "";
           var that = this;
@@ -458,7 +525,7 @@ export default {
     // 猜你喜欢的查看
     toStudentInfo(type, id) {
       this.$router.push({
-        path: "/service/studentinfo",
+        path: "/serviceinfo",
         query: { type: type, servId: id }
       });
     },
@@ -592,10 +659,75 @@ export default {
       this.getMoreList(this.commandNumber, this.limitNumber);
     },
     goToMonitor() {
-      this.$router.push({
-        name: "monitor",
-        params: {
-          // ...数据对象
+      this.dialogIOVisible = true;
+      if (this.$refs["tab-service"]) {
+        this.$refs["tab-service"].init();
+      }
+    },
+    unSubscribe() {
+      this.$confirm("确认要取消订阅该服务吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        api
+          .unSubscribe({
+            servId: this.servId
+          })
+          .then(res => {
+            const { status, data } = res;
+            if (status === 200 && data) {
+              if (data.status === "success") {
+                this.infoData.subCount--;
+                this.sub = "0";
+                this.$message({
+                  type: "success",
+                  message: data.message
+                });
+              } else {
+                this.$message.error(data.message);
+              }
+            }
+          });
+      });
+    },
+    subscribe() {
+      this.dialogIOVisibleSub = true;
+
+      api.getAppList().then(res => {
+        const { status, data } = res;
+        if (status === 200 && data) {
+          this.appArr = data;
+        }
+      });
+    },
+    subscribeDone(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          api
+            .subscribe({
+              servId: this.servId,
+              appId: this.form.appId,
+              desc: this.form.desc
+            })
+            .then(res => {
+              const { status, data } = res;
+              if (status === 200 && data) {
+                if (data.status === "success") {
+                  this.dialogIOVisibleSub = false;
+                  this.infoData.subCount++;
+                  this.sub = "1";
+                  this.$message({
+                    type: "success",
+                    message: data.message
+                  });
+                } else {
+                  this.$message.error(data.message);
+                }
+              }
+            });
+        } else {
+          return false;
         }
       });
     }
@@ -649,23 +781,21 @@ export default {
   ul li:nth-child(5) {
     background: url("./img/info_good.png") no-repeat left center;
   }
-  ul li:nth-child(6) {
+
+  .nav-back {
     background: url("./img/info_back.png") no-repeat left center;
   }
-  ul li:nth-child(7) {
+  .nav-forbidden {
     background: url("./img/info_forbidden.png") no-repeat left center;
   }
-  ul li:nth-child(8) {
+  .nav-monitor {
     background: url("./img/info_watch.png") no-repeat left center;
   }
-  ul li:nth-child(9) {
-    background: url("./img/info_wifi.png") no-repeat left center;
-  }
-  ul li:nth-child(10) {
+  .nav-res {
     background: url("./img/info_edit.png") no-repeat left center;
   }
-  ul li:nth-child(11) {
-    background: url("./img/info_add.png") no-repeat left center;
+  .nav-sub {
+    background: url("./img/info_wifi.png") no-repeat left center;
   }
   /* 卡片 */
   .card-item {

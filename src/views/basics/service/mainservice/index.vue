@@ -1,49 +1,62 @@
 <template>
-    <div>
-        <el-col :span="24" class="opaPart">
-            <el-radio-group v-model="servType" @change="changeType">
-                <el-radio-button label="allt">全部</el-radio-button>
-                <el-radio-button v-for="item in servTypeList" :key="item.key" :label="item.key">{{item.value}}</el-radio-button>
-            </el-radio-group>
-        </el-col>
-        <el-col :span="24">
-            <el-card class="box-card" v-loading.body="listLoading">
-                <el-row class="fw-rowbox" :gutter="20">
-                    <el-col :span="8" v-for="item in fwserTypeList" :key="item.id">
-                        <el-card class="box-card">
-                            <div slot="header" class="box-card-header">
-                                {{item.name}}
-                                <el-tag class="fw-part-tag" size="small">{{item.tagname?item.tagname:'其他'}}</el-tag>
-                                <el-button class="box-card-hbtn" type="success" size="small" @click="toStudentInfo(item.type,item.id)">查看</el-button>
-                            </div>
+  <div>
+    <el-col :span="24" class="opaPart">
+      <el-radio-group v-model="servType" @change="changeType">
+        <el-radio-button label="allt">全部</el-radio-button>
+        <el-radio-button v-for="item in servTypeList" :key="item.key" :label="item.key">{{item.value}}</el-radio-button>
+      </el-radio-group>
+    </el-col>
+    <el-col :span="24">
 
-                            <div class="fw-part-con">{{item.intro}}</div>
-                            <div class="fw-part-foot">
-                                <div class="target">
-                                    <span>{{item.producer}}</span>
-                                </div>
-                                <div class="count">
-                                    <i class="el-icon-view"></i>
-                                    {{item.evalCount}}
-                                </div>
-                            </div>
-                        </el-card>
-                    </el-col>
-                </el-row>
-                <div v-show="!listLoading" class="pagination-container">
-                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[6,12,18,50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total"> </el-pagination>
+      <el-card v-if="fwserTypeList.length === 0" class="box-card">
+        <div class="empty-tips">
+          暂无数据
+        </div>
+      </el-card>
+
+      <el-card v-else class="box-card" v-loading.body="listLoading">
+        <el-row class="fw-rowbox" :gutter="20">
+          <el-col :span="8" v-for="item in fwserTypeList" :key="item.id">
+            <el-card class="box-card">
+              <div slot="header" class="box-card-header">
+                {{item.name}}
+                <el-tag class="fw-part-tag" size="small">{{item.tagname?item.tagname:'其他'}}</el-tag>
+                <el-tag v-if="item.subscribed === '1'" class="fw-part-tag" size="small" type="warning">已订阅</el-tag>
+                <el-button class="box-card-hbtn" type="success" size="small" @click="toStudentInfo(item.type,item.id,item.subscribed)">查看</el-button>
+              </div>
+
+              <div class="fw-part-con">{{item.intro}}</div>
+              <div class="fw-part-foot">
+                <div class="target">
+                  <span>{{item.producer}}</span>
                 </div>
+                <div class="count">
+                  <i class="el-icon-view"></i>
+                  {{item.evalCount}}
+                </div>
+              </div>
             </el-card>
-        </el-col>
+          </el-col>
+        </el-row>
+        <div v-show="!listLoading" class="pagination-container">
+          <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page" :page-sizes="[6,12,18,50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total"> </el-pagination>
+        </div>
+      </el-card>
 
-    </div>
+    </el-col>
+
+  </div>
 </template>
 
 <script>
 import * as dicty from "api/dictionary";
 import * as api from "api/service/management";
+import { mapGetters } from "vuex";
 export default {
   name: "mainservice",
+  computed: {
+    ...mapGetters(["rightInfoObj"])
+  },
   data() {
     return {
       servTypeList: [], //服务分类
@@ -79,6 +92,10 @@ export default {
     getBaseData() {
       var query = { group: "servType" };
       dicty.getBaseData(query).then(response => {
+        response.data.push({
+          key: "sub",
+          value: "已订阅"
+        });
         this.servTypeList = response.data;
       });
     },
@@ -118,12 +135,21 @@ export default {
       this.listQuery.pageNo = "1";
       this.getList();
     },
-    toStudentInfo(type, id) {
+    toStudentInfo(type, id, subscribed) {
       this.$router.push({
-        path: "/service/studentinfo",
-        query: { type: type, servId: id }
+        path: "/serviceinfo",
+        query: { type: type, servId: id, sub: subscribed }
       });
     }
   }
 };
 </script>
+
+<style scoped>
+.empty-tips {
+  padding: 200px 0;
+  text-align: center;
+  font-size: 14px;
+  color: #9a9a9a;
+}
+</style>

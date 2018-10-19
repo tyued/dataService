@@ -33,10 +33,10 @@ export default {
       // 改变小时和日报要重置表格
       this.init();
     },
-    apiId() {
-      // 改变接口时，也要重置表格 @ apiId  '' => '16' ： 第一次点击就会触发
-      this.init();
-    }
+    // apiId() {
+    //   // 改变接口时，也要重置表格 @ apiId  '' => '16' ： 第一次点击就会触发
+    //   this.init();
+    // }
   },
   data() {
     return {
@@ -56,6 +56,7 @@ export default {
   },
   methods: {
     init(time = this.defaultValueTime) {
+      this.activeArr = [false, false, true]
       // 获取echarts数据并props down
       api
         .postFailCount({
