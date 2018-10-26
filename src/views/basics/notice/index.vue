@@ -15,7 +15,7 @@
           <template slot="title">
             <span class="title" :class="{already: item.status === '1'}">
               <i v-show="item.status !== '1'"></i>
-              一致性 Consistency
+              {{item.title}}
               <span class="fr">{{item.timestamp}}&emsp;</span>
             </span>
           </template>
@@ -77,15 +77,15 @@ export default {
       if (typeof i !== "number") {
         return;
       }
-      const { status, userid } = this.noticeList[i];
+      const { status, id } = this.noticeList[i];
       if (status === "0") {
         api
           .postRead({
-            id: userid
+            id
           })
           .then(res => {
             if (res.status === 200 && res.data.status === "success") {
-              this.getList(this.current, this.size);
+              this.noticeList[i].status = '1'
               this.changeNoticeNumber();
             }
           });

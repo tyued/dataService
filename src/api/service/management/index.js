@@ -1,13 +1,13 @@
 import fetch from 'utils/fetch';
 /**
- * 用途：查询已经审批通过的服务订阅记录
+ * 用途：已订阅：查看（申请人、申请的应用、申请说明）、授权管理（签发秘钥、禁用、重置）
  * 注意：status=1
  * 说明：如果想完成该功能，应该先完成，应用管理、服务订阅功能
  * @param {appId} data 服务-调用申请应用ID编号-将要调用申请服务的应用ID (该参数来源于消费者申请调用一个服务的时候，需要选择自己哪个应用来调用，即系统中有应用管理、服务订阅功能没做)
  * @param {servId} data 服务-信息ID编号
  * @param {status} data 服务-调用申请状态：0:待审批|1:审批通过|2:审批不通过(用于筛选订阅申请数据)
  */
-export function getPassSubscribeList (data) {
+export function getPassSubscribeList(data) {
   return fetch({
     url: '/dsb/admin/service/subscribe/list',
     method: 'post',
@@ -15,8 +15,8 @@ export function getPassSubscribeList (data) {
   })
 }
 
-// 获取已订阅 列表
-export function getSubscribeList (data) {
+// 未提交：查看、修改、撤销
+export function getRetrieveList(data) {
   return fetch({
     url: '/dsb/admin/service/retrieve/list',
     method: 'post',
@@ -24,48 +24,12 @@ export function getSubscribeList (data) {
   })
 }
 
-// 待审批服务发布申请    0:待审核|1:审核通过|2:审核不通过
-export function getReviewTG (data) {
+// 已发布（针对接口）：禁用  已禁用（针对接口）：启用  待审核：查看（审核、驳回）
+export function getApiList(data) {
   return fetch({
-    url: '/dsb/admin/service/review/list',
-    method: 'post',
-    data:data
-  })
-}
-
-// 增加一个新的服务发布申请记录 提交服务发布申请
-export function submitService (data) {
-  return fetch({
-    url: '/dsb/admin/service/publish/submit',
+    url: '/dsb/admin/service/api/retrieve/list',
     method: 'post',
     data
-  })
-}
-
-// 获取已发布的服务接口信息
-export function getPubList (data) {
-  return fetch({
-    url: '/dsb/admin/service/retrieve/list',
-    method: 'post',
-    data
-  })
-}
-
-// 获取待审核 & 已禁用的服务接口信息
-export function getApiList (data) {
-  return fetch({
-    url: '/dsb/admin/service/retrieve/apiList',
-    method: 'post',
-    data
-  })
-}
-
-// 获取指定服务下指定的接口信息
-export function getApiParamForms(params) {
-  return fetch({
-    url: '/dsb/admin/service/retrieve/apis',
-    method: 'post',
-    params
   })
 }
 
@@ -79,16 +43,16 @@ export function editApi(data) {
 }
 
 // 禁用服务接口！
-export function forbiddenService (data) {
+export function forbiddenService(data) {
   return fetch({
-    url: '/dsb/admin/service/mgmt/pause',
+    url: '/dsb/admin/service/mgmt/distory',
     method: 'post',
     data
   })
 }
 
 // 启用服务接口！
-export function runService (data) {
+export function runService(data) {
   return fetch({
     url: '/dsb/admin/service/mgmt/deploy',
     method: 'post',
@@ -96,20 +60,97 @@ export function runService (data) {
   })
 }
 
-// 服务撤销！
-export function cancelService (data) {
+// // 服务撤销！
+// export function cancelService(data) {
+//   return fetch({
+//     url: '/dsb/admin/service/mgmt/undeploy',
+//     method: 'post',
+//     data
+//   })
+// }
+
+
+// 分页查询待审批服务发布申请记录 -r
+export function getReviewList (data) {
   return fetch({
-    url: '/dsb/admin/service/mgmt/undeploy',
+    url: '/dsb/admin/service/review/list',
+    method: 'post',
+    data:data
+  })
+}
+
+// 审批服务!发布!申请记录 
+export function checkPublishRequest (data) {
+  return fetch({
+    url: '/dsb/admin/service/review/review',
     method: 'post',
     data
   })
 }
 
-// 获取接口list by 服务id
-export function postApisListById(data) {
+// 可用的插件扩展实现对象信息
+export function getExtensions (data) {
   return fetch({
-    url: 'dsb/admin/service/retrieve/apis',
+    url: '/dsb/admin/service/plugin/extensions',
     method: 'post',
     data
-  });
+  })
+}
+
+
+
+// 获取指定服务下指定的接口信息
+export function getApiParamForms(params) {
+  return fetch({
+    url: '/dsb/admin/service/retrieve/api',
+    method: 'post',
+    params
+  })
+}
+
+// 获取指定服务下所有接口信息
+export function getApisParamForms(params) {
+  return fetch({
+    url: '/dsb/admin/service/retrieve/apis',
+    method: 'post',
+    params
+  })
+}
+
+// -----------------------------服务授权------------------------------
+
+// 查看按钮-审核通过
+export function passReviewKey(data) {
+  return fetch({
+    url: '/dsb/admin/service/subscribe/review',
+    method: 'post',
+    data
+  })
+}
+
+// 查询服务订阅授权信息
+export function getKeyList(params) {
+  return fetch({
+    url: '/dsb/admin/service/authz/list',
+    method: 'post',
+    params
+  })
+}
+
+// 重置授权秘钥
+export function resetKey(params) {
+  return fetch({
+    url: '/dsb/admin/service/authz/reset',
+    method: 'post',
+    params
+  })
+}
+
+// 更新授权状态
+export function updateKey(params) {
+  return fetch({
+    url: '/dsb/admin/service/authz/status',
+    method: 'post',
+    params
+  })
 }

@@ -85,7 +85,7 @@
         </el-row>
         <el-row class="gl-rowbox gl-partbox">
             <el-col :span="24   ">
-                <el-card class="box-card">
+                <el-card class="box-card pb20">
                     <div slot="header" class="box-card-header">
                         申请接入列表
                         <!-- <span class="more">更多</span> -->
@@ -136,3 +136,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.pb20 {
+    padding-bottom: 20px;
+}
+</style>

@@ -53,7 +53,7 @@ import * as dicty from "api/dictionary";
 import * as api from "api/service/management";
 import { mapGetters } from "vuex";
 export default {
-  name: "mainservice",
+  name: "mainService",
   computed: {
     ...mapGetters(["rightInfoObj"])
   },
@@ -101,7 +101,7 @@ export default {
     },
     // 获取全部服务
     getList() {
-      api.getSubscribeList(this.listQuery).then(response => {
+      api.getRetrieveList(this.listQuery).then(response => {
         this.fwserTypeList = response.data.rows;
         this.total = response.data.total;
         var that = this;

@@ -1,4 +1,7 @@
-import { asyncRouterMap, constantRouterMap } from '@/router'
+import {
+  asyncRouterMap,
+  constantRouterMap
+} from '@/router'
 
 /**
  * 通过meta.role判断是否与当前用户权限匹配
@@ -22,7 +25,8 @@ function filterAsyncRouter(routes, rightInfoObj) {
   const res = []
 
   routes.forEach(route => {
-    const tmp = { ...route }
+    const tmp = { ...route
+    }
     if (hasPermission(rightInfoObj, tmp)) {
       if (tmp.children) {
         tmp.children = filterAsyncRouter(tmp.children, rightInfoObj)
@@ -32,6 +36,18 @@ function filterAsyncRouter(routes, rightInfoObj) {
   })
   return res
 }
+
+// function filterRouter(router, asyncRouter) {
+//   router.forEach((a) => {
+//     asyncRouter.forEach((b, idx) => {
+//       if (a.name === b.name) {
+//         a.children = a.children.concat(b.children)
+//         asyncRouter.splice(idx, 1)
+//       }
+//     })
+//   })
+//   return router.concat(asyncRouter)
+// }
 
 const permission = {
   state: {
@@ -43,15 +59,19 @@ const permission = {
     SET_ROUTERS: (state, routers) => {
       state.addRouters = routers
       state.routers = constantRouterMap.concat(routers)
-      // console.log(state.routers)
+      // state.routers = filterRouter(constantRouterMap, routers)
     },
     SET_ISDONE: (state, bool) => {
       state.isDone = bool
     }
   },
   actions: {
-    GenerateRoutes({ commit }, data) {
-      let {rightInfoObj } = data
+    GenerateRoutes({
+      commit
+    }, data) {
+      let {
+        rightInfoObj
+      } = data
       return new Promise(resolve => {
         let accessedRouters
         accessedRouters = filterAsyncRouter(asyncRouterMap, rightInfoObj)

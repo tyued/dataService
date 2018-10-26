@@ -1,10 +1,10 @@
 const service = {
     state:{
-        fuwindex_on: false,                 //服务首页
+        getfuwindex_on: [true, false, false, false],       //服务首页
     },
     mutations:{
         SET_fuwindex_on: (state, data) => {
-            state.fuwindex_on = data;
+            state.getfuwindex_on = data;
         },
     },
     actions:{

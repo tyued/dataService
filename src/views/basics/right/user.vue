@@ -5,19 +5,19 @@
     </el-row>
     <el-row class="row">
       <el-table v-loading="loading" :data="tableData" style="width: 100%">
-        <el-table-column sortable prop="id" label="用户ID">
+        <el-table-column prop="pdName" label="所属供应商" sortable>
         </el-table-column>
-        <el-table-column sortable prop="username" label="用户名称">
+        <el-table-column prop="username" label="用户名称">
         </el-table-column>
-        <el-table-column sortable prop="alias" label="用户别名">
+        <el-table-column prop="alias" label="用户别名">
         </el-table-column>
-        <el-table-column sortable prop="genderX" label="性别">
+        <el-table-column prop="genderX" label="性别">
         </el-table-column>
-        <el-table-column sortable prop="email" label="邮箱">
+        <el-table-column prop="email" label="邮箱">
         </el-table-column>
-        <el-table-column sortable prop="phone" label="手机">
+        <el-table-column prop="phone" label="手机">
         </el-table-column>
-        <el-table-column sortable prop="status" label="状态">
+        <el-table-column prop="status" label="状态">
           <template slot-scope="scope">
             <el-tag size="small" v-show="scope.row.status == '0'" type="info">不可用</el-tag>
             <el-tag size="small" v-show="scope.row.status == '1'" type="success">正常</el-tag>
@@ -50,6 +50,11 @@
         <el-form-item label="用户角色" prop="roleId">
           <el-select v-model="ruleForm.roleId" placeholder="请选择用户角色">
             <el-option v-for="(item, index) in roleArr" :key="index" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所属供应商" prop="pdId">
+          <el-select v-model="ruleForm.pdId" placeholder="请选择所属供应商">
+            <el-option v-for="(item, index) in valueArr" :key="index" :label="item.value" :value="item.key"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="用户别名" prop="alias">
@@ -89,6 +94,11 @@
             <el-option v-for="(item, index) in roleArr" :key="index" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="所属供应商" prop="pdId">
+          <el-select v-model="ruleFormEdit.pdId" placeholder="请选择所属供应商">
+            <el-option v-for="(item, index) in valueArr" :key="index" :label="item.value" :value="item.key"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="用户别名" prop="alias">
           <el-input clearable maxlength="50" v-model="ruleFormEdit.alias"></el-input>
         </el-form-item>
@@ -115,7 +125,7 @@
 </template>
 
 <script>
-import * as api from "api/login";
+import * as api from "api/right";
 import PageBar from "components/PageBar/index";
 import Base64 from "utils/base64";
 export default {
@@ -153,12 +163,14 @@ export default {
     };
     return {
       roleArr: [], // 角色数组
+      valueArr: [],
       defaultProps: {
         children: "children",
         label: "label"
       },
       ruleForm: {
         id: "",
+        pdName: "",
         username: "",
         password: "",
         alias: "",
@@ -177,10 +189,14 @@ export default {
         phone: [{ required: true, validator: phoneCheck, trigger: "blur" }],
         email: [{ required: true, validator: emailCheck, trigger: "blur" }],
         gender: [{ required: true, message: "请选择性别", trigger: "change" }],
-        roleId: [{ required: true, message: "请选择角色", trigger: "change" }]
+        roleId: [{ required: true, message: "请选择角色", trigger: "change" }],
+        pdId: [
+          { required: true, message: "请选择所属供应商", trigger: "change" }
+        ]
       },
       ruleFormEdit: {
         id: "",
+        pdName: "",
         username: "",
         password: "",
         alias: "",
@@ -199,7 +215,10 @@ export default {
         phone: [{ required: true, validator: phoneCheck, trigger: "blur" }],
         email: [{ required: true, validator: emailCheck, trigger: "blur" }],
         gender: [{ required: true, message: "请选择性别", trigger: "change" }],
-        roleId: [{ required: true, message: "请选择角色", trigger: "change" }]
+        roleId: [{ required: true, message: "请选择角色", trigger: "change" }],
+        pdId: [
+          { required: true, message: "请选择所属供应商", trigger: "change" }
+        ]
       },
       loading: true,
       total: 0, // 分页
@@ -251,6 +270,7 @@ export default {
             phone: this.ruleForm.phone,
             email: this.ruleForm.email,
             gender: this.ruleForm.gender,
+            pdId: this.ruleForm.pdId,
             roleId: this.ruleForm.roleId
           };
           api.addUser(query).then(res => {
@@ -284,6 +304,7 @@ export default {
             phone: this.ruleFormEdit.phone,
             email: this.ruleFormEdit.email,
             gender: this.ruleFormEdit.gender,
+            pdId: this.ruleFormEdit.pdId,
             roleId: this.ruleFormEdit.roleId,
             id: this.ruleFormEdit.id
           };
@@ -316,7 +337,7 @@ export default {
         .then(() => {
           api
             .deleteUser({
-              userid: row.id
+              id: row.id
             })
             .then(res => {
               const { status, data } = res;
@@ -348,7 +369,16 @@ export default {
         }
       });
     },
+    getProducerValueList() {
+      api.getProducerValueList().then(res => {
+        const { status, data } = res;
+        if (status === 200 && data) {
+          this.valueArr = data;
+        }
+      });
+    },
     editItem(row) {
+      this.getProducerValueList();
       this.getRoleArr();
       this.dialogFormVisibleEdit = true;
 
@@ -364,10 +394,12 @@ export default {
         });
     },
     addUser() {
+      this.getProducerValueList();
       this.getRoleArr();
       this.dialogFormVisible = true;
       this.ruleForm = {
         id: "",
+        pdId: "",
         username: "",
         password: "",
         alias: "",

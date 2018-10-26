@@ -1,5 +1,5 @@
 const getters = {
-    getfuwindex_on: state => state.service.fuwindex_on,
+    getfuwindex_on: state => state.service.getfuwindex_on,
     token: state => state.login.token,
     noticeNumber: state => state.login.noticeNumber,
     userInfoObj: state => state.login.userInfoObj,

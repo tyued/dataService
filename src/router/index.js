@@ -10,7 +10,7 @@ export const constantRouterMap = [{
   path: '/',
   component: Layout,
   redirect: 'generalization',
-  name: '概览',
+  name: '/',
   children: [{
     path: '/notice',
     name: 'notice', // 通知页
@@ -26,18 +26,21 @@ export const constantRouterMap = [{
     component: _import('basics/monitor/index'),
     children: [{
       path: 'main',
+      name: 'main',
       component: _import('basics/monitor/systerm/main/index'),
     }, {
       path: 'detail',
+      name: 'detail',
       component: _import('basics/monitor/systerm/detail/index'),
     }]
   }]
 }, {
   path: '/login',
   component: _import('login/index'),
-  name: '登录',
+  name: 'login',
 }, {
   path: '/404',
+  name: '404',
   component: _import('404/index'),
 }]
 
@@ -54,12 +57,13 @@ export const asyncRouterMap = [{
   path: '/',
   component: Layout,
   redirect: 'generalization',
-  name: '概览',
+  name: '/',
   meta: {
     right: ['serv-home']
   },
   children: [{
     path: 'generalization', // 概览模块
+    name: 'generalization', // 概览模块
     component: _import('basics/generalization/index'),
     meta: {
       right: ['serv-home']
@@ -93,7 +97,10 @@ export const asyncRouterMap = [{
       right: ['servs']
     },
   }]
-}, {
-  path: '*',
-  redirect: '/404',
-}];
+}
+// , {
+//   path: '*',
+//   name: '*',
+//   redirect: '/404',
+// }
+];

@@ -29,9 +29,9 @@
           </el-badge>
         </span>
       </li>
-      <li>
+      <!-- <li>
         <el-input clearable :maxlength="50" prefix-icon="el-icon-search" size="mini" v-model="inputValue" placeholder="服务检索"></el-input>
-      </li>
+      </li> -->
     </ul>
     <!-- 个人信息弹出层 -->
     <el-dialog width="700px" title="个人信息" :visible.sync="personInfoVisible">

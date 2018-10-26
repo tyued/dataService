@@ -23,32 +23,32 @@
 
     <el-row style="margin: 10px 0;">
       <el-table v-loading="loading" :data="tableData" stripe style="width: 100%">
-        <el-table-column sortable prop="userId" label="接口的用户ID/服务创建人ID">
+        <el-table-column prop="userId" label="接口的用户ID/服务创建人ID" sortable>
         </el-table-column>
-        <el-table-column sortable prop="userName" label="用户名称">
+        <el-table-column prop="userName" label="用户名称">
         </el-table-column>
-        <el-table-column sortable prop="appId" label="接口的应用ID">
+        <el-table-column prop="appId" label="接口的应用ID">
         </el-table-column>
-        <el-table-column sortable prop="appName" label="接口的应用名称">
+        <el-table-column prop="appName" label="接口的应用名称">
         </el-table-column>
 
-        <el-table-column sortable prop="reqAddr" label="来源IP">
+        <el-table-column prop="reqAddr" label="来源IP">
         </el-table-column>
-        <el-table-column sortable prop="reqURI" label="URI地址">
+        <el-table-column prop="reqURI" label="URI地址">
         </el-table-column>
-        <el-table-column sortable prop="type" label="系统异常类型">
+        <el-table-column prop="type" label="系统异常类型">
         </el-table-column>
-        <el-table-column sortable prop="status" label="状态">
+        <el-table-column prop="status" label="状态">
         </el-table-column>
-        <el-table-column sortable prop="duration" label="执行时间">
+        <el-table-column prop="duration" label="执行时间">
         </el-table-column>
-        <el-table-column sortable prop="exception" label="异常信息">
+        <el-table-column prop="exception" label="异常信息">
         </el-table-column>
-        <el-table-column sortable prop="respCode" label="响应错误对照码">
+        <el-table-column prop="respCode" label="响应错误对照码">
         </el-table-column>
-        <el-table-column sortable prop="respMsg" label="错误信息">
+        <el-table-column prop="respMsg" label="错误信息">
         </el-table-column>
-        <el-table-column sortable prop="timestamp" label="系统异常发生时间">
+        <el-table-column prop="timestamp" label="系统异常发生时间">
         </el-table-column>
         <el-table-column label="操作" width="80">
           <template slot-scope="scope">
@@ -71,21 +71,24 @@ import moment from "moment";
 export default {
   name: "journal-service",
   created() {
-    api.postServTypes().then(res => {
-      const { data, status } = res;
-      if (status === 200 && data) {
-        data.forEach((item, index) => {
-          this.servTypeArr.push({
-            id: ++index,
-            name: item.desc,
-            show: false,
-            value: item.key
+    api
+      .postServTypes()
+      .then(res => {
+        const { data, status } = res;
+        if (status === 200 && data) {
+          data.forEach((item, index) => {
+            this.servTypeArr.push({
+              id: ++index,
+              name: item.desc,
+              show: false,
+              value: item.key
+            });
           });
-        });
-      }
-    }).then(() => {
-      this.getList()
-    });
+        }
+      })
+      .then(() => {
+        this.getList();
+      });
   },
   components: {
     PageBar

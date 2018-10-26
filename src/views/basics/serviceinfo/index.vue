@@ -19,9 +19,11 @@
             <span v-else>发布</span>
           </li> -->
           <li class="nav-monitor" v-if="$store.getters.userInfoObj.roleId === '1'" @click="goToMonitor">&nbsp;监控</li>
-          <li class="nav-sub">
-            <span v-if="sub === '0'" @click="subscribe">订阅</span>
-            <span v-else @click="unSubscribe">取消订阅</span>
+          <li @click="subscribe" v-if="sub === '0'" class="nav-sub">
+            <span>订阅</span>
+          </li>
+          <li @click="unSubscribe" v-else class="nav-sub">
+            <span>取消订阅</span>
           </li>
           <li class="nav-res" @click="handleList">意见反馈</li>
         </ul>
@@ -272,7 +274,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="subscribeDone('form')">确定</el-button>
-          <el-button>取消</el-button>
+          <el-button @click="dialogIOVisibleSub = false">取消</el-button>
         </el-form-item>
 
       </el-form>
@@ -692,8 +694,9 @@ export default {
       });
     },
     subscribe() {
-      this.dialogIOVisibleSub = true;
-
+      this.dialogIOVisibleSub = true
+      this.form.appId = ""
+      this.form.desc = ""
       api.getAppList().then(res => {
         const { status, data } = res;
         if (status === 200 && data) {

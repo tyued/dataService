@@ -20,30 +20,30 @@
 
     <el-row style="margin: 10px 0;">
       <el-table v-loading="loading" :data="tableData" stripe style="width: 100%">
-        <el-table-column sortable prop="id" label="日志ID">
+        <el-table-column prop="id" label="日志ID" sortable>
         </el-table-column>
-        <el-table-column sortable prop="userId" label="认证授权对象ID">
+        <el-table-column prop="userId" label="认证授权对象ID">
         </el-table-column>
-        <el-table-column sortable prop="opt" label="认证授权类型">
+        <el-table-column prop="opt" label="认证授权类型">
         </el-table-column>
-        <el-table-column sortable prop="protocol" label="认证协议">
+        <el-table-column prop="protocol" label="认证协议">
         </el-table-column>
 
-        <el-table-column sortable prop="realm" label="负责此次认证授权的realm名称">
+        <el-table-column prop="realm" label="负责此次认证授权的realm名称">
         </el-table-column>
-        <el-table-column sortable prop="level" label="日志级别">
+        <el-table-column prop="level" label="日志级别">
         </el-table-column>
-        <el-table-column sortable prop="addr" label="认证请求来源IP地址">
+        <el-table-column prop="addr" label="认证请求来源IP地址">
         </el-table-column>
-        <el-table-column sortable prop="status" label="认证授权结果">
+        <el-table-column prop="status" label="认证授权结果">
         </el-table-column>
-        <el-table-column sortable prop="msg" label="认证授权请求信息">
+        <el-table-column prop="msg" label="认证授权请求信息">
         </el-table-column>
-        <el-table-column sortable prop="exception" label="认证授权异常信息">
+        <el-table-column prop="exception" label="认证授权异常信息">
         </el-table-column>
-        <el-table-column sortable prop="respCode" label="响应错误对照码">
+        <el-table-column prop="respCode" label="响应错误对照码">
         </el-table-column>
-        <el-table-column sortable prop="timestamp" label="认证授权发生时间">
+        <el-table-column prop="timestamp" label="认证授权发生时间">
         </el-table-column>
         <el-table-column label="操作" width="80">
           <template slot-scope="scope">
@@ -66,7 +66,7 @@ import moment from "moment";
 export default {
   name: "journal-login",
   created() {
-    this.getList()
+    this.getList();
   },
   components: {
     PageBar
@@ -201,7 +201,7 @@ export default {
         timeValue: "",
         opt: "",
         protocol: "", // 认证协议
-        status: "", //  此次服务接口访问结果状态   1：成功|0:异常
+        status: "" //  此次服务接口访问结果状态   1：成功|0:异常
       }
     };
   },

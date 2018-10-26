@@ -6,8 +6,6 @@
       <el-table-column prop="_servType" label="服务类型"></el-table-column>
       <el-table-column prop="producer" label="服务提供商">
       </el-table-column>
-      <el-table-column prop="appName" label="订阅应用">
-      </el-table-column>
       <el-table-column prop="timestamp" label="申请时间" width="160px">
       </el-table-column>
       <el-table-column label="是否公开">
@@ -19,7 +17,6 @@
           <el-tag size="small">{{scope.row.servTag}}</el-tag>
         </template>
       </el-table-column>
-
       <el-table-column prop="apiStatus" label="状态">
         <template slot-scope="scope">
           <el-tag size="small" v-show="scope.row.apiStatus == '0'" type="info">待上线</el-tag>
@@ -28,13 +25,10 @@
           <el-tag size="small" v-show="scope.row.apiStatus == '3'" type="danger">下线</el-tag>
         </template>
       </el-table-column>
-
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button type="danger" size="small" @click="openChange(scope.row)">禁用</el-button>
-        </template>
+      <el-table-column prop="opinion" label="驳回意见">
       </el-table-column>
     </el-table>
+
     <!-- 分页组件here -->
     <PageBar v-show="!loading" :total="total" :currentpage="current" @handlePage="handlePage" @handlePageSize="handlePageSize" />
   </div>
@@ -45,7 +39,7 @@
 import * as api from "api/service/management";
 import PageBar from "components/PageBar/index";
 export default {
-  name: "publication",
+  name: "reject",
   components: {
     PageBar
   },
@@ -62,16 +56,15 @@ export default {
     this.getList();
   },
   methods: {
-    getList(pageNo = 1, limit = 10, pubStatus = "1", apiStatus = "1") {
+    getList(pageNo = 1, limit = 10, pubStatus = "2") {
       api
         .getApiList({
           pageNo,
           limit,
-          apiStatus,
           pubStatus
         })
         .then(res => {
-          const { status, data } = res;
+          const { status, data, total } = res;
           if (status === 200 && data) {
             this.loading = false;
             data.rows.forEach(item => {
@@ -103,40 +96,6 @@ export default {
       this.size = number;
       this.getList(1, number);
       this.current = 1;
-    },
-    openChange(row) {
-      this.$confirm("您是否要禁用该服务?", "禁用提醒", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          api
-            .forbiddenService({
-              servId: row.id,
-              userId: row.userId
-            })
-            .then(res => {
-              const { status, data } = res;
-              if (status === 200 && data) {
-                if (data.status === "success") {
-                  this.$message({
-                    type: "success",
-                    message: data.message
-                  });
-                  this.getList();
-                } else {
-                  this.$message.error(data.message);
-                }
-              }
-            });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消"
-          });
-        });
     }
   }
 };

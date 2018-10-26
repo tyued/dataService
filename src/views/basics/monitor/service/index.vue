@@ -127,7 +127,7 @@ import PageBar from "components/PageBar/index";
 import formatData from "utils/formatData";
 
 export default {
-  name: "service",
+  name: "mservice",
   components: {
     TabService,
     PageBar

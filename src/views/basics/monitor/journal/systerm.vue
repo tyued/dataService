@@ -17,23 +17,23 @@
 
     <el-row style="margin: 10px 0;">
       <el-table v-loading="loading" :data="tableData" stripe style="width: 100%">
-        <el-table-column sortable prop="userId" label="系统异常操作人ID">
+        <el-table-column prop="userId" label="系统异常操作人ID" sortable>
         </el-table-column>
-        <el-table-column sortable prop="clazz" label="系统异常对象">
+        <el-table-column prop="clazz" label="系统异常对象">
         </el-table-column>
-        <el-table-column sortable prop="type" label="系统异常类型">
+        <el-table-column prop="type" label="系统异常类型">
         </el-table-column>
-        <el-table-column sortable prop="level" label="日志级别">
+        <el-table-column prop="level" label="日志级别">
         </el-table-column>
-        <el-table-column sortable prop="addr" label="导致系统异常的请求来源IP地址">
+        <el-table-column prop="addr" label="导致系统异常的请求来源IP地址">
         </el-table-column>
-        <el-table-column sortable prop="code" label="系统异常代码">
+        <el-table-column prop="code" label="系统异常代码">
         </el-table-column>
-        <el-table-column sortable prop="msg" label="系统异常描述">
+        <el-table-column prop="msg" label="系统异常描述">
         </el-table-column>
-        <el-table-column sortable prop="exception" label="系统异常信息">
+        <el-table-column prop="exception" label="系统异常信息">
         </el-table-column>
-        <el-table-column sortable prop="timestamp" label="系统异常发生时间">
+        <el-table-column prop="timestamp" label="系统异常发生时间">
         </el-table-column>
         <el-table-column label="操作" width="80">
           <template slot-scope="scope">
@@ -56,7 +56,7 @@ import moment from "moment";
 export default {
   name: "journal-systerm",
   created() {
-    this.getList()
+    this.getList();
   },
   components: {
     PageBar

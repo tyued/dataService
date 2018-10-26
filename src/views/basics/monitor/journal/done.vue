@@ -20,23 +20,23 @@
 
     <el-row style="margin: 10px 0;">
       <el-table v-loading="loading" :data="tableData" stripe style="width: 100%">
-        <el-table-column sortable prop="id" label="日志ID">
+        <el-table-column prop="id" label="日志ID" sortable>
         </el-table-column>
-        <el-table-column sortable prop="module" label="功能模块">
+        <el-table-column prop="module" label="功能模块">
         </el-table-column>
-        <el-table-column sortable prop="business" label="业务名称">
+        <el-table-column prop="business" label="业务名称">
         </el-table-column>
-        <el-table-column sortable prop="opt" label="操作类型">
+        <el-table-column prop="opt" label="操作类型">
         </el-table-column>
-        <el-table-column sortable prop="desc" label="操作描述">
+        <el-table-column prop="desc" label="操作描述">
         </el-table-column>
-        <el-table-column sortable prop="errorCode" label="服务接口访问异常错误对照码">
+        <el-table-column prop="errorCode" label="服务接口访问异常错误对照码">
         </el-table-column>
-        <el-table-column sortable prop="exception" label="服务接口访问异常信息">
+        <el-table-column prop="exception" label="服务接口访问异常信息">
         </el-table-column>
-        <el-table-column sortable prop="userId" label="操作人ID">
+        <el-table-column prop="userId" label="操作人ID">
         </el-table-column>
-        <el-table-column sortable prop="timestamp" label="操作发生时间">
+        <el-table-column prop="timestamp" label="操作发生时间">
         </el-table-column>
         <el-table-column label="操作" width="80">
           <template slot-scope="scope">
@@ -59,21 +59,24 @@ import moment from "moment";
 export default {
   name: "journal-done",
   created() {
-    api.postOptTypes().then(res => {
-      const { data, status } = res;
-      if (status === 200 && data) {
-        data.forEach((item, index) => {
-          this.optArr.push({
-            id: ++index,
-            name: item.desc,
-            show: false,
-            value: item.key
+    api
+      .postOptTypes()
+      .then(res => {
+        const { data, status } = res;
+        if (status === 200 && data) {
+          data.forEach((item, index) => {
+            this.optArr.push({
+              id: ++index,
+              name: item.desc,
+              show: false,
+              value: item.key
+            });
           });
-        });
-      }
-    }).then(() => {
-      this.getList()
-    });
+        }
+      })
+      .then(() => {
+        this.getList();
+      });
   },
   components: {
     PageBar
@@ -257,7 +260,7 @@ export default {
       } else {
         this.typeObj.errorValue = value;
       }
-    },
+    }
   }
 };
 </script>

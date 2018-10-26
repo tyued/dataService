@@ -5,20 +5,20 @@
     </el-row>
     <el-row class="row">
       <el-table v-loading="loading" :data="tableData" style="width: 100%">
-        <el-table-column sortable prop="id" label="角色ID">
+        <el-table-column  prop="id" label="角色ID" sortable>
         </el-table-column>
-        <el-table-column sortable prop="name" label="角色名称">
+        <el-table-column  prop="name" label="角色名称">
         </el-table-column>
-        <!-- <el-table-column sortable prop="type" label="角色类型">
+        <!-- <el-table-column  prop="type" label="角色类型">
           <template slot-scope="scope">
             <el-tag size="small" v-show="scope.row.type == '1'" type="info">原生</el-tag>
             <el-tag size="small" v-show="scope.row.type == '2'" type="success">继承</el-tag>
             <el-tag size="small" v-show="scope.row.type == '3'" type="warning">复制</el-tag>
           </template>
         </el-table-column> -->
-        <el-table-column sortable prop="intro" label="角色简介">
+        <el-table-column  prop="intro" label="角色简介">
         </el-table-column>
-        <el-table-column sortable prop="status" label="状态">
+        <el-table-column  prop="status" label="状态">
           <template slot-scope="scope">
             <el-tag size="small" v-show="scope.row.status == '0'" type="info">不可用</el-tag>
             <el-tag size="small" v-show="scope.row.status == '1'" type="success">正常</el-tag>
@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import * as api from "api/login";
+import * as api from "api/right";
 import PageBar from "components/PageBar/index";
 export default {
   name: "role",
@@ -276,7 +276,7 @@ export default {
         .then(() => {
           api
             .deleteRole({
-              roleid: row.id
+              id: row.id
             })
             .then(res => {
               const { status, data } = res;

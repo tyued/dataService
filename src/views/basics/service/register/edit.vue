@@ -2,41 +2,18 @@
   <el-col :span="24">
     <div class="regCon">
       <h3 class="regH3">服务注册</h3>
-      <el-steps :active="active" finish-status="success">
-        <el-step title="选择服务用途"></el-step>
-        <el-step title="选择服务类型"></el-step>
-        <el-step title="填写注册信息"></el-step>
-        <el-step title="提交审核"></el-step>
-      </el-steps>
-      <div class="act_stepBox">
-        <el-form label-position="top" label-width="80px" :model="formLabelStep1" class="formStep1" v-if="active==0">
-          <el-form-item label="请根据接口用途、适用的场景：">
-            <el-radio-group v-model="formLabelStep1.useof">
-              <el-radio :label="1">内部接口（仅校内使用）</el-radio>
-              <el-radio :label="2">开放接口（可供其他学校或平台使用）</el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-form>
-        <el-row :gutter="20" v-if="active==1">
-          <el-col :span="6" v-for="(item,index) in stepTypeList" v-bind:key="index">
-            <div @click="selStepType(item)" :class="{'on':item.sel}">
-              <el-card class="box-card">
-                <div class="stepTypeBox">{{item.name}}</div>
-              </el-card>
-            </div>
-          </el-col>
-        </el-row>
-        <el-form label-width="120px" :model="formLabelStep3" class="formStep3" v-if="active==2">
+      <div>
+        <el-form label-width="120px" :model="editDataObj" class="formStep3">
           <el-form-item required label="服务名称">
-            <el-input v-model="formLabelStep3.name" placeholder="3-20个字符"></el-input>
+            <el-input v-model="editDataObj.name" placeholder="3-20个字符"></el-input>
           </el-form-item>
           <el-form-item required label="服务分类">
-            <el-radio-group v-model="formLabelStep3.tag">
+            <el-radio-group v-model="editDataObj.tag">
               <el-radio v-for="item in servTypeList" :key="item.key" :label="item.value" border></el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item required label="服务简介">
-            <el-input type="textarea" v-model="formLabelStep3.intro"></el-input>
+            <el-input type="textarea" v-model="editDataObj.intro"></el-input>
           </el-form-item>
           <el-form-item label='服务详情'>
             <VueUEditor :ueditorConfig='editorConfig' @ready="editorReadyServ"></VueUEditor>
@@ -46,7 +23,7 @@
             </div>
             <div class="nozz-box">
               <el-tabs type="border-card" v-model="editableTabsValue" closable @tab-remove="removeTab">
-                <el-tab-pane v-for="(item) in editableTabs" :key="item.tabInd" :label="item.title" :name="item.tabInd">
+                <el-tab-pane v-for="(item, index) in editableTabs" :key="index" :label="item.title" :name="item.tabInd">
                   <el-form-item required label="接口中文名称">
                     <el-input v-model="item.name" placeholder="3-20个字符"></el-input>
                   </el-form-item>
@@ -63,31 +40,28 @@
                     <el-input v-model="item.method" placeholder="3-20个字符"></el-input>
                   </el-form-item>
                   <el-form-item required label="外部访问地址" v-if="selSerType!=4">
-                    <el-input :value="`${Settings}/{version}${item.path ? '/' + item.path : ''}`" disabled></el-input>
+                    <el-input :value="`${Settings}/${item.version}${item.path ? '/' + item.path : ''}`" disabled></el-input>
                   </el-form-item>
                   <el-form-item required label="请求方式" v-if="selSerType==1 || selSerType==3">
                     <el-radio-group v-model="item.method">
                       <el-radio v-for='list in reqmethod' :key="list" :label="list">{{list}}</el-radio>
                     </el-radio-group>
                   </el-form-item>
-                  <el-form-item required label="返回格式" v-if="selSerType==1">
+                  <el-form-item required label="返回格式" v-if="selSerType===1">
                     <el-radio-group v-model="item.resp" @change="changeResp">
                       <el-radio v-for='list in retformat' :key="list" :label="list">{{list}}</el-radio>
                     </el-radio-group>
                   </el-form-item>
-
-                  <el-form-item required label="返回格式" v-if="selSerType==3">
+                  <el-form-item required label="返回格式" v-if="selSerType===3">
                     <el-radio-group v-model="item.resp">
                       <el-radio label="JSON">JSON</el-radio>
                     </el-radio-group>
                   </el-form-item>
-
-                  <el-form-item required label="返回格式" v-if="selSerType==2">
+                  <el-form-item required label="返回格式" v-if="selSerType===2">
                     <el-radio-group v-model="item.resp">
                       <el-radio label="XML">XML</el-radio>
                     </el-radio-group>
                   </el-form-item>
-
                   <el-form-item required label="接口返回示例" v-if="item.resp!='XML'">
                     <el-input type="textarea" :rows="11" placeholder="请输入字符" v-model="item.example"></el-input>
                   </el-form-item>
@@ -108,17 +82,7 @@
                       <el-radio v-for="item in OptTypes" :key="item.key" :label="item.key">{{item.desc}}</el-radio>
                     </el-radio-group>
                   </el-form-item>
-                  <!-- <el-form-item required label="发布路径规则" v-if="selSerType==3">
-                    <el-input v-model="item.path" placeholder="3-20个字符"></el-input>
-                  </el-form-item> -->
                   <el-form-item required label="上传接口文件" v-if="selSerType==4">
-                    <!-- <el-upload class="upload-demo"
-                                            action="https://jsonplaceholder.typicode.com/posts/"
-                                            :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove"
-                                            multiple :limit="3" :on-exceed="handleExceed" :file-list="fileList">
-                                            <el-button size="small" type="primary">点击上传</el-button>
-                                            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                                        </el-upload>-->
                   </el-form-item>
                   <el-tabs v-model="item.opt" v-if="selSerType==3">
                     <el-tab-pane v-if="item.opt==itemOpt.key" v-for="itemOpt in OptTypes" :key="itemOpt.key" :label="itemOpt.desc" :name="itemOpt.key">
@@ -142,12 +106,6 @@
                             <el-col :span="12">
                               <div class="label">条件及参数设定</div>
                             </el-col>
-                            <!--<el-col :span="12">
-                                                            <div class="boxrig">
-                                                                <el-button type="primary" size="small" plain>预览SQL</el-button>
-                                                                <el-button type="primary" size="small" plain>预览返回结果</el-button>
-                                                            </div>
-                                                        </el-col>-->
                           </el-row>
                           <el-table :data="item.conditions" style="width: 100%">
                             <el-table-column label="列名">
@@ -322,27 +280,10 @@
         </el-form>
       </div>
       <div class="stepBtnr">
-        <el-button @click='prev' v-if='active!=3'>取 消</el-button>
-        <el-button type="primary" @click='next' v-if="active!=3">{{active==2?'保存':'下一步'}}</el-button>
-        <el-button type="primary" @click='sureReg' v-if="active==3">提交审核</el-button>
+        <el-button type="warning" @click='next'>暂不提交</el-button>
+        <el-button type="primary" @click='sureReg'>提交审核</el-button>
       </div>
     </div>
-    <el-dialog center :title="textMap[dialogStatus]" :visible.sync="dialogVisible_user" width="600px">
-      <div class="diag_tipsBox">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non nu</div>
-      <el-checkbox v-model="agreeuser">我已认真阅读该协议</el-checkbox>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible_user = false">取 消</el-button>
-        <el-button type="primary" @click="Clickagreeuser">同 意</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog center :title="textMap[dialogStatus]" :visible.sync="dialogVisible_nazz" width="600px">
-      <div class="diag_tipsBox">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non nu</div>
-      <el-checkbox v-model="agreenazz">我已认真阅读该协议</el-checkbox>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible_nazz = false">取 消</el-button>
-        <el-button type="primary" @click="Clickagreenazz">同 意</el-button>
-      </span>
-    </el-dialog>
   </el-col>
 </template>
 
@@ -378,27 +319,15 @@ var expSoap2 =
   "</soap12:Envelope>";
 export default {
   name: "register",
-  props: ['haha'],
   components: {
     VueUEditor
   },
+  props: ["editDataObj"],
   data() {
     return {
-      active: 0, //当前步骤
-      formLabelStep1: {
-        useof: 1
-      },
-      stepTypeList: [
-        { name: "HTTP API", type: "1", sel: true },
-        { name: "WebService API", type: "2", sel: false },
-        { name: "通过数据源发布", type: "3", sel: false }
-        // {name:'上传服务接口',type:'4',sel:false},
-      ],
-      selSerType: "", //选择服务类型   --选中的
-      formLabelStep3: {},
-      servTypeList: [],
+      servTypeList: [], // 服务分类
       dbTypes: [],
-      dataSourceList: [],
+      dataSourceList: [], // 选择数据源
       OptTypes: [], //查询数据源操作类型信息
       ObjTypeList: [],
       TablesList: [],
@@ -411,17 +340,6 @@ export default {
         { name: "变量", key: "2" }
       ],
       disRelation: false, //是否值类型能填
-
-      textMap: {
-        //判断弹层
-        useragree: "用户许可协议",
-        nazzagree: "接口须知"
-      },
-      dialogVisible_user: false, //用户许可协议
-      dialogStatus: "",
-      agreeuser: false, //用户许可协议
-      dialogVisible_nazz: false, //接口须知
-      agreenazz: false,
       reqmethod: [
         "GET",
         "HEAD",
@@ -434,67 +352,9 @@ export default {
       ], //请求方式
       retformat: ["normal", "JSON", "XML", "Stream"], //返回格式
       editableTabsValue: "1",
-      editableTabs: [
-        {
-          title: "接口1",
-          tabInd: "1",
-          opt: "query",
-          selObjType: 1,
-          target: "",
-          column: [],
-          rtType: 1,
-          intro: "",
-          selexample: "1",
-          example: "",
-          resp: "JSON", //返回格式
-          method: "GET",
-          queryList: [
-            {
-              //输入参数
-              name: "Key",
-              required: true, //0：否  1：是
-              type: "String",
-              desc: "申请调用的Key",
-              state: "0" //0 编辑  1 保存
-            },
-            {
-              name: "新增参数"
-            }
-          ],
-          params: [
-            {
-              //输入参数
-              name: "Key",
-              required: true, //0：否  1：是
-              type: "String",
-              desc: "申请调用的Key",
-              foucs: false,
-              state: "0" //0 编辑  1 保存
-            }
-          ],
-          responses: [
-            {
-              //输出参数
-              state: "1" //0 编辑  1 保存
-            }
-          ],
-          errors: [
-            {
-              //错误代码
-              state: "1" //0 编辑  1 保存
-            }
-          ],
-          conditions: [
-            {
-              state: "1" //0 编辑  1 保存
-            }
-          ]
-        }
-      ],
-
+      editableTabs: [], // 接口数组
       ediTabNum: "",
       curEditTabs: 0,
-      tabIndex: 1, //条件及参数设定 table
       editorConfig: {
         //富文本框基础设定
         toolbars: [
@@ -514,11 +374,88 @@ export default {
       datatype: ["String", "Boolean", "Number"], //数据类型
 
       Settings: "", //访问地址前缀
-      servId: ""
+      servId: "",
+      selSerType: 0,
+      sureRegActive: false
     };
   },
-  created() {
-    this.getBaseData();
+  async created() {
+    this.selSerType = +this.editDataObj.type;
+    await this.getBaseData();
+    this.editableTabs = this.editDataObj.apis.map((item, index) => {
+      let obj = {
+        title: `接口${++index}`,
+        tabInd: index + "",
+        selexample: "1",
+        selObjType: 1,
+        resp: this.editDataObj.type === "2" ? "XML" : "JSON",
+        ...item
+      };
+
+      // obj.queryList = item.queryList.map(item => {
+      //   return {
+      //     state: item.state ? item.state : "0", //0 编辑  1 保存
+      //     name: item.name,
+      //     required: item.required === "1" ? true : false,
+      //     type: item.type,
+      //     desc: item.desc
+      //   };
+      // });
+      obj.params = item.params.map(item => {
+        return {
+          id: item.id,
+          state: "0", //0 编辑  1 保存
+          name: item.name,
+          required: item.required === "1" ? true : false,
+          type: item.type,
+          desc: item.desc,
+          foucs: false
+        };
+      });
+
+      obj.responses = item.responses.map(item => {
+        return {
+          id: item.id,
+          state: "0", //0 编辑  1 保存
+          name: item.name,
+          required: item.required === "1" ? true : false,
+          type: item.type,
+          desc: item.desc,
+          foucs: false
+        };
+      });
+
+      obj.errors = item.errors.map(item => {
+        return {
+          id: item.id,
+          state: "0", //0 编辑  1 保存
+          name: item.name,
+          required: item.required === "1" ? true : false,
+          type: item.type,
+          desc: item.desc,
+          foucs: false,
+          code: item.code,
+          text: item.text
+        };
+      });
+      if (item.conditions) {
+        obj.conditions = item.conditions.map(item => {
+          return {
+            id: item.id,
+            apiId: item.apiId,
+            id: item.id,
+            name: item.name,
+            relation: item.relation,
+            servId: item.servId,
+            type: item.type,
+            value: item.value,
+            state: "0" //0 编辑  1 保存
+          };
+        });
+      }
+
+      return obj;
+    });
     this.ediTabNum = this.editableTabs.length;
   },
   watch: {
@@ -544,311 +481,6 @@ export default {
     }
   },
   methods: {
-    // 上一步
-    prev() {
-      var actpart = this.active;
-      if (actpart == 1) {
-        this.active--;
-      }
-      if (actpart == 2) {
-        this.editableTabsValue = "1";
-        this.editableTabs = [
-          {
-            title: "接口1",
-            tabInd: "1",
-            opt: "query",
-            selObjType: 1,
-            target: "",
-            column: [],
-            rtType: 1,
-            intro: "",
-            selexample: "1",
-            example: "",
-            resp: "JSON", //返回格式
-            method: "GET", //返回格式
-            queryList: [
-              {
-                //输入参数
-                name: "Key",
-                required: true, //0：否  1：是
-                type: "String",
-                desc: "申请调用的Key",
-                state: "0" //0 编辑  1 保存
-              },
-              {
-                name: "新增参数"
-              }
-            ],
-            params: [
-              {
-                //输入参数
-                name: "Key",
-                required: true, //0：否  1：是
-                type: "String",
-                desc: "申请调用的Key",
-                foucs: false,
-                state: "0" //0 编辑  1 保存
-              }
-            ],
-            responses: [
-              {
-                //输出参数
-                state: "1" //0 编辑  1 保存
-              }
-            ],
-            errors: [
-              {
-                //错误代码
-                state: "1" //0 编辑  1 保存
-              }
-            ],
-            conditions: [
-              {
-                state: "1" //0 编辑  1 保存
-              }
-            ]
-          }
-        ];
-        this.tabIndex = 1;
-        this.active--;
-      }
-      // if (this.active < 1) return false;
-      // if (this.active-- < 1) return false;
-    },
-    validatePass(value) {
-      const re = /^([A-Z0-9a-z\.]+)?(\/\{?[A-Z0-9a-z]+\}?)*$/i;
-      return re.test(value)
-    },
-    // 下一步
-    next() {
-      var actpart = this.active;
-      if (actpart == 0) {
-        var localagreeuser = window.localStorage.getItem("agreeuser");
-        if (localagreeuser == "false" || localagreeuser == null) {
-          this.dialogVisible_user = true;
-          this.dialogStatus = "useragree";
-        } else {
-          this.active++;
-        }
-      }
-      if (actpart == 1) {
-        var localagreenazz = window.localStorage.getItem("agreenazz");
-        if (localagreenazz == "false" || localagreenazz == null) {
-          this.dialogVisible_nazz = true;
-          this.dialogStatus = "nazzagree";
-        } else {
-          this.active++;
-        }
-        var that = this;
-        this.stepTypeList.forEach(function(item, index) {
-          if (item.sel) {
-            that.selSerType = item.type;
-          }
-        });
-        if (this.selSerType == 2) {
-          this.editableTabs[0].resp = "XML";
-          this.editableTabs[0].example = expSoap1;
-        } else {
-          this.editableTabs[0].resp = "JSON";
-          this.editableTabs[0].example = "";
-        }
-      }
-      if (actpart == 2) {
-        var submitD = {};
-        var judge = true;
-        submitD.useof = this.formLabelStep1.useof; //选择服务用途
-        submitD.type = this.selSerType; //选择的服务类型
-        submitD.name = this.formLabelStep3.name ? this.formLabelStep3.name : ""; //服务名称
-        submitD.tag = this.formLabelStep3.tag; //服务分类
-        submitD.intro = this.formLabelStep3.intro; //服务简介
-        submitD.detail = this.formLabelStep3.detail
-          ? this.formLabelStep3.detail
-          : "空"; //服务详情
-        submitD.apis = []; //接口列表
-        if (submitD.name.length < 3 || submitD.name.length > 20) judge = false;
-        if (!submitD.tag) judge = false;
-        if (!submitD.intro || submitD.intro.length < 3) judge = false;
-
-        this.editableTabs.forEach(function(item, index) {
-          var exp = {};
-          exp.name = item.name; //接口中文名称
-          exp.intro = item.intro ? item.intro : "空";
-          exp.params = [];
-          exp.responses = [];
-          exp.errors = [];
-          item.params.forEach(function(obj, ind) {
-            obj.key = obj.name;
-            obj.required = obj.required ? "1" : "0";
-            if (obj.state == "0") {
-              //保存过的
-              exp.params.push(obj);
-            }
-          });
-          item.responses.forEach(function(obj, ind) {
-            obj.key = obj.name;
-            if (obj.state == "0") {
-              //保存过的
-              exp.responses.push(obj);
-            }
-          });
-          item.errors.forEach(function(obj, ind) {
-            if (obj.state == "0") {
-              //保存过的
-              exp.errors.push(obj);
-            }
-          });
-          if (!exp.name) judge = false; 
-          if (exp.name.length < 3 || exp.name.length > 20) judge = false;
-          submitD.apis.push(exp);
-        });
-        if (this.selSerType == 1) {
-          //rest---http api
-          this.editableTabs.forEach((item, index) => {
-            submitD.apis[index].example = item.example; //接口返回示例
-            submitD.apis[index].url = item.url; //接口地址
-            submitD.apis[index].path = item.path; 
-            submitD.apis[index].method = item.method; //请求方式
-            submitD.apis[index].resp = item.resp; //返回格式
-            if (!submitD.apis[index].url) judge = false;
-            if (submitD.apis[index].url.length < 3 || submitD.apis[index].url.length > 20) judge = false;
-            if(!this.validatePass(item.path)) judge = false;
-          if (submitD.apis[index].path.length < 3 || submitD.apis[index].path.length > 20) judge = false;
-          });
-          if (judge) {
-            api.putRest(submitD).then(res => {
-              if (res.status == "200") {
-                this.$notify({
-                  title: "成功",
-                  message: "创建成功",
-                  type: "success",
-                  duration: 2000
-                });
-                this.servId = res.data.servId;
-                this.active++;
-              } else {
-                this.$notify({
-                  title: "失败",
-                  message: res.data.message,
-                  type: "error",
-                  duration: 2000
-                });
-              }
-            });
-          } else {
-            this.$message({ type: "warning", message: "请完整填写条件!" });
-          }
-        }
-        if (this.selSerType == 2) {
-          //rest---webservice
-          this.editableTabs.forEach(function(item, index) {
-            submitD.apis[index].example = item.example; //接口返回示例
-            submitD.apis[index].url = item.url; //接口地址
-            submitD.apis[index].path = item.method; 
-            submitD.apis[index].namespace = item.namespace; //命名空间
-            submitD.apis[index].method = item.method; //请求方式
-            submitD.apis[index].resp = item.resp; //返回格式
-            if (!submitD.apis[index].url) judge = false;
-            // submitD.apis[index].method = submitD.apis[index].path = item.method  //方法名称
-          });
-          if (judge) {
-            api.putSoap(submitD).then(res => {
-              if (res.status == "200") {
-                this.$notify({
-                  title: "成功",
-                  message: "创建成功",
-                  type: "success",
-                  duration: 2000
-                });
-                this.servId = res.data.servId;
-                this.active++;
-              } else {
-                this.$notify({
-                  title: "失败",
-                  message: res.message,
-                  type: "error",
-                  duration: 2000
-                });
-              }
-            });
-          } else {
-            this.$message({ type: "warning", message: "请完整填写条件!" });
-          }
-        }
-        if (this.selSerType == 3) {
-          //rest---数据源
-          var that = this;
-          this.editableTabs.forEach((item, index) => {
-            submitD.apis[index].example = item.example; //接口返回示例
-            submitD.apis[index].url = item.url; //接口地址
-            submitD.apis[index].method = item.method; //请求方式
-            submitD.apis[index].resp = item.resp; //返回格式
-            that.dataSourceList.forEach(function(objData, ind) {
-              //数据源
-              if (item.dsId == objData.uid) {
-                submitD.apis[index].dsId = objData.id;
-              }
-            });
-            submitD.apis[index].opt = item.opt; //选择操作类型
-            submitD.apis[index].rtType = item.rtType; //返回内容
-            submitD.apis[index].columns = []; //返回属性
-            item.column.forEach(function(objcol, ind) {
-              var expcol = {};
-              expcol.column = objcol;
-              submitD.apis[index].columns.push(expcol);
-            });
-            submitD.apis[index].conditions = item.conditions; //返回属性
-            submitD.apis[index].target = item.target; //查询-操作对象
-            submitD.apis[index].path = item.path; //接口发布路径规则
-
-            // if (!submitD.apis[index].url) judge = false;
-            if(!this.validatePass(item.path)) judge = false;
-          });
-          if (judge) {
-            api.putDataSet(submitD).then(res => {
-              if (res.status == "200") {
-                this.$notify({
-                  title: "成功",
-                  message: "创建成功",
-                  type: "success",
-                  duration: 2000
-                });
-                this.servId = res.data.servId;
-                this.active++;
-              } else {
-                this.$notify({
-                  title: "失败",
-                  message: res.message,
-                  type: "error",
-                  duration: 2000
-                });
-              }
-            });
-          } else {
-            this.$message({ type: "warning", message: "请完整填写条件!" });
-          }
-        }
-      }
-    },
-    //同意 用户协议
-    Clickagreeuser() {
-      this.dialogVisible_user = false;
-      window.localStorage.setItem("agreeuser", this.agreeuser);
-      this.active++;
-    },
-    //同意 接口须知
-    Clickagreenazz() {
-      this.dialogVisible_nazz = false;
-      window.localStorage.setItem("agreenazz", this.agreenazz);
-      this.active++;
-    },
-    // 第二步选择服务类型
-    selStepType(item) {
-      this.stepTypeList.forEach(function(obj, ind) {
-        obj.sel = false;
-      });
-      const index = this.stepTypeList.indexOf(item);
-      this.stepTypeList[index].sel = true;
-    },
     // 获取服务分类
     getBaseData() {
       var query = { group: "servType" };
@@ -900,7 +532,7 @@ export default {
         respSel = "JSON";
         exampleSel = "";
       }
-      let tabInd = ++this.tabIndex + "";
+      var tabInd = this.editableTabs.length + 1 + "";
       this.editableTabs.push({
         title: "接口" + tabInd,
         tabInd: tabInd,
@@ -1174,17 +806,225 @@ export default {
     },
     // 富文本编辑器
     editorReady(editorInstance) {
+      editorInstance.setContent(this.editableTabs[this.curEditTabs].intro);
       editorInstance.addListener("contentChange", () => {
         this.editableTabs[this.curEditTabs].intro = editorInstance.getContent();
       });
     },
     editorReadyServ(editorInstance) {
+      editorInstance.setContent(this.editDataObj.detail);
       editorInstance.addListener("contentChange", () => {
-        this.formLabelStep3.detail = editorInstance.getContent();
+        this.editDataObj.detail = editorInstance.getContent();
       });
     },
-    // 提交审核
-    sureReg() {
+
+    // 下一步
+    next() {
+      var submitD = {};
+      var judge = true;
+      submitD.useof = this.editDataObj.useof; //选择服务用途
+      submitD.type = this.editDataObj.type; //选择的服务类型
+
+      submitD.name = this.editDataObj.name ? this.editDataObj.name : ""; //服务名称
+      submitD.id = this.editDataObj.id; //服务分类
+      submitD.tag = this.editDataObj.tag; //服务分类
+      submitD.intro = this.editDataObj.intro; //服务简介
+      submitD.detail = this.editDataObj.detail ? this.editDataObj.detail : "空"; //服务详情
+      submitD.apis = []; //接口列表
+
+      if (submitD.name.length < 3 || submitD.name.length > 20) judge = false;
+      if (!submitD.tag) judge = false;
+      if (!submitD.intro || submitD.intro.length < 3) judge = false;
+
+      this.editableTabs.forEach((item, index) => {
+        var exp = {};
+        exp.id = item.id; //接口id
+        exp.name = item.name; //接口中文名称
+        // exp.ename = item.ename; //接口英文名称
+        exp.intro = item.intro ? item.intro : "空";
+        exp.params = [];
+        exp.responses = [];
+        exp.errors = [];
+        item.params.forEach(function(obj, ind) {
+          obj.id = obj.id;
+          obj.key = obj.name;
+          obj.required = obj.required ? "1" : "0";
+          if (obj.state == "0") {
+            //保存过的
+            exp.params.push(obj);
+          }
+        });
+        item.responses.forEach(function(obj, ind) {
+          obj.id = obj.id;
+          obj.key = obj.name;
+          if (obj.state == "0") {
+            //保存过的
+            exp.responses.push(obj);
+          }
+        });
+        item.errors.forEach(function(obj, ind) {
+          obj.id = obj.id;
+          if (obj.state == "0") {
+            //保存过的
+            exp.errors.push(obj);
+          }
+        });
+        if (!exp.name) judge = false;
+        if (exp.name.length < 3 || exp.name.length > 20) judge = false;
+
+        submitD.apis.push(exp);
+      });
+      if (this.selSerType == 1) {
+        //rest---http api
+        this.editableTabs.forEach((item, index) => {
+          submitD.apis[index].id = item.id;
+          submitD.apis[index].example = item.example; //接口返回示例
+          submitD.apis[index].url = item.url; //接口地址
+          submitD.apis[index].method = item.method; //请求方式
+          submitD.apis[index].path = item.path;
+          submitD.apis[index].resp = item.resp; //返回格式
+          if (!submitD.apis[index].url) judge = false;
+          if (
+            submitD.apis[index].url.length < 3 ||
+            submitD.apis[index].url.length > 20
+          )
+            judge = false;
+          if (!this.validatePass(item.path)) judge = false;
+          if (
+            submitD.apis[index].path.length < 3 ||
+            submitD.apis[index].path.length > 20
+          )
+            judge = false;
+        });
+        if (judge) {
+          api.putRest(submitD).then(res => {
+            if (res.status == "200") {
+              this.servId = res.data.servId;
+              if (this.sureRegActive) {
+                this.save();
+              } else {
+                this.$notify({
+                  title: "成功",
+                  message: "创建成功",
+                  type: "success",
+                  duration: 2000
+                });
+                this.$emit("clickServiceManegement");
+              }
+            } else {
+              this.$notify({
+                title: "失败",
+                message: res.data.message,
+                type: "error",
+                duration: 2000
+              });
+            }
+          });
+        } else {
+          this.$message({ type: "warning", message: "请完整填写条件!" });
+        }
+      }
+      if (this.selSerType == 2) {
+        //rest---webservice
+        this.editableTabs.forEach(function(item, index) {
+          submitD.apis[index].id = item.id;
+          submitD.apis[index].example = item.example; //接口返回示例
+          submitD.apis[index].url = item.url; //接口地址
+          submitD.apis[index].path = item.method;
+          submitD.apis[index].namespace = item.namespace; //命名空间
+          submitD.apis[index].method = item.method; //请求方式
+          submitD.apis[index].resp = item.resp; //返回格式
+          if (!submitD.apis[index].url) judge = false;
+          // submitD.apis[index].method = submitD.apis[index].path = item.method  //方法名称
+        });
+        if (judge) {
+          api.putSoap(submitD).then(res => {
+            if (res.status == "200") {
+              this.servId = res.data.servId;
+              if (this.sureRegActive) {
+                this.save();
+              } else {
+                this.$notify({
+                  title: "成功",
+                  message: "创建成功",
+                  type: "success",
+                  duration: 2000
+                });
+                this.$emit("clickServiceManegement");
+              }
+            } else {
+              this.$notify({
+                title: "失败",
+                message: res.message,
+                type: "error",
+                duration: 2000
+              });
+            }
+          });
+        } else {
+          this.$message({ type: "warning", message: "请完整填写条件!" });
+        }
+      }
+      if (this.selSerType == 3) {
+        //rest---数据源
+        var that = this;
+        this.editableTabs.forEach((item, index) => {
+          submitD.apis[index].id = item.id;
+          submitD.apis[index].example = item.example; //接口返回示例
+          submitD.apis[index].url = item.url; //接口地址
+          submitD.apis[index].method = item.method; //请求方式
+          submitD.apis[index].resp = item.resp; //返回格式
+          that.dataSourceList.forEach(function(objData, ind) {
+            //数据源
+            if (item.dsId == objData.uid) {
+              submitD.apis[index].dsId = objData.id;
+            }
+          });
+          submitD.apis[index].opt = item.opt; //选择操作类型
+          submitD.apis[index].rtType = item.rtType; //返回内容
+          submitD.apis[index].columns = []; //返回属性
+          item.column.forEach(function(objcol, ind) {
+            var expcol = {};
+            expcol.column = objcol;
+            submitD.apis[index].columns.push(expcol);
+          });
+          submitD.apis[index].conditions = item.conditions; //返回属性
+          submitD.apis[index].target = item.target; //查询-操作对象
+          submitD.apis[index].path = item.path; //接口发布路径规则
+
+          // if (!submitD.apis[index].url) judge = false;
+          if (!this.validatePass(item.path)) judge = false;
+        });
+        if (judge) {
+          api.putDataSet(submitD).then(res => {
+            if (res.status == "200") {
+              this.servId = res.data.servId;
+              if (this.sureRegActive) {
+                this.save();
+              } else {
+                this.$notify({
+                  title: "成功",
+                  message: "创建成功",
+                  type: "success",
+                  duration: 2000
+                });
+                this.$emit("clickServiceManegement");
+              }
+            } else {
+              this.$notify({
+                title: "失败",
+                message: res.message,
+                type: "error",
+                duration: 2000
+              });
+            }
+          });
+        } else {
+          this.$message({ type: "warning", message: "请完整填写条件!" });
+        }
+      }
+    },
+    save() {
       var submitD = {
         servId: this.servId,
         userId: ""
@@ -1198,6 +1038,7 @@ export default {
             duration: 2000
           });
           this.$store.dispatch("GET_fuwindex_on", [true, false, false, false]);
+          this.$emit("clickServiceManegement");
         } else {
           this.$notify({
             title: "失败",
@@ -1207,6 +1048,15 @@ export default {
           });
         }
       });
+    },
+    // 提交审核
+    sureReg() {
+      this.sureRegActive = true;
+      this.next();
+    },
+    validatePass(value) {
+      const re = /^([A-Z0-9a-z\.]+)?(\/\{?[A-Z0-9a-z]+\}?)*$/i;
+      return re.test(value);
     }
   }
 };

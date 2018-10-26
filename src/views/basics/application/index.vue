@@ -5,9 +5,9 @@
     </el-row>
     <el-row class="row">
       <el-table v-loading="loading" :data="tableData" style="width: 100%">
-        <!-- <el-table-column sortable prop="appUid" label="应用UID">
+        <!-- <el-table-column  prop="appUid" label="应用UID">
         </el-table-column> -->
-        <el-table-column type="expand">
+        <el-table-column type="expand" sortable>
           <template slot-scope="props" class="template">
             <el-row style="padding: 10px 0">
               <div class="template-row">
@@ -37,19 +37,19 @@
             </el-form> -->
           </template>
         </el-table-column>
-        <el-table-column sortable prop="name" label="应用名称">
+        <el-table-column prop="name" label="应用名称">
         </el-table-column>
-        <el-table-column sortable prop="desc" label="应用描述">
+        <el-table-column prop="desc" label="应用描述">
         </el-table-column>
-        <el-table-column sortable prop="lang" label="应用开发语言">
+        <el-table-column prop="lang" label="应用开发语言">
         </el-table-column>
-        <el-table-column sortable prop="addr" label="应用部署地址">
+        <el-table-column prop="addr" label="应用部署地址">
         </el-table-column>
-        <!-- <el-table-column sortable prop="appKey" label="应用Key">
+        <!-- <el-table-column  prop="appKey" label="应用Key">
         </el-table-column>
-        <el-table-column sortable prop="appSecret" label="应用Secret">
+        <el-table-column  prop="appSecret" label="应用Secret">
         </el-table-column> -->
-        <el-table-column sortable prop="subSum" label="应用服务订阅量">
+        <el-table-column prop="subSum" label="应用服务订阅量">
         </el-table-column>
 
         <el-table-column min-width="150" label="操作">

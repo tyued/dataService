@@ -42,9 +42,12 @@
 
 /************ 概览 ************/
 .gl-partbox{ height: 410px;}
+.gl-partbox:last-child {
+    height: auto;
+}
 .gl-partbox .el-col,.gl-partbox .box-card{ height: 100%;}
 /* 系统概述 */
-.gl-rowbox{ margin-bottom: 20px;}
+.gl-rowbox + .gl-rowbox { margin-top: 20px;}
 .gl-rowbox .box-card .el-card__header{ color: #000; font-size: 18px; border: none; padding-bottom: 0;} 
 .gl-rowbox .box-card .xtgsdata{ display: block; color: #606266; font-size: 26px;}
 .gl-rowbox .box-card .xtgsname{ display: block; color: #909399; font-size: 16px;}

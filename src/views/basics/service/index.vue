@@ -1,147 +1,138 @@
 <template>
-    <div class="fw-container">
-        <el-row v-if="isLastOne" class="fw-rowbox fw-rowbox-part" :gutter="20" type="flex" justify="space-between">
-            <el-col v-if="rightInfoObj['serv-home']">
-                <div @click="clickIndex" :class="{'on':fuwindex_on}">
-                    <el-card class="box-card">
-                        <i class="fuwindex-ico fw-topico"></i>
-                        <div class="fw-toppart">服务首页</div>
-                    </el-card>
-                </div>
-            </el-col>
-            <el-col v-if="rightInfoObj['serv-audit']">
-                <div @click="clickReview" :class="{'on':shenh_on}">
-                    <el-card class="box-card">
-                        <i class="shenh-ico fw-topico"></i>
-                        <div class="fw-toppart">审核</div>
-                    </el-card>
-                </div>
-            </el-col>
-            <el-col v-if="rightInfoObj['serv-register']">
-                <div @click="clickRegister" :class="{'on':zhuc_on}">
-                    <el-card class="box-card">
-                        <i class="zhuc-ico fw-topico"></i>
-                        <div class="fw-toppart">注册</div>
-                    </el-card>
-                </div>
-            </el-col>
-            <el-col v-if="rightInfoObj['serv-mgr']">
-                <div @click="clickManegement" :class="{'on':guanl_on}">
-                    <el-card class="box-card">
-                        <i class="guanl-ico fw-topico"></i>
-                        <div class="fw-toppart">管理</div>
-                    </el-card>
-                </div>
-            </el-col>
-            <el-col v-if="rightInfoObj['serv-ds']">
-                <div @click="clickDataservice" :class="{'on':shujuy_on}">
-                    <el-card class="box-card">
-                        <i class="shujuy-ico fw-topico"></i>
-                        <div class="fw-toppart">数据源</div>
-                    </el-card>
-                </div>
-            </el-col>
-        </el-row>
-        <el-row class="fw-rowbox">
-            <component :is="pageMB"></component>
-        </el-row>
+  <div class="fw-container">
+    <el-row v-if="isLastOne" class="fw-rowbox fw-rowbox-part" :gutter="20" type="flex" justify="space-between">
+      <el-col v-if="rightInfoObj['serv-home']">
+        <div @click="clickIndex" :class="{'on':getfuwindex_on[0]}">
+          <el-card class="box-card">
+            <i class="fuwindex-ico fw-topico"></i>
+            <div class="fw-toppart">服务首页</div>
+          </el-card>
+        </div>
+      </el-col>
+      <el-col v-if="rightInfoObj['serv-register']">
+        <div @click="clickRegister" :class="{'on':getfuwindex_on[1]}">
+          <el-card class="box-card">
+            <i class="zhuc-ico fw-topico"></i>
+            <div class="fw-toppart">服务注册</div>
+          </el-card>
+        </div>
+      </el-col>
+      <el-col v-if="rightInfoObj['serv-mgr']">
+        <div @click="clickServiceManegement" :class="{'on':getfuwindex_on[2]}">
+          <el-card class="box-card">
+            <i class="guanl-ico fw-topico"></i>
+            <div class="fw-toppart">服务管理</div>
+          </el-card>
+        </div>
+      </el-col>
+      <el-col v-if="rightInfoObj['serv-ds']">
+        <div @click="clickDataservice" :class="{'on':getfuwindex_on[3]}">
+          <el-card class="box-card">
+            <i class="shujuy-ico fw-topico"></i>
+            <div class="fw-toppart">数据源</div>
+          </el-card>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row class="fw-rowbox">
+      <component :editDataObj="editDataObj" @clickServiceManegement="clickServiceManegement" @handleEdit="handleEdit" :is="pageMB"></component>
+    </el-row>
 
-    </div>
+  </div>
 </template>
 
 <script>
-import {
-    mainService,
-    pageReviewed,
-    pageDataservice,
-    pageRegister,
-    pageManagement
-} from "views/basics/service";
-import { mapGetters } from 'vuex';
+import { getRegistryDetail } from "api/service/register";
+import mainService from "views/basics/service/mainService/index";
+import register from "views/basics/service/register/index";
+import edit from "views/basics/service/register/edit";
+import management from "views/basics/service/management/index";
+import dataService from "views/basics/service/dataService/index";
+
+import { mapGetters } from "vuex";
 
 export default {
-    name: "service",
-    components: {
-        mainService,
-        pageReviewed,
-        pageDataservice,
-        pageRegister,
-        pageManagement
-    },
-    data() {
-        return {
-            pageMB:'',
-            fuwindex_on:false,
-            shenh_on:false,
-            zhuc_on:false,
-            guanl_on:false,
-            shujuy_on:false,
-        }
-    },
-    computed: {
-        ...mapGetters([
-            'getfuwindex_on',
-            'rightInfoObj'
-        ]),
-        isLastOne() {
-            return this.rightInfoObj['serv-home'] && this.rightInfoObj['serv-audit'] && this.rightInfoObj['serv-register'] && this.rightInfoObj['serv-mgr'] && this.rightInfoObj['serv-ds']
-        }
-    },
-    watch:{
-        getfuwindex_on(){
-            if(this.$store.getters.getfuwindex_on){
-                this.clickIndex()
-            }
-        }
-    },
-    created(){
-        this.fuwindex_on = true
-        this.pageMB = mainService
-    },
-    methods:{
-        clickIndex(){               //服务首页
-            this.pageMB = mainService
-            this.fuwindex_on = true
-            this.shenh_on = false
-            this.zhuc_on = false
-            this.guanl_on = false
-            this.shujuy_on = false
-
-        },
-        clickReview(){              //审核页
-            this.pageMB = pageReviewed
-            this.fuwindex_on = false
-            this.shenh_on = true
-            this.zhuc_on = false
-            this.guanl_on = false
-            this.shujuy_on = false
-        },                          
-        clickRegister(){            //注册
-            this.pageMB = pageRegister
-            this.fuwindex_on = false
-            this.shenh_on = false
-            this.zhuc_on = true
-            this.guanl_on = false
-            this.shujuy_on = false
-
-        },
-        clickDataservice(){         //数据源
-            this.pageMB = pageDataservice
-            this.fuwindex_on = false
-            this.shenh_on = false
-            this.zhuc_on = false
-            this.guanl_on = false
-            this.shujuy_on = true
-        },
-        clickManegement() {         // 管理
-            this.pageMB = pageManagement;
-            this.fuwindex_on = false;
-            this.shenh_on = false;
-            this.zhuc_on = false;
-            this.guanl_on = true;
-            this.shujuy_on = false;
-        }
+  name: "service",
+  components: {
+    mainService,
+    register,
+    edit,
+    management,
+    dataService
+  },
+  data() {
+    return {
+      pageMB: mainService,
+      showArr: [],
+      editDataObj: ""
+    };
+  },
+  created() {
+    this.$store.dispatch("GET_fuwindex_on", [true, false, false, false]);
+  },
+  computed: {
+    ...mapGetters(["getfuwindex_on", "rightInfoObj"]),
+    // ???????????????????????????????????????????????????????????????????????????????????????????????????
+    isLastOne() {
+      return (
+        this.rightInfoObj["serv-home"] &&
+        this.rightInfoObj["serv-register"] &&
+        this.rightInfoObj["serv-mgr"] &&
+        this.rightInfoObj["serv-ds"]
+      );
     }
-
+  },
+  methods: {
+    clickIndex() {
+      //服务首页
+      this.pageMB = mainService;
+      this.$store.dispatch("GET_fuwindex_on", [true, false, false, false]);
+    },
+    clickRegister() {
+      //注册
+      this.pageMB = register;
+      this.$store.dispatch("GET_fuwindex_on", [false, true, false, false]);
+    },
+    clickServiceManegement() {
+      // 管理
+      this.pageMB = management;
+      this.$store.dispatch("GET_fuwindex_on", [false, false, true, false]);
+    },
+    clickDataservice() {
+      //数据源
+      this.pageMB = dataService;
+      this.$store.dispatch("GET_fuwindex_on", [false, false, false, true]);
+    },
+    handleEdit(row) {
+      let addr;
+      switch (row.type) {
+        case "1":
+          addr = "rest";
+          break;
+        case "2":
+          addr = "soap";
+          break;
+        case "3":
+          addr = "dataset";
+          break;
+        case "4":
+          addr = "osgi";
+          break;
+      }
+      getRegistryDetail(
+        {
+          servId: row.id,
+          detail: true
+        },
+        addr
+      ).then(res => {
+        const { status, data } = res;
+        if (status === 200 && data) {
+          this.editDataObj = data;
+          this.pageMB = edit;
+        }
+      });
+    },
+  }
 };
 </script>

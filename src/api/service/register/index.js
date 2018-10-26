@@ -3,7 +3,7 @@ import fetch from 'utils/fetch';
 // Rest服务注册--保存  http api
 export function putRest(obj) {
     return fetch({
-        url: '/dsb/platform/service/registry/rest',
+        url: '/dsb/admin/service/registry/rest',
         method: 'post',
         data: obj
     });
@@ -11,7 +11,7 @@ export function putRest(obj) {
 // Soap服务注册--保存  webservice
 export function putSoap(obj) {
     return fetch({
-        url: '/dsb/platform/service/registry/soap',
+        url: '/dsb/admin/service/registry/soap',
         method: 'post',
         data: obj
     });
@@ -19,7 +19,7 @@ export function putSoap(obj) {
 // DataSet服务注册--保存   数据源
 export function putDataSet(obj) {
     return fetch({
-        url: '/dsb/platform/service/registry/dataset',
+        url: '/dsb/admin/service/registry/dataset',
         method: 'post',
         data: obj
     });
@@ -31,5 +31,14 @@ export function putSubmit(obj) {
         url: '/dsb/admin/service/publish/submit',
         method: 'post',
         data: obj
+    });
+}
+
+// 获取未提交的注册信息
+export function getRegistryDetail(params, addr) {
+    return fetch({
+        url: `/dsb/admin/service/retrieve/${addr}`,
+        method: 'post',
+        params
     });
 }

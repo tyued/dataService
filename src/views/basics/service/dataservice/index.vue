@@ -89,7 +89,7 @@ import * as api from 'api/service/dataservice/index';
 import * as dicty from 'api/dictionary';
 
 export default {
-    name:'pageDataservice',
+    name:'dataService',
     components: {
         VueUEditor
     },

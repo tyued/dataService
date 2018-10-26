@@ -119,21 +119,21 @@
               </span>
             </p>
             <el-table id="out-table" :data="tableData" stripe style="width: 100%;margin: 10px 0;">
-              <el-table-column sortable prop="date" label="时间">
+              <el-table-column  prop="date" label="时间" sortable>
               </el-table-column>
-              <el-table-column v-if="byType === '1'" sortable prop="hour" label="小时">
+              <el-table-column v-if="byType === '1'"  prop="hour" label="小时">
               </el-table-column>
-              <el-table-column sortable prop="calltimes" label="调用次数">
+              <el-table-column  prop="calltimes" label="调用次数">
               </el-table-column>
-              <el-table-column sortable prop="failures" label="失败次数">
+              <el-table-column  prop="failures" label="失败次数">
               </el-table-column>
-              <el-table-column sortable prop="failurePct" label="失败率">
+              <el-table-column  prop="failurePct" label="失败率">
               </el-table-column>
-              <el-table-column sortable prop="sumdur" label="总共耗时(毫秒)">
+              <el-table-column  prop="sumdur" label="总共耗时(毫秒)">
               </el-table-column>
-              <el-table-column sortable prop="avgdur" label="平均耗时(毫秒)">
+              <el-table-column  prop="avgdur" label="平均耗时(毫秒)">
               </el-table-column>
-              <el-table-column sortable prop="maxdur" label="最大耗时(毫秒)">
+              <el-table-column  prop="maxdur" label="最大耗时(毫秒)">
               </el-table-column>
             </el-table>
             <!-- 分页 组件-->
