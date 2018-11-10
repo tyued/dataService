@@ -1,13 +1,13 @@
 <template>
   <div class="role">
     <el-row class="row">
-      <el-button type="primary" @click="addUser">添加角色</el-button>
+      <el-button v-if="rightInfoObj['role']['role:new']" type="primary" @click="addUser">添加角色</el-button>
     </el-row>
     <el-row class="row">
       <el-table v-loading="loading" :data="tableData" style="width: 100%">
-        <el-table-column  prop="id" label="角色ID" sortable>
+        <el-table-column prop="id" label="角色ID" sortable>
         </el-table-column>
-        <el-table-column  prop="name" label="角色名称">
+        <el-table-column prop="name" label="角色名称">
         </el-table-column>
         <!-- <el-table-column  prop="type" label="角色类型">
           <template slot-scope="scope">
@@ -16,19 +16,21 @@
             <el-tag size="small" v-show="scope.row.type == '3'" type="warning">复制</el-tag>
           </template>
         </el-table-column> -->
-        <el-table-column  prop="intro" label="角色简介">
+        <el-table-column prop="intro" label="角色简介">
         </el-table-column>
-        <el-table-column  prop="status" label="状态">
+        <el-table-column prop="users" label="用户数">
+        </el-table-column>
+        <el-table-column prop="status" label="状态">
           <template slot-scope="scope">
             <el-tag size="small" v-show="scope.row.status == '0'" type="info">不可用</el-tag>
             <el-tag size="small" v-show="scope.row.status == '1'" type="success">正常</el-tag>
             <el-tag size="small" v-show="scope.row.status == '2'" type="warning">锁定</el-tag>
           </template>
         </el-table-column>
-        <el-table-column min-width="150" label="操作">
+        <el-table-column width="150" label="操作">
           <template slot-scope="scope">
-            <el-button size="small" type="warning" @click="editItem(scope.row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="deleteItem(scope.row)">删除</el-button>
+            <el-button v-if="rightInfoObj['role']['role:edit']" size="small" type="warning" @click="editItem(scope.row)">编辑</el-button>
+            <el-button v-if="rightInfoObj['role']['role:del']" size="small" type="danger" @click="deleteItem(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -43,7 +45,7 @@
     <el-dialog title="添加角色" :visible.sync="dialogFormVisible" width="660px">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="角色名称" prop="name">
-          <el-input maxlength="50" v-model="ruleForm.name"></el-input>
+          <el-input maxlength="50" v-model.trim="ruleForm.name"></el-input>
         </el-form-item>
         <!-- <el-form-item label="角色类型" prop="type">
           <el-select v-model="ruleForm.type" placeholder="请选择角色类型">
@@ -60,7 +62,7 @@
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="角色简介" prop="intro">
-          <el-input type="textarea" v-model="ruleForm.intro"></el-input>
+          <el-input :autosize="{ minRows: 2, maxRows: 6 }" type="textarea" v-model.trim="ruleForm.intro"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
@@ -74,7 +76,7 @@
     <el-dialog title="编辑角色" :visible.sync="dialogFormVisibleEdit" width="660px">
       <el-form :model="ruleFormEdit" :rules="rulesEdit" ref="ruleFormEdit" label-width="100px" class="demo-ruleForm">
         <el-form-item label="角色名称" prop="name">
-          <el-input maxlength="50" v-model="ruleFormEdit.name"></el-input>
+          <el-input maxlength="50" v-model.trim="ruleFormEdit.name"></el-input>
         </el-form-item>
         <!-- <el-form-item label="角色类型" prop="type">
           <el-select v-model="ruleFormEdit.type" placeholder="请选择角色类型">
@@ -91,7 +93,7 @@
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="角色简介" prop="intro">
-          <el-input type="textarea" v-model="ruleFormEdit.intro"></el-input>
+          <el-input :autosize="{ minRows: 2, maxRows: 6 }" type="textarea" v-model.trim="ruleFormEdit.intro"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitFormEdit('ruleFormEdit')">确定</el-button>
@@ -106,12 +108,15 @@
 <script>
 import * as api from "api/right";
 import PageBar from "components/PageBar/index";
+import { mapGetters } from "vuex";
 export default {
   name: "role",
   components: {
     PageBar
   },
-  computed: {},
+  computed: {
+    ...mapGetters(["rightInfoObj"])
+  },
   created() {
     this.getList();
   },
@@ -145,7 +150,7 @@ export default {
         // type: "",
         right: [],
         intro: "",
-        id: ''
+        id: ""
       },
       rulesEdit: {
         name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
@@ -168,7 +173,7 @@ export default {
     };
   },
   methods: {
-    getList(pageNo = 1, limit = 10) {
+    getList(pageNo = 1, limit = this.size) {
       let query = {
         pageNo,
         limit

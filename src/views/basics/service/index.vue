@@ -1,6 +1,6 @@
 <template>
   <div class="fw-container">
-    <el-row v-if="isLastOne" class="fw-rowbox fw-rowbox-part" :gutter="20" type="flex" justify="space-between">
+    <el-row v-if="n !== 1" class="fw-rowbox fw-rowbox-part" :gutter="20" type="flex" justify="space-between">
       <el-col v-if="rightInfoObj['serv-home']">
         <div @click="clickIndex" :class="{'on':getfuwindex_on[0]}">
           <el-card class="box-card">
@@ -9,7 +9,7 @@
           </el-card>
         </div>
       </el-col>
-      <el-col v-if="rightInfoObj['serv-register']">
+      <el-col v-if="rightInfoObj['serv-registry']">
         <div @click="clickRegister" :class="{'on':getfuwindex_on[1]}">
           <el-card class="box-card">
             <i class="zhuc-ico fw-topico"></i>
@@ -35,7 +35,7 @@
       </el-col>
     </el-row>
     <el-row class="fw-rowbox">
-      <component :editDataObj="editDataObj" @clickServiceManegement="clickServiceManegement" @handleEdit="handleEdit" :is="pageMB"></component>
+      <component @clickServiceManegement="clickServiceManegement" :editDataObj="editDataObj" @handleEdit="handleEdit" :is="pageMB" :act="act"></component>
     </el-row>
 
   </div>
@@ -48,7 +48,6 @@ import register from "views/basics/service/register/index";
 import edit from "views/basics/service/register/edit";
 import management from "views/basics/service/management/index";
 import dataService from "views/basics/service/dataService/index";
-
 import { mapGetters } from "vuex";
 
 export default {
@@ -64,44 +63,65 @@ export default {
     return {
       pageMB: mainService,
       showArr: [],
-      editDataObj: ""
+      editDataObj: "",
+      n: 0, // 只有一个的时候消失掉
+      act: "" // 是否要记住已订阅下的状态
     };
   },
   created() {
-    this.$store.dispatch("GET_fuwindex_on", [true, false, false, false]);
+    if (this.$route.params.act === "1") {
+      // 这个时候要返回到管理下的已订阅
+      this.act = "1";
+    }
+    this.toggleCompo(this.getServiceComponentName);
+    this.rightInfoObj["serv-home"] && this.n++;
+    this.rightInfoObj["serv-registry"] && this.n++;
+    this.rightInfoObj["serv-mgr"] && this.n++;
+    this.rightInfoObj["serv-ds"] && this.n++;
   },
   computed: {
-    ...mapGetters(["getfuwindex_on", "rightInfoObj"]),
-    // ???????????????????????????????????????????????????????????????????????????????????????????????????
-    isLastOne() {
-      return (
-        this.rightInfoObj["serv-home"] &&
-        this.rightInfoObj["serv-register"] &&
-        this.rightInfoObj["serv-mgr"] &&
-        this.rightInfoObj["serv-ds"]
-      );
-    }
+    ...mapGetters(["getfuwindex_on", "rightInfoObj", "getServiceComponentName"])
   },
   methods: {
     clickIndex() {
       //服务首页
-      this.pageMB = mainService;
+      this.$store.commit("SET_compName", "mainService");
       this.$store.dispatch("GET_fuwindex_on", [true, false, false, false]);
+      this.toggleCompo(this.getServiceComponentName);
     },
     clickRegister() {
       //注册
-      this.pageMB = register;
+      this.$store.commit("SET_compName", "register");
       this.$store.dispatch("GET_fuwindex_on", [false, true, false, false]);
+      this.toggleCompo(this.getServiceComponentName);
     },
     clickServiceManegement() {
       // 管理
-      this.pageMB = management;
+      this.$store.commit("SET_compName", "management");
       this.$store.dispatch("GET_fuwindex_on", [false, false, true, false]);
+      this.toggleCompo(this.getServiceComponentName);
     },
     clickDataservice() {
       //数据源
-      this.pageMB = dataService;
+      this.$store.commit("SET_compName", "dataService");
       this.$store.dispatch("GET_fuwindex_on", [false, false, false, true]);
+      this.toggleCompo(this.getServiceComponentName);
+    },
+    toggleCompo(name) {
+      switch (name) {
+        case "mainService":
+          this.pageMB = mainService;
+          break;
+        case "register":
+          this.pageMB = register;
+          break;
+        case "management":
+          this.pageMB = management;
+          break;
+        case "dataService":
+          this.pageMB = dataService;
+          break;
+      }
     },
     handleEdit(row) {
       let addr;
@@ -132,7 +152,7 @@ export default {
           this.pageMB = edit;
         }
       });
-    },
+    }
   }
 };
 </script>

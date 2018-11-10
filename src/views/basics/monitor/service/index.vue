@@ -5,7 +5,7 @@
       <div slot="header" class="clearfix">
         <span>服务信息</span>
       </div>
-      <el-collapse v-model="activeName" accordion>
+      <el-collapse v-if="tabData.length > 0" v-model="activeName" accordion>
         <el-collapse-item v-loading="loading" v-for="(item, index) in tabData" :key="index" :name="index">
           <template slot="title">
             <span style="font-size: 14px;">{{item.servName}}</span>
@@ -110,6 +110,7 @@
           </el-row>
         </el-collapse-item>
       </el-collapse>
+      <div v-else class="empty">暂无数据</div>
       <PageBar :total="total" :currentpage="current" @handlePage="handlePage" @handlePageSize="handlePageSize" />
     </el-card>
 
@@ -146,6 +147,7 @@ export default {
       dialogIOVisible: false,
       total: 0,
       current: 0,
+      size: 10,
       loading: true
     };
   },
@@ -153,7 +155,7 @@ export default {
     init() {
       this.getList();
     },
-    getList(pageNo = 1, limit = 10) {
+    getList(pageNo = 1, limit = this.size) {
       api
         .postQueryList({
           limit,
@@ -295,5 +297,11 @@ export default {
   float: right;
   line-height: 48px;
   border: none;
+}
+.empty {
+  text-align: center;
+  padding: 140px 0;
+  font-size: 14px;
+  color: #9a9a9a;
 }
 </style>

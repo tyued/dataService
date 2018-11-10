@@ -1,4 +1,5 @@
 import fetch from 'utils/fetch';
+// import { type } from 'os';
 /**
  * 用途：已订阅：查看（申请人、申请的应用、申请说明）、授权管理（签发秘钥、禁用、重置）
  * 注意：status=1
@@ -43,20 +44,39 @@ export function editApi(data) {
 }
 
 // 禁用服务接口！
-export function forbiddenService(data) {
+export function forbiddenService(params) {
   return fetch({
-    url: '/dsb/admin/service/mgmt/distory',
+    // url: '/dsb/admin/service/mgmt/distory',
+    url: '/dsb/admin/service/api/mgmt/pause',
     method: 'post',
-    data
+    params
   })
 }
 
 // 启用服务接口！
-export function runService(data) {
+export function runService(params) {
   return fetch({
-    url: '/dsb/admin/service/mgmt/deploy',
+    url: '/dsb/admin/service/api/mgmt/restore',
     method: 'post',
-    data
+    params
+  })
+}
+
+// 上线
+export function deployService(params) {
+  return fetch({
+    url: '/dsb/admin/service/api/mgmt/deploy',
+    method: 'post',
+    params
+  })
+}
+
+// 下线
+export function destroyService(params) {
+  return fetch({
+    url: '/dsb/admin/service/api/mgmt/destroy',
+    method: 'post',
+    params
   })
 }
 
@@ -91,7 +111,7 @@ export function checkPublishRequest (data) {
 // 可用的插件扩展实现对象信息
 export function getExtensions (data) {
   return fetch({
-    url: '/dsb/admin/service/plugin/extensions',
+    url: '/dsb/admin/service/api/plugin/extensions',
     method: 'post',
     data
   })
@@ -154,3 +174,46 @@ export function updateKey(params) {
     params
   })
 }
+
+
+// ---------------------服务删除----------------------
+// 更新授权状态
+export function deleteService(type, params) {
+  return fetch({
+    url: `/dsb/admin/service/destroy/${type}`,
+    method: 'post',
+    params
+  })
+}
+
+// 拉去服务list
+export function getServList() {
+  return fetch({
+    url: `/dsb/admin/service/retrieve/pairs`,
+    method: 'post',
+  })
+}
+
+
+
+
+// 接口修改
+export function submitEditIo(data, type) {
+  let ty = ''
+  switch (type) {
+    case '1':
+      ty = 'rest'
+      break;
+    case '2':
+      ty = 'soap'
+      break;
+    case '3':
+      ty = 'dataset'
+      break;
+  }
+  return fetch({
+    url: `/dsb/admin/service/api/renew/${ty}`,
+    method: 'post',
+    data
+  })
+} 

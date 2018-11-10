@@ -13,19 +13,24 @@
           <li>
             <el-rate v-model="valRate" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate>
           </li>
-          <li class="nav-back" @click="$router.back()">返回</li>
-          <!-- <li class="nav-forbidden" v-if="$store.getters.userInfoObj.roleId === '1'">
-            <span v-if="sub === '0'">禁用</span>
+          <li class="nav-back" @click="handleBack">返回</li>
+          <!-- <li class="nav-forbidden" v-if="$store.getters.userInfoObj.roleId == '1'">
+            <span v-if="sub == '0'">禁用</span>
             <span v-else>发布</span>
           </li> -->
-          <li class="nav-monitor" v-if="$store.getters.userInfoObj.roleId === '1'" @click="goToMonitor">&nbsp;监控</li>
-          <li @click="subscribe" v-if="sub === '0'" class="nav-sub">
-            <span>订阅</span>
-          </li>
-          <li @click="unSubscribe" v-else class="nav-sub">
-            <span>取消订阅</span>
-          </li>
-          <li class="nav-res" @click="handleList">意见反馈</li>
+          <li class="nav-monitor" v-if="$store.getters.userInfoObj.roleId == '1'" @click="goToMonitor">&nbsp;监控</li>
+          <template v-if="rightInfoObj['serv-home']['serv:sub']">
+            <li @click="subscribe" v-if="sub == '0'" class="nav-sub">
+              <span>订阅</span>
+            </li>
+          </template>
+          <template v-if="rightInfoObj['serv-home']['serv:unsub']">
+            <li @click="unSubscribe" v-if="sub != '0'" class="nav-sub">
+              <span>取消订阅</span>
+            </li>
+          </template>
+          
+          <li v-if="rightInfoObj['serv-home']['serv:eval']" class="nav-res" @click="handleList">意见反馈</li>
         </ul>
       </el-col>
     </el-row>
@@ -74,14 +79,24 @@
                   <el-col :span="12" class="left-box">
                     <h5>基本信息</h5>
                     <ol>
-                      <li><span class="li-title">接口地址：</span><span class="li-cont">{{item.url}}</span></li>
-                      <li><span class="li-title">返回格式：</span><span class="li-cont">
-                          <el-tag>{{item.resp?item.resp:(type==2?'XML':'空')}}</el-tag>
+                      <li>服务名称：{{ infoData.name }}</li>
+                      <li>服务分类：
+                        <el-tag size="small">{{infoData.tagname}}</el-tag>
+                      </li>
+                      <li>接口中文名称：{{ item.name }}</li>
+                      <li v-if="type != '3'"><span class="li-title">接口原始地址：</span><span class="li-cont">{{item.url}}</span></li>
+                      <li v-if="type != '3'"><span class="li-title">返回格式：</span><span class="li-cont">
+                          <el-tag v-if="type == '2'" size="small" type="success">XML</el-tag>
+                          <el-tag v-else size="small" type="success">{{item.resp}}</el-tag>
                         </span>
                       </li>
-                      <li><span class="li-title">请求方式：</span><span class="li-cont">
+                      <li v-if="type == '2'"><span class="li-title">请求方式：</span><span class="li-cont">
                           <el-tag>{{item.method}}</el-tag>
                         </span>
+                      </li>
+                      <li v-if="type == '3'">返回内容：
+                        <span v-if="item.rtType == '0'">受影响记录数</span>
+                        <span v-if="item.rtType == '1'">操作状态</span>
                       </li>
                       <li><span class="li-title">请求示例：</span><span class="li-cont">{{item.expUrl}}</span></li>
                       <li><span class="li-title">接口备注：</span><span class="li-cont" v-html="item.intro"></span>
@@ -111,7 +126,10 @@
                     </el-tabs>
                   </el-col>
                   <el-col :span="12" class="right-box">
-                    <h5>&emsp;{{item.resp?item.resp:(type==2?'XML':'空')}}返回示例</h5>
+                    <!-- <el-button v-if="type == '2'" type="primary">XML</el-button>
+                    <el-button v-else type="primary">{{infoData.resp}}</el-button> -->
+                    <!-- <h5>&emsp;{{item.resp?item.resp:(type==2?'XML':'空')}}返回示例</h5> -->
+                    <h5>&emsp;返回示例</h5>
                     <div class="respBox" v-html="item.example"></div>
                   </el-col>
                 </el-row>
@@ -206,10 +224,10 @@
 
           <el-form :model="submitParams" :rules="rules" ref="submitParams" label-width="70px" class="demo-ruleForm">
             <el-form-item label="标题" prop="text">
-              <el-input v-model="submitParams.text"></el-input>
+              <el-input v-model.trim="submitParams.text"></el-input>
             </el-form-item>
             <el-form-item label="评论" prop="title">
-              <el-input type="textarea" v-model="submitParams.title"></el-input>
+              <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 6 }" v-model.trim="submitParams.title"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button size="small" type="primary" @click="submitForm('submitParams')">确 定</el-button>
@@ -255,7 +273,7 @@
 
     <!-- 接口的弹出层 -->
     <el-dialog width="76%" title="接口监控信息" :visible.sync="dialogIOVisible">
-      <TabService :servId="servId" :servType="type" ref="tab-service" />
+      <TabService :servId="servId" :servType="type" ref="tab-service" />  
     </el-dialog>
     <!-- /接口的弹出层 -->
 
@@ -270,7 +288,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="描述" prop="desc">
-          <el-input type="textarea" v-model="form.desc"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 6 }" v-model.trim="form.desc"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="subscribeDone('form')">确定</el-button>
@@ -287,10 +305,14 @@
 import * as api from "api/serviceinfo/index";
 import * as dicty from "api/dictionary";
 import TabService from "../monitor/service/tabservice/index";
+import { mapGetters } from "vuex";
 export default {
   name: "serviceinfo",
   components: {
     TabService
+  },
+  computed: {
+    ...mapGetters(["servTagArr", 'rightInfoObj'])
   },
   data() {
     return {
@@ -310,7 +332,7 @@ export default {
         ],
         appId: [{ required: true, message: "请选择应用", trigger: "change" }]
       },
-      listLoading: true,
+      listLoading: false,
       dialogIOVisibleSub: false,
       dialogIOVisible: false,
       lessControll: false, // 控制收起按钮的显示
@@ -417,17 +439,25 @@ export default {
             }
           });
           var uuid = this.infoData.uuid;
-          var reg = new RegExp("\\.", "g");
           this.apisList.forEach((item, index) => {
-            var apiVer = item.version.replace(reg, "_");
-            item.expUrl =
-              this.Settings +
-              "/rest/" +
-              uuid +
-              "/" +
-              item.ename +
-              "/V" +
-              apiVer;
+            if (this.type == 1) {
+              //soap---http
+              item.expUrl = `${this.Settings}/http/${uuid}/v${item.version}${
+                item.path ? "/" + item.path : ""
+              }`;
+            }
+            if (this.type == 2) {
+              //webservice----soap
+              item.expUrl = `${this.Settings}/http/${uuid}/v${item.method}${
+                item.version ? "/" + item.version : ""
+              }`;
+            }
+            if (this.type == 3) {
+              //数据源-----dataset
+              item.expUrl = `${this.Settings}/http/${uuid}/v${item.version}${
+                item.path ? "/" + item.path : ""
+              }`;
+            }
           });
 
           this.infoData.tagname = this.infoData.tagname
@@ -453,17 +483,25 @@ export default {
             }
           });
           var uuid = this.infoData.uuid;
-          var reg = new RegExp("\\.", "g");
-          this.apisList.forEach(function(item, index) {
-            var apiVer = item.version.replace(reg, "_");
-            item.expUrl =
-              item.Settings +
-              "/rest/" +
-              uuid +
-              "/" +
-              item.ename +
-              "/V" +
-              apiVer;
+          this.apisList.forEach((item, index) => {
+            if (this.type == 1) {
+              //soap---http
+              item.expUrl = `${this.Settings}/http/${uuid}/v${item.version}${
+                item.path ? "/" + item.path : ""
+              }`;
+            }
+            if (this.type == 2) {
+              //webservice----soap
+              item.expUrl = `${this.Settings}/http/${uuid}/v${item.method}${
+                item.version ? "/" + item.version : ""
+              }`;
+            }
+            if (this.type == 3) {
+              //数据源-----dataset
+              item.expUrl = `${this.Settings}/http/${uuid}/v${item.version}${
+                item.path ? "/" + item.path : ""
+              }`;
+            }
           });
           this.infoData.tagname = this.infoData.tagname
             ? this.infoData.tagname
@@ -476,6 +514,7 @@ export default {
       if (this.type == "3") {
         //数据源
         api.getDataset(this.DetailQuery).then(response => {
+          console.log(response)
           this.infoData = response.data;
           this.sub = response.data.subscribed;
           this.apisList = response.data.apis;
@@ -487,17 +526,25 @@ export default {
             }
           });
           var uuid = this.infoData.uuid;
-          var reg = new RegExp("\\.", "g");
-          this.apisList.forEach(function(item, index) {
-            var apiVer = item.version.replace(reg, "_");
-            item.expUrl =
-              item.Settings +
-              "/rest/" +
-              uuid +
-              "/" +
-              item.ename +
-              "/V" +
-              apiVer;
+          this.apisList.forEach((item, index) => {
+            if (this.type == 1) {
+              //soap---http
+              item.expUrl = `${this.Settings}/http/${uuid}/v${item.version}${
+                item.path ? "/" + item.path : ""
+              }`;
+            }
+            if (this.type == 2) {
+              //webservice----soap
+              item.expUrl = `${this.Settings}/http/${uuid}/v${item.method}${
+                item.version ? "/" + item.version : ""
+              }`;
+            }
+            if (this.type == 3) {
+              //数据源-----dataset
+              item.expUrl = `${this.Settings}/http/${uuid}/v${item.version}${
+                item.path ? "/" + item.path : ""
+              }`;
+            }
           });
           this.infoData.tagname = this.infoData.tagname
             ? this.infoData.tagname
@@ -569,7 +616,7 @@ export default {
         })
         .then(res => {
           const { data, status, total } = res;
-          if (status === 200 && data.rows) {
+          if (status == 200 && data.rows) {
             data.rows.forEach(item => {
               item.rank = +item.rank;
             });
@@ -584,7 +631,7 @@ export default {
       //   // console.log(this.submitParams)
       //   // this.submitParams.servId = "1"
       //   api.submitAssess(this.submitParams).then(res => {
-      //       if (res.status === 200) {
+      //       if (res.status == 200) {
       //         this.$notify({title: '成功', message: '打分成功', type: 'success', duration: 2000});
       //         this.init();
       //         this.centerDialogVisible = false;
@@ -597,7 +644,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           api.submitAssess(this.submitParams).then(res => {
-            if (res.status === 200) {
+            if (res.status == 200) {
               this.$notify({
                 title: "成功",
                 message: "提交成功",
@@ -678,14 +725,15 @@ export default {
           })
           .then(res => {
             const { status, data } = res;
-            if (status === 200 && data) {
-              if (data.status === "success") {
+            if (status == 200 && data) {
+              if (data.status == "success") {
                 this.infoData.subCount--;
                 this.sub = "0";
                 this.$message({
                   type: "success",
                   message: data.message
                 });
+                this.$store.dispatch("getNoticeNumber");
               } else {
                 this.$message.error(data.message);
               }
@@ -694,12 +742,12 @@ export default {
       });
     },
     subscribe() {
-      this.dialogIOVisibleSub = true
-      this.form.appId = ""
-      this.form.desc = ""
+      this.dialogIOVisibleSub = true;
+      this.form.appId = "";
+      this.form.desc = "";
       api.getAppList().then(res => {
         const { status, data } = res;
-        if (status === 200 && data) {
+        if (status == 200 && data) {
           this.appArr = data;
         }
       });
@@ -715,8 +763,8 @@ export default {
             })
             .then(res => {
               const { status, data } = res;
-              if (status === 200 && data) {
-                if (data.status === "success") {
+              if (status == 200 && data) {
+                if (data.status == "success") {
                   this.dialogIOVisibleSub = false;
                   this.infoData.subCount++;
                   this.sub = "1";
@@ -724,6 +772,7 @@ export default {
                     type: "success",
                     message: data.message
                   });
+                  this.$store.dispatch("getNoticeNumber");
                 } else {
                   this.$message.error(data.message);
                 }
@@ -733,6 +782,19 @@ export default {
           return false;
         }
       });
+    },
+    handleBack() {
+      if (this.$route.query.from == "mgr") {
+        this.$store.dispatch("GET_fuwindex_on", [false, false, true, false]);
+        this.$router.push({
+          name: "service",
+          params: {
+            act: "1"
+          }
+        });
+      } else {
+        this.$router.back();
+      }
     }
   }
 };
@@ -899,10 +961,9 @@ export default {
       padding-bottom: 3000px;
     }
     .right-box {
+      overflow: auto;
       margin-bottom: -3000px;
       padding-bottom: 3000px;
-      // height: inherit;
-      // min-height: 520px;
       background-color: #e3e6ec;
     }
   }

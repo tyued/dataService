@@ -1,0 +1,98 @@
+.active {
+  background-color: #409eff;
+  border-color: #409eff;
+  color: #fff;
+}
+
+.el-tabs--border-card {
+  margin-top: 10px;
+}
+// 分页样式
+.change-page {
+  overflow: hidden;
+}
+.pagebox {
+  // float: right;
+  margin-top: 10px;
+}
+.el-input__icon {
+  line-height: inherit;
+}
+
+// 审核弹出层样式
+.review-layer {
+  .layer-container {
+    overflow: hidden;
+    margin-top: -30px;
+  }
+  .activeBtn {
+    background-color: #449afc;
+    color: #fff;
+  }
+  .layer-btns {
+    margin-top: 10px;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .el-dialog {
+    overflow: hidden;
+  }
+  .el-dialog__body {
+    padding: 10px 20px 30px;
+  }
+  .right-box {
+    padding: 20px;
+    overflow: auto;
+    max-height: 900px;
+    h3 {
+      padding: 20px 0;
+    }
+    line-height: 1.4em;
+    background-color: #e3e6ec;
+  }
+  .left-box {
+    padding: 20px;
+    overflow: auto;
+    max-height: 900px;
+    h2 {
+      padding-bottom: 20px;
+      text-align: center;
+    }
+    h3 {
+      padding: 0 0 10px;
+    }
+    ol {
+      padding: 0 10px 10px;
+      line-height: 2.6em;
+      li {
+        word-wrap: break-word;
+      }
+    }
+  }
+}
+
+// 内部弹层
+.review-complete-layer {
+  line-height: 3em;
+  .el-dialog__header {
+    text-align: center;
+  }
+  .dialog-innertext {
+    text-align: right;
+  }
+  .layer-selectbox {
+    line-height: 2.4em;
+    padding: 0 10px;
+    border: 1px solid #eee;
+    cursor: pointer;
+  }
+  .el-dialog__body {
+    padding: 10px 10px 20px 10px;
+  }
+  .layer-innerbtns {
+    margin-top: 30px;
+    overflow: hidden;
+    text-align: center;
+  }
+}

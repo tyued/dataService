@@ -45,11 +45,11 @@
           <span>&nbsp;当前角色不可更改为其它角色</span>
         </el-form-item>
         <el-form-item prop="username" label="用户名" :label-width="formLabelWidth">
-          <el-input clearable :maxlength="50" style="width:280px;" v-model="personInfoForm.username" auto-complete="off" disabled></el-input>
+          <el-input clearable :maxlength="50" style="width:280px;" v-model.trim="personInfoForm.username" auto-complete="off" disabled></el-input>
           <span>&nbsp;不可修改。一般用于后台登入名</span>
         </el-form-item>
         <el-form-item prop="alias" label="昵称" :label-width="formLabelWidth">
-          <el-input clearable :maxlength="50" style="width:280px;" v-model="personInfoForm.alias" auto-complete="off"></el-input>
+          <el-input clearable :maxlength="50" style="width:280px;" v-model.trim="personInfoForm.alias" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item prop="gender" label="性别" :label-width="formLabelWidth">
           <el-radio v-model="personInfoForm.gender" label="male">男</el-radio>
@@ -62,13 +62,13 @@
           </el-upload>
         </el-form-item> -->
         <el-form-item prop="phone" label="手机" :label-width="formLabelWidth">
-          <el-input clearable :maxlength="50" style="width:280px;" v-model="personInfoForm.phone" auto-complete="off"></el-input>
+          <el-input clearable :maxlength="50" style="width:280px;" v-model.trim="personInfoForm.phone" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item prop="email" label="邮箱" :label-width="formLabelWidth">
-          <el-input clearable :maxlength="50" style="width:280px;" v-model="personInfoForm.email" auto-complete="off"></el-input>
+          <el-input clearable :maxlength="50" style="width:280px;" v-model.trim="personInfoForm.email" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item prop="remark" label="备注" :label-width="formLabelWidth">
-          <el-input clearable :maxlength="250" type="textarea" v-model="personInfoForm.remark" placeholder="请输入内容"></el-input>
+          <el-input clearable :maxlength="250" :autosize="{ minRows: 2, maxRows: 6 }" type="textarea" v-model.trim="personInfoForm.remark" placeholder="请输入内容"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -82,14 +82,14 @@
     <el-dialog width="560px" title="修改密码" :visible.sync="changePasswordVisible">
       <el-form :model="passwordInfoForm" :rules="rulesPwd" ref="ruleFormPwd">
         <el-form-item prop="currentPassword" label="当前密码" :label-width="formLabelWidth">
-          <el-input clearable :maxlength="50" style="width:280px;" v-model="passwordInfoForm.currentPassword" auto-complete="off"></el-input>
+          <el-input clearable :maxlength="50" style="width:280px;" v-model.trim="passwordInfoForm.currentPassword" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item prop="newPassword" label="新密码" :label-width="formLabelWidth">
-          <el-input clearable :maxlength="50" style="width:280px;" v-model="passwordInfoForm.newPassword" auto-complete="off"></el-input>
+          <el-input clearable :maxlength="50" style="width:280px;" v-model.trim="passwordInfoForm.newPassword" auto-complete="off"></el-input>
           <span>&nbsp;6-16个字符</span>
         </el-form-item>
         <el-form-item prop="checkNewPassword" label="确认新密码" :label-width="formLabelWidth">
-          <el-input clearable :maxlength="50" style="width:280px;" v-model="passwordInfoForm.checkNewPassword" auto-complete="off"></el-input>
+          <el-input clearable :maxlength="50" style="width:280px;" v-model.trim="passwordInfoForm.checkNewPassword" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -173,9 +173,12 @@ export default {
     handleCommand(command) {
       switch (command) {
         case "e":
-          this.$store.dispatch("logOut").then(() => {
-            this.$router.push("/login");
-          });
+          this.$store.commit('LOG_OUT')
+          location.reload()
+          // this.$store.dispatch("logOut").then(() => {
+          //   // this.$router.push("/login");
+          //   location.reload()
+          // });
           break;
         case "a": // 个人信息
           this.personInfoVisible = true;

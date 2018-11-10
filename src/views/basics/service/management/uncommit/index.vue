@@ -16,7 +16,7 @@
       </el-table-column>
       <el-table-column prop="tag" label="服务分类">
         <template slot-scope="scope">
-          <el-tag size="small">{{scope.row.tag}}</el-tag>
+          <el-tag v-for="(item, index) in servTagArr" v-if="scope.row.tag === item.key" :key="index" size="small">{{item.value}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="status" label="状态">
@@ -29,10 +29,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="status" label="操作" width="200">
+      <el-table-column prop="status" label="操作" width="220">
         <template slot-scope="scope">
-          <el-button size="small" type="warning" v-show="scope.row.status == '0'" @click="openChange(scope.row)">修改</el-button>
-          <el-button size="small" type="primary" @click="openStart(scope.row)" class="activeBtn">提交</el-button>
+          <el-button v-if="rightInfoObj['serv-examining']['serv-examining:renew']" size="small" type="warning" v-show="scope.row.status == '0'" @click="openChange(scope.row)">修改</el-button>
+          <el-button v-if="rightInfoObj['serv-examining']['serv-examining:submit']" size="small" type="primary" @click="openStart(scope.row)" class="activeBtn">提交</el-button>
+          <el-button v-if="rightInfoObj['serv-examining']['serv-examining:delete']" size="small" type="danger" @click="deleteServe(scope.row)" class="activeBtn">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -47,10 +48,14 @@
 import * as api from "api/service/management";
 import PageBar from "components/PageBar/index";
 import { putSubmit } from "api/service/register";
+import { mapGetters } from "vuex";
 export default {
   name: "uncommit",
   components: {
     PageBar
+  },
+  computed: {
+    ...mapGetters(["servTagArr", 'rightInfoObj'])
   },
   data() {
     return {
@@ -65,7 +70,7 @@ export default {
     this.getList();
   },
   methods: {
-    getList(pageNo = 1, limit = 10, status = "0") {
+    getList(pageNo = 1, limit = this.size, status = "0") {
       api
         .getRetrieveList({
           pageNo,
@@ -117,28 +122,57 @@ export default {
       }).then(() => {
         putSubmit({
           servId: row.id
-        }).then(res => {
-          if (res.status == "200") {
-            this.$notify({
-              title: "成功",
-              message: "提交成功",
-              type: "success",
-              duration: 2000
-            });
+        }).then(({data}) => {
+          if (data.status === "success") {
             this.getList();
-          } else {
-            this.$notify({
-              title: "失败",
-              message: res.message,
-              type: "error",
-              duration: 2000
+            this.$message({
+              type: "success",
+              message: data.message
             });
+          } else {
+            this.$message.error(data.message);
           }
         });
       });
     },
     openChange(row) {
       this.$emit("handleEdit", row);
+    },
+    deleteServe(row) {
+      let type = "";
+      switch (row.type) {
+        case "1":
+          type = "rest";
+          break;
+        case "2":
+          type = "soap";
+          break;
+        case "3":
+          type = "dataset";
+          break;
+        case "4":
+          type = "ogsi";
+          break;
+      }
+      api
+        .deleteService(type, {
+          servId: row.id
+        })
+        .then(res => {
+          const { status, data } = res;
+          if (status === 200 && data) {
+            if (data.status === "success") {
+              this.getList();
+              this.$message({
+                type: "success",
+                message: data.message
+              });
+              this.$store.dispatch('getNoticeNumber')
+            } else {
+              this.$message.error(data.message);
+            }
+          }
+        });
     }
   }
 };

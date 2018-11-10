@@ -3,18 +3,15 @@ import { getToken, setToken, removeToken } from 'utils/handleToken'
 const login = {
   state: {
     token: getToken(),
-    username: '',
     noticeNumber: 0,
     userInfoObj: {},
     rightInfoObj: {},
-    isOut: false
+    isOut: false,
+    activePath: '' // sidebar 高亮
   },
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token;
-    },
-    SET_USERNAME: (state, username) => {
-      state.username = username;
     },
     SET_NOTICENUMBER: (state, noticeNumber) => {
       state.noticeNumber = noticeNumber
@@ -28,6 +25,13 @@ const login = {
     SET_ISOUT: (state, bool) => {
       state.isOut = bool
     },
+    SET_SIDEBAR: (state, activePath) => {
+      state.activePath = activePath
+    },
+    // 登出
+    LOG_OUT: () => {
+      removeToken()
+    }
   },
   actions: {
     // 登录
@@ -49,7 +53,7 @@ const login = {
               setToken(token)
               commit('SET_TOKEN', token);
             }
-            commit('SET_USERNAME', username);
+            // commit('SET_USERNAME', username);
             resolve(data);
           }
         }).catch(error => {
@@ -58,12 +62,11 @@ const login = {
       });
     },
     // 登出
-    logOut({ commit, rootState }) {
-      commit('SET_TOKEN', '');
-      commit('SET_USERNAME', '');
-      commit('SET_ISDONE', false)
-      removeToken()
-    },
+    // logOut({ commit, rootState }) {
+    //   // commit('SET_TOKEN', '');
+    //   // commit('SET_ISDONE', false)
+    //   removeToken()
+    // },
     // 获取通知数
     getNoticeNumber({ commit }) {
       return new Promise((resolve, reject) => {
@@ -101,7 +104,10 @@ const login = {
           if (status === 200 && data) {
             let obj = {}
             data.map((item) => {
-              obj[item.code] = true
+              obj[item.code] = {}
+              item.perms && item.perms.split(',').forEach((ele) => {
+                obj[item.code][ele] = true
+              })
             })
             commit('SET_RIGHTINFO', obj)
             resolve(obj);

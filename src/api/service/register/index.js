@@ -42,3 +42,29 @@ export function getRegistryDetail(params, addr) {
         params
     });
 }
+
+// ----------------------------------------------
+// Rest服务--保存  http api
+export function updateRest(obj) {
+    return fetch({
+        url: '/dsb/admin/service/renew/rest',
+        method: 'post',
+        data: obj
+    });
+}
+// Soap服务--保存  webservice
+export function updateSoap(obj) {
+    return fetch({
+        url: '/dsb/admin/service/renew/soap',
+        method: 'post',
+        data: obj
+    });
+}
+// DataSet服务--保存   数据源
+export function updateDataSet(obj) {
+    return fetch({
+        url: '/dsb/admin/service/renew/dataset',
+        method: 'post',
+        data: obj
+    });
+}

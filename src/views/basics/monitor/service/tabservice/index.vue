@@ -275,7 +275,7 @@ export default {
       // 改变echarts tab
       this.tabName = tab.name;
     },
-    getTable(pageNo = 1, limit = 10) {
+    getTable(pageNo = 1, limit = this.size) {
       // 渲染表格
       api
         .postDetail({

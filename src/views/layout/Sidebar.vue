@@ -1,22 +1,22 @@
 <template>
-  <el-menu :default-active="activePath" @select="handleClick" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" router>
-    <el-menu-item index="/generalization">
+  <el-menu :default-active="activePath" @select="handleClick" class="el-menu-vertical-demo">
+    <el-menu-item index="1">
       <i class="menuico menu_gl"></i>
       <span slot="title">概览</span>
     </el-menu-item>
-    <el-menu-item v-if="rightInfoObj['servs']" index="/service">
+    <el-menu-item v-if="rightInfoObj['servs']" index="2">
       <i class="menuico menu_fw"></i>
       <span slot="title">服务</span>
     </el-menu-item>
-    <el-menu-item v-if="rightInfoObj['monitor']" index="/monitor">
+    <el-menu-item v-if="rightInfoObj['monitor']" index="3">
       <i class="menuico menu_jk"></i>
       <span slot="title">监控</span>
     </el-menu-item>
-    <el-menu-item v-if="rightInfoObj['perms']" index="/right">
+    <el-menu-item v-if="rightInfoObj['perms']" index="4">
       <i class="menuico menu_right"></i>
       <span slot="title">权限</span>
     </el-menu-item>
-    <el-menu-item v-if="rightInfoObj['sets']" index="/setting">
+    <el-menu-item v-if="rightInfoObj['sets']" index="5">
       <i class="menuico menu_set"></i>
       <span slot="title">设置</span>
     </el-menu-item>
@@ -28,25 +28,54 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      activePath: ""
+      // activePath: ""
     };
   },
   computed: {
-    ...mapGetters(["rightInfoObj"])
+    ...mapGetters(["rightInfoObj", "activePath"])
   },
   created() {
-    this.activePath = this.$route.path;
+    let s = this.$route.path;
+    switch (this.$route.path.slice(0, 3)) {
+      case "/ge":
+        s = '1'
+        break;
+      case "/se":
+        s = '2'
+        break;
+      case "/mo":
+        s = '3'
+        break;
+      case "/ri":
+        s = '4'
+        break;
+      case "/se":
+        s = '5'
+        break;
+    }
+    this.$store.commit("SET_SIDEBAR", s);
+    // this.activePath = this.$route.path;
   },
   methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
-    },
     handleClick(index, indexPath) {
-      // console.log(index, indexPath);
-      this.activePath = index;
+      this.$store.commit("SET_SIDEBAR", index);
+      switch (index) {
+        case "1":
+          this.$router.push("/");
+          break;
+        case "2":
+          this.$router.push("/service");
+          break;
+        case "3":
+          this.$router.push("/monitor");
+          break;
+        case "4":
+          this.$router.push("/right");
+          break;
+        case "5":
+          this.$router.push("/setting");
+          break;
+      }
     }
   }
 };

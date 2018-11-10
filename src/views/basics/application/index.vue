@@ -73,7 +73,7 @@
           <el-input clearable maxlength="50" v-model="ruleForm.name"></el-input>
         </el-form-item>
         <el-form-item label="应用描述" prop="desc">
-          <el-input clearable maxlength="50" v-model="ruleForm.desc"></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 6 }" clearable maxlength="50" v-model.trim="ruleForm.desc"></el-input>
         </el-form-item>
         <el-form-item label="应用开发语言" prop="lang">
           <el-select v-model="ruleForm.lang" placeholder="请选择应用开发语言">
@@ -90,7 +90,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="应用部署地址" prop="addr">
-          <el-input clearable maxlength="50" v-model="ruleForm.addr"></el-input>
+          <el-input clearable maxlength="50" v-model.trim="ruleForm.addr"></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -105,10 +105,10 @@
     <el-dialog title="修改应用" :visible.sync="dialogFormVisibleEdit" width="500px">
       <el-form :model="ruleFormEdit" :rules="rulesEdit" ref="ruleFormEdit" label-width="120px" class="demo-ruleForm">
         <el-form-item label="应用名称" prop="name">
-          <el-input clearable maxlength="50" v-model="ruleFormEdit.name"></el-input>
+          <el-input clearable maxlength="50" v-model.trim="ruleFormEdit.name"></el-input>
         </el-form-item>
         <el-form-item label="应用描述" prop="desc">
-          <el-input clearable maxlength="50" v-model="ruleFormEdit.desc"></el-input>
+          <el-input clearable maxlength="50" v-model.trim="ruleFormEdit.desc"></el-input>
         </el-form-item>
         <el-form-item label="应用开发语言" prop="lang">
           <el-select v-model="ruleFormEdit.lang" placeholder="请选择应用开发语言">
@@ -125,7 +125,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="应用部署地址" prop="addr">
-          <el-input clearable maxlength="50" v-model="ruleFormEdit.addr"></el-input>
+          <el-input clearable maxlength="50" v-model.trim="ruleFormEdit.addr"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitFormEdit('ruleFormEdit')">确定</el-button>
@@ -171,7 +171,8 @@ export default {
         name: "",
         desc: "",
         lang: "",
-        addr: ""
+        addr: "",
+
       },
       rulesEdit: {
         name: [{ required: true, message: "请输入应用名称", trigger: "blur" }],
@@ -193,7 +194,7 @@ export default {
     };
   },
   methods: {
-    getList(pageNo = 1, limit = 10) {
+    getList(pageNo = 1, limit = this.size) {
       let query = {
         pageNo,
         limit
@@ -254,10 +255,11 @@ export default {
         if (valid) {
           // 修改
           let query = {
-            name: this.ruleForm.name,
-            desc: this.ruleForm.desc,
-            lang: this.ruleForm.lang,
-            addr: this.ruleForm.addr
+            name: this.ruleFormEdit.name,
+            desc: this.ruleFormEdit.desc,
+            lang: this.ruleFormEdit.lang,
+            addr: this.ruleFormEdit.addr,
+            id: this.ruleFormEdit.id
           };
           api.updateApp(query).then(res => {
             const { status, data } = res;

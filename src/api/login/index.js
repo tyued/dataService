@@ -55,6 +55,15 @@ export function postReadAll(params) {
   });
 }
 
+// 删除 
+export function deleteNotice(params) {
+  return fetch({
+    url: '/dsb/admin/service/notify/delete',
+    method: 'post',
+    params
+  });
+}
+
 // -------------------个人信息和密码模块-------------------
 
 // 拉去用户信息
@@ -114,10 +123,11 @@ export function addApp(data) {
 }
 
 // 应用-改
-export function updateApp(params) {
+export function updateApp(data) {
   return fetch({
-    url: `/dsb/customer/myapp/edit/${params.appId}`,
+    url: `/dsb/customer/myapp/edit`,
     method: 'post',
+    data
   });
 }
 

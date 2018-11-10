@@ -1,7 +1,7 @@
 <template>
   <div class="user">
     <el-row class="row">
-      <el-button type="primary" @click="addUser">添加用户</el-button>
+      <el-button v-if="rightInfoObj['user']['user:new']" type="primary" @click="addUser">添加用户</el-button>
     </el-row>
     <el-row class="row">
       <el-table v-loading="loading" :data="tableData" style="width: 100%">
@@ -17,6 +17,8 @@
         </el-table-column>
         <el-table-column prop="phone" label="手机">
         </el-table-column>
+        <el-table-column prop="roleName" label="角色名称">
+        </el-table-column>
         <el-table-column prop="status" label="状态">
           <template slot-scope="scope">
             <el-tag size="small" v-show="scope.row.status == '0'" type="info">不可用</el-tag>
@@ -24,10 +26,10 @@
             <el-tag size="small" v-show="scope.row.status == '2'" type="warning">锁定</el-tag>
           </template>
         </el-table-column>
-        <el-table-column min-width="150" label="操作">
+        <el-table-column width="150" label="操作">
           <template slot-scope="scope">
-            <el-button size="small" type="warning" @click="editItem(scope.row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="deleteItem(scope.row)" :disabled="scope.row.username === 'admin'">删除</el-button>
+            <el-button v-if="rightInfoObj['user']['user:edit']" size="small" type="warning" @click="editItem(scope.row)">编辑</el-button>
+            <el-button v-if="rightInfoObj['user']['user:del']" size="small" type="danger" @click="deleteItem(scope.row)" :disabled="scope.row.username === 'admin'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -42,29 +44,29 @@
     <el-dialog title="添加用户" :visible.sync="dialogFormVisible" width="460px">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名称" prop="username">
-          <el-input clearable maxlength="50" v-model="ruleForm.username"></el-input>
+          <el-input clearable maxlength="50" v-model.trim="ruleForm.username"></el-input>
         </el-form-item>
         <el-form-item label="用户密码" prop="password">
-          <el-input clearable maxlength="50" v-model="ruleForm.password"></el-input>
+          <el-input clearable maxlength="50" v-model.trim="ruleForm.password"></el-input>
         </el-form-item>
         <el-form-item label="用户角色" prop="roleId">
-          <el-select v-model="ruleForm.roleId" placeholder="请选择用户角色">
+          <el-select clearable v-model="ruleForm.roleId" placeholder="请选择用户角色">
             <el-option v-for="(item, index) in roleArr" :key="index" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="所属供应商" prop="pdId">
-          <el-select v-model="ruleForm.pdId" placeholder="请选择所属供应商">
+          <el-select clearable v-model="ruleForm.pdId" placeholder="请选择所属供应商">
             <el-option v-for="(item, index) in valueArr" :key="index" :label="item.value" :value="item.key"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="用户别名" prop="alias">
-          <el-input clearable maxlength="50" v-model="ruleForm.alias"></el-input>
+          <el-input clearable maxlength="50" v-model.trim="ruleForm.alias"></el-input>
         </el-form-item>
         <el-form-item label="手机" prop="phone">
-          <el-input clearable maxlength="50" v-model="ruleForm.phone"></el-input>
+          <el-input clearable maxlength="50" v-model.trim="ruleForm.phone"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input clearable maxlength="50" v-model="ruleForm.email"></el-input>
+          <el-input clearable maxlength="50" v-model.trim="ruleForm.email"></el-input>
         </el-form-item>
         <el-form-item label="性别" prop="gender">
           <el-radio-group v-model="ruleForm.gender">
@@ -84,29 +86,29 @@
     <el-dialog title="修改用户" :visible.sync="dialogFormVisibleEdit" width="460px">
       <el-form :model="ruleFormEdit" :rules="rulesEdit" ref="ruleFormEdit" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名称" prop="username">
-          <el-input clearable maxlength="50" v-model="ruleFormEdit.username"></el-input>
-        </el-form-item>
+          <el-input disabled clearable maxlength="50" v-model.trim="ruleFormEdit.username"></el-input>
+        </el-form-item> v-if="rightInfoObj['serv-ds']['serv-ds:new']"
         <el-form-item label="用户密码" prop="password">
-          <el-input clearable maxlength="50" v-model="ruleFormEdit.password"></el-input>
+          <el-input clearable maxlength="50" v-model.trim="ruleFormEdit.password"></el-input>
         </el-form-item>
         <el-form-item label="用户角色" prop="roleId">
-          <el-select v-model="ruleFormEdit.roleId" placeholder="请选择用户角色">
+          <el-select clearable v-model="ruleFormEdit.roleId" placeholder="请选择用户角色">
             <el-option v-for="(item, index) in roleArr" :key="index" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="所属供应商" prop="pdId">
-          <el-select v-model="ruleFormEdit.pdId" placeholder="请选择所属供应商">
+          <el-select clearable v-model="ruleFormEdit.pdId" placeholder="请选择所属供应商">
             <el-option v-for="(item, index) in valueArr" :key="index" :label="item.value" :value="item.key"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="用户别名" prop="alias">
-          <el-input clearable maxlength="50" v-model="ruleFormEdit.alias"></el-input>
+          <el-input clearable maxlength="50" v-model.trim="ruleFormEdit.alias"></el-input>
         </el-form-item>
         <el-form-item label="手机" prop="phone">
-          <el-input clearable maxlength="50" v-model="ruleFormEdit.phone"></el-input>
+          <el-input clearable maxlength="50" v-model.trim="ruleFormEdit.phone"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input clearable maxlength="50" v-model="ruleFormEdit.email"></el-input>
+          <el-input clearable maxlength="50" v-model.trim="ruleFormEdit.email"></el-input>
         </el-form-item>
         <el-form-item label="性别" prop="gender">
           <el-radio-group v-model="ruleFormEdit.gender">
@@ -128,16 +130,20 @@
 import * as api from "api/right";
 import PageBar from "components/PageBar/index";
 import Base64 from "utils/base64";
+import { mapGetters } from "vuex";
 export default {
   name: "user",
   components: {
     PageBar
   },
+
   computed: {},
   created() {
     this.getList();
   },
-
+  computed: {
+    ...mapGetters(["rightInfoObj"])
+  },
   data() {
     var phoneCheck = (rule, value, callback) => {
       if (value === "") {
@@ -189,10 +195,10 @@ export default {
         phone: [{ required: true, validator: phoneCheck, trigger: "blur" }],
         email: [{ required: true, validator: emailCheck, trigger: "blur" }],
         gender: [{ required: true, message: "请选择性别", trigger: "change" }],
-        roleId: [{ required: true, message: "请选择角色", trigger: "change" }],
-        pdId: [
-          { required: true, message: "请选择所属供应商", trigger: "change" }
-        ]
+        roleId: [{ required: true, message: "请选择角色", trigger: "change" }]
+        // pdId: [
+        //   { required: false, message: "请选择所属供应商", trigger: "change" }
+        // ]
       },
       ruleFormEdit: {
         id: "",
@@ -215,10 +221,10 @@ export default {
         phone: [{ required: true, validator: phoneCheck, trigger: "blur" }],
         email: [{ required: true, validator: emailCheck, trigger: "blur" }],
         gender: [{ required: true, message: "请选择性别", trigger: "change" }],
-        roleId: [{ required: true, message: "请选择角色", trigger: "change" }],
-        pdId: [
-          { required: true, message: "请选择所属供应商", trigger: "change" }
-        ]
+        roleId: [{ required: true, message: "请选择角色", trigger: "change" }]
+        // pdId: [
+        //   { required: true, message: "请选择所属供应商", trigger: "change" }
+        // ]
       },
       loading: true,
       total: 0, // 分页
@@ -230,7 +236,7 @@ export default {
     };
   },
   methods: {
-    getList(pageNo = 1, limit = 10) {
+    getList(pageNo = 1, limit = this.size) {
       let query = {
         pageNo,
         limit

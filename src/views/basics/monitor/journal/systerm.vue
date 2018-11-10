@@ -37,7 +37,7 @@
         </el-table-column>
         <el-table-column label="操作" width="80">
           <template slot-scope="scope">
-            <el-button size="mini">查看</el-button>
+            <el-button size="small" type="primary">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -179,7 +179,7 @@ export default {
     handleSearch() {
       this.getList(this.current, this.size);
     },
-    getList(pageNo = 1, limit = 10) {
+    getList(pageNo = 1, limit = this.size) {
       let query = {};
       if (this.typeObj.timeValue.length !== 0) {
         query.begintime = this.typeObj.timeValue[0];

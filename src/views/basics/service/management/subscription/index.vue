@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="subscription">
     <el-table v-loading.body="loading" :data="tableData">
       <el-table-column prop="servUuid" label="UID" sortable>
       </el-table-column>
@@ -16,7 +16,7 @@
       </el-table-column>
       <el-table-column prop="servTag" label="服务分类">
         <template slot-scope="scope">
-          <el-tag size="small">{{scope.row.servTag}}</el-tag>
+          <el-tag v-for="(item, index) in servTagArr" v-if="scope.row.servTag === item.key" :key="index" size="small">{{item.value}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="status" label="状态">
@@ -26,10 +26,13 @@
           <el-tag size="small" v-if="scope.row.status === '2'" type="warning ">未通过</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" width="250">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" @click="showDetail(scope.row)">查看</el-button>
-          <el-button v-if="scope.row.status !== '0'" type="success" size="small" @click="showDialog(scope.row)">授权管理</el-button>
+          <el-button v-if="rightInfoObj['serv-subscribe']['serv-sub:review']" type="primary" size="small" @click="showDetail(scope.row)">审核</el-button>
+          <el-button v-if="rightInfoObj['serv-subscribe']['serv-sub:detail']" type="info" size="small" @click="goToServiceInfo(scope.row)">详情</el-button>
+          <template  v-if="rightInfoObj['serv-subscribe']['serv-sub:list']">
+            <el-button v-if="scope.row.status !== '0'" type="danger" size="small" @click="showDialog(scope.row)">授权管理</el-button>
+          </template>
         </template>
       </el-table-column>
     </el-table>
@@ -63,13 +66,13 @@
         <el-col :span="10">
           <el-form label-position="left" label-width="80px" style="padding: 20px;">
             <el-form-item label="秘钥">
-              <el-input disabled type="textarea" :rows="10" v-model="firstrow.token"></el-input>
+              <el-input disabled type="textarea" :rows="10" v-model.trim="firstrow.token"></el-input>
             </el-form-item>
             <el-form-item label="申请人">
               <span>{{firstrow.userName}}</span>
             </el-form-item>
             <el-form-item label="过期时间">
-              <el-date-picker :rules="[{ required: true, message: '过期时间不能为空'},]" style="width: 100%;" value-format="yyyy-MM-dd HH:mm:ss" v-model="firstrow.expiration" type="datetime" placeholder="选择过期时间" align="right" :picker-options="pickerOptions1">
+              <el-date-picker :rules="[{ required: true, message: '过期时间不能为空'},]" style="width: 100%;" value-format="yyyy-MM-dd HH:mm:ss" v-model="firstrow.expiration" type="datetime" placeholder="选择过期时间" :picker-options="pickerOptions1">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="私钥管理">
@@ -80,7 +83,7 @@
                     <el-button size="mini" type="text" @click="visible1 = false">取消</el-button>
                     <el-button type="primary" size="mini" @click="handleReset">确定</el-button>
                   </div>
-                  <el-button slot="reference" size="mini" type="danger" plain>重置私钥</el-button>
+                  <el-button v-if="rightInfoObj['serv-subscribe']['serv-authz:reset']" slot="reference" size="mini" type="danger" plain>重置私钥</el-button>
                 </el-popover>
                 &nbsp;
                 <el-popover v-if="firstrow.status === '1'" placement="bottom" width="160" v-model="visible2">
@@ -89,7 +92,7 @@
                     <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
                     <el-button type="primary" size="mini" @click="handleForbidden('0')">确定</el-button>
                   </div>
-                  <el-button slot="reference" size="mini" type="danger" plain>禁用私钥</el-button>
+                  <el-button v-if="rightInfoObj['serv-subscribe']['serv-authz:disable']" slot="reference" size="mini" type="danger" plain>禁用私钥</el-button>
                 </el-popover>
                 <el-popover v-if="firstrow.status === '0'" placement="bottom" width="160" v-model="visible3">
                   <p>确定要启用私钥吗？</p>
@@ -97,7 +100,7 @@
                     <el-button size="mini" type="text" @click="visible3 = false">取消</el-button>
                     <el-button type="primary" size="mini" @click="handleForbidden('1')">确定</el-button>
                   </div>
-                  <el-button slot="reference" size="mini" type="success" plain>启用私钥</el-button>
+                  <el-button v-if="rightInfoObj['serv-subscribe']['serv-authz:enable']" slot="reference" size="mini" type="success" plain>启用私钥</el-button>
                 </el-popover>
               </template>
             </el-form-item>
@@ -125,7 +128,7 @@
           <span>{{ruleForm.desc}}</span>
         </el-form-item>
         <el-form-item label="审核意见" prop="opinion" :rules="[{ required: ruleForm.status === '0', message: '审核意见不能为空'},]">
-          <el-input type="textarea" maxlength="1000" :disabled="ruleForm.status !== '0'" v-model="ruleForm.opinion"></el-input>
+          <el-input  :autosize="{ minRows: 2, maxRows: 6 }" type="textarea" maxlength="1000" :disabled="ruleForm.status !== '0'" v-model.trim="ruleForm.opinion"></el-input>
         </el-form-item>
         <el-form-item v-if="ruleForm.status === '0'">
           <el-button type="primary" @click="submitForm('ruleForm', '1')">同意订阅</el-button>
@@ -140,35 +143,19 @@
 <script>
 import * as api from "api/service/management";
 import PageBar from "components/PageBar/index";
+import { mapGetters } from "vuex";
 export default {
   name: "subcription",
+  computed: {
+    ...mapGetters(["servTagArr", 'rightInfoObj'])
+  },
   data() {
+    let that = this
     return {
       pickerOptions1: {
-        shortcuts: [
-          {
-            text: "今天",
-            onClick(picker) {
-              picker.$emit("pick", new Date());
-            }
-          },
-          {
-            text: "昨天",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
-              picker.$emit("pick", date);
-            }
-          },
-          {
-            text: "一周前",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", date);
-            }
-          }
-        ]
+        disabledDate(time) {
+          return time.getTime() < Date.now() || time.getTime() <= new Date(that.firstrow.timestamp).getTime();
+        }
       },
       visible1: false,
       visible2: false,
@@ -181,7 +168,7 @@ export default {
       firstrow: {
         token: "",
         userName: "",
-        time: "",
+        timestamp: "",
         status: "",
         expiration: "",
         id: ""
@@ -213,7 +200,7 @@ export default {
   },
   methods: {
     // 获取列表
-    getList(pageNo = 1, limit = 10) {
+    getList(pageNo = 1, limit = this.size) {
       api
         .getPassSubscribeList({
           pageNo,
@@ -257,6 +244,7 @@ export default {
     showDialog(row) {
       this.dialogTableVisible = true;
       this.firstrow.userName = row.userName;
+      this.firstrow.timestamp = row.timestamp;
       this.servId = row.servId;
       this.subId = row.id;
       this.appId = row.appId;
@@ -384,6 +372,13 @@ export default {
             }
           }
         });
+    },
+    goToServiceInfo(row) {
+      // 我从管理来
+      this.$router.push({
+        path: "/serviceinfo",
+        query: { type: row.servType, servId: row.servId, sub: '1', from: 'mgr' }
+      });
     }
   }
 };

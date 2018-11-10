@@ -7,15 +7,15 @@
       <el-form-item prop="username">
         <span class="svg-container username-icon">
         </span>
-        <el-input clearable :maxlength="50" name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="账号"></el-input>
+        <el-input clearable :maxlength="50" name="username" type="text" v-model.trim="loginForm.username" autoComplete="on" placeholder="账号"></el-input>
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container password-icon">
         </span>
-        <el-input clearable :maxlength="50" name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="密码"></el-input>
+        <el-input clearable :maxlength="50" name="password" type="password" @keyup.enter.native="handleLogin" v-model.trim="loginForm.password" autoComplete="on" placeholder="密码"></el-input>
       </el-form-item>
       <el-form-item prop="captcha" v-if="captchaFlag">
-        <el-input :maxlength="4" name="captcha" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.captcha"></el-input>
+        <el-input :maxlength="4" name="captcha" type="text" @keyup.enter.native="handleLogin" v-model.trim="loginForm.captcha"></el-input>
         <img @load="imgLoading = true;" ref="captchaImgBox" class="captcha-img" :src="imgSrc" alt="">
         <el-button type="text" @click="handleImg">换一张</el-button>
       </el-form-item>

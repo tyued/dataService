@@ -1,23 +1,23 @@
 <template>
   <div class="producer">
     <el-row class="row">
-      <el-button type="primary" @click="addUser">信息注册</el-button>
+      <el-button v-if="rightInfoObj['producer']['producer:registry']" type="primary" @click="addUser">信息注册</el-button>
     </el-row>
     <el-row class="row">
       <el-table v-loading="loading" :data="tableData" style="width: 100%">
-        <el-table-column  prop="id" label="ID编号" sortable>
+        <el-table-column prop="id" label="ID编号" sortable>
         </el-table-column>
-        <el-table-column  prop="code" label="企业代码">
+        <el-table-column prop="code" label="代码">
         </el-table-column>
-        <el-table-column  prop="name" label="企业名称">
+        <el-table-column prop="name" label="名称">
         </el-table-column>
-        <el-table-column  prop="addr" label="企业地址">
+        <el-table-column prop="addr" label="地址">
         </el-table-column>
-        <el-table-column  prop="trade" label="企业行业">
+        <el-table-column prop="trade" label="行业">
         </el-table-column>
-        <el-table-column  prop="contact" label="联系人姓名">
+        <el-table-column prop="contact" label="联系人姓名">
         </el-table-column>
-        <el-table-column  prop="timestamp" label="注册时间">
+        <el-table-column prop="timestamp" label="注册时间">
         </el-table-column>
         <!-- <el-table-column  prop="status" label="账号状态">
           <template slot-scope="scope">
@@ -26,10 +26,10 @@
             <el-tag size="small" v-show="scope.row.status == '2'" type="warning">锁定</el-tag>
           </template>
         </el-table-column> -->
-        <el-table-column min-width="150" label="操作">
+        <el-table-column width="150" label="操作">
           <template slot-scope="scope">
-            <el-button size="small" type="warning" @click="editItem(scope.row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="deleteItem(scope.row)" :disabled="scope.row.username === 'admin'">删除</el-button>
+            <el-button v-if="rightInfoObj['producer']['producer:edit']" size="small" type="warning" @click="editItem(scope.row)">编辑</el-button>
+            <el-button v-if="rightInfoObj['producer']['producer:del']" size="small" type="danger" @click="deleteItem(scope.row)" :disabled="scope.row.username === 'admin'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -43,20 +43,20 @@
     <!-- 添加弹层 -->
     <el-dialog title="信息注册" :visible.sync="dialogFormVisible" width="460px">
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="企业名称" prop="name">
-          <el-input clearable maxlength="100" v-model="ruleForm.name"></el-input>
+        <el-form-item label="名称" prop="name">
+          <el-input clearable maxlength="100" v-model.trim="ruleForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="企业代码" prop="code">
-          <el-input clearable maxlength="100" v-model="ruleForm.code"></el-input>
+        <el-form-item label="代码" prop="code">
+          <el-input clearable maxlength="100" v-model.trim="ruleForm.code"></el-input>
         </el-form-item>
-        <el-form-item label="企业地址" prop="addr">
-          <el-input clearable maxlength="100" v-model="ruleForm.addr"></el-input>
+        <el-form-item label="地址" prop="addr">
+          <el-input clearable maxlength="100" v-model.trim="ruleForm.addr"></el-input>
         </el-form-item>
-        <el-form-item label="企业行业" prop="trade">
-          <el-input clearable maxlength="100" v-model="ruleForm.trade"></el-input>
+        <el-form-item label="行业" prop="trade">
+          <el-input clearable maxlength="100" v-model.trim="ruleForm.trade"></el-input>
         </el-form-item>
         <el-form-item label="联系人姓名" prop="contact">
-          <el-input clearable maxlength="50" v-model="ruleForm.contact"></el-input>
+          <el-input clearable maxlength="50" v-model.trim="ruleForm.contact"></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -68,22 +68,22 @@
     <!-- /添加弹层 -->
 
     <!-- 修改弹层 -->
-    <el-dialog title="修改用户" :visible.sync="dialogFormVisibleEdit" width="460px">
+    <el-dialog title="修改数据提供商" :visible.sync="dialogFormVisibleEdit" width="460px">
       <el-form :model="ruleFormEdit" :rules="rulesEdit" ref="ruleFormEdit" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="企业名称" prop="name">
-          <el-input clearable maxlength="100" v-model="ruleFormEdit.name"></el-input>
+        <el-form-item label="名称" prop="name">
+          <el-input clearable maxlength="100" v-model.trim="ruleFormEdit.name"></el-input>
         </el-form-item>
-        <el-form-item label="企业代码" prop="code">
-          <el-input clearable maxlength="100" v-model="ruleFormEdit.code"></el-input>
+        <el-form-item label="代码" prop="code">
+          <el-input clearable maxlength="100" v-model.trim="ruleFormEdit.code"></el-input>
         </el-form-item>
-        <el-form-item label="企业地址" prop="addr">
-          <el-input clearable maxlength="100" v-model="ruleFormEdit.addr"></el-input>
+        <el-form-item label="地址" prop="addr">
+          <el-input clearable maxlength="100" v-model.trim="ruleFormEdit.addr"></el-input>
         </el-form-item>
-        <el-form-item label="企业行业" prop="trade">
-          <el-input clearable maxlength="100" v-model="ruleFormEdit.trade"></el-input>
+        <el-form-item label="行业" prop="trade">
+          <el-input clearable maxlength="100" v-model.trim="ruleFormEdit.trade"></el-input>
         </el-form-item>
         <el-form-item label="联系人姓名" prop="contact">
-          <el-input clearable maxlength="50" v-model="ruleFormEdit.contact"></el-input>
+          <el-input clearable maxlength="50" v-model.trim="ruleFormEdit.contact"></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -100,12 +100,15 @@
 import * as api from "api/right";
 import PageBar from "components/PageBar/index";
 import Base64 from "utils/base64";
+import { mapGetters } from "vuex";
 export default {
   name: "producer",
   components: {
     PageBar
   },
-  computed: {},
+  computed: {
+    ...mapGetters(["rightInfoObj"])
+  },
   created() {
     this.getList();
   },
@@ -122,10 +125,10 @@ export default {
         status: ""
       },
       rules: {
-        code: [{ required: true, message: "请输入企业代码", trigger: "blur" }],
-        name: [{ required: true, message: "请输入企业名称", trigger: "blur" }],
-        addr: [{ required: true, message: "请输入企业地址", trigger: "blur" }],
-        trade: [{ required: true, message: "请输入企业行业", trigger: "blur" }],
+        code: [{ required: true, message: "请输入代码", trigger: "blur" }],
+        name: [{ required: true, message: "请输入名称", trigger: "blur" }],
+        addr: [{ required: true, message: "请输入地址", trigger: "blur" }],
+        trade: [{ required: true, message: "请输入行业", trigger: "blur" }],
         contact: [
           { required: true, message: "请输入联系人姓名", trigger: "blur" }
         ]
@@ -140,10 +143,10 @@ export default {
         status: ""
       },
       rulesEdit: {
-        code: [{ required: true, message: "请输入企业代码", trigger: "blur" }],
-        name: [{ required: true, message: "请输入企业名称", trigger: "blur" }],
-        addr: [{ required: true, message: "请输入企业地址", trigger: "blur" }],
-        trade: [{ required: true, message: "请输入企业行业", trigger: "blur" }],
+        code: [{ required: true, message: "请输入代码", trigger: "blur" }],
+        name: [{ required: true, message: "请输入名称", trigger: "blur" }],
+        addr: [{ required: true, message: "请输入地址", trigger: "blur" }],
+        trade: [{ required: true, message: "请输入行业", trigger: "blur" }],
         contact: [
           { required: true, message: "请输入联系人姓名", trigger: "blur" }
         ]
@@ -158,7 +161,7 @@ export default {
     };
   },
   methods: {
-    getList(pageNo = 1, limit = 10) {
+    getList(pageNo = 1, limit = this.size) {
       let query = {
         pageNo,
         limit

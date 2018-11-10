@@ -5,7 +5,7 @@
       <el-tab-pane v-if="rightInfoObj['bizExcps']" label="系统异常">
         <Systerm />
       </el-tab-pane>
-      <el-tab-pane v-if="rightInfoObj['servAccess']" label="服务异常">
+      <el-tab-pane v-if="rightInfoObj['servAcces']" label="服务异常">
         <Service />
       </el-tab-pane>
       <el-tab-pane v-if="rightInfoObj['authzs']" label="登录日志">

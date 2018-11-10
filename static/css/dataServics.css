@@ -136,7 +136,7 @@ div.edui-box{ float: left;}
 .diag_tipsBox{ height: 500px; overflow: auto;}
 .ObjRgpart{ margin-left: 10px;}
 .nozz-box .el-transfer-panel{ width: 40%;}
-.nozzsetPart{ padding: 30px 0 20px;}
+.nozzsetPart{ padding: 20px 0 20px;}
 .nozzsetPart .label{font-size: 14px; color: #606266; line-height: 32px;}
 .nozzsetPart .boxrig{ text-align: right;}
 .primary{ color: #449afc; cursor: pointer; display: inline-block; margin: 0 5px;}
@@ -213,4 +213,20 @@ div.edui-box{ float: left;}
 
 .role .el-checkbox {
     margin-right: 30px;
+}
+
+.subscription .el-picker-panel__footer .el-button--text {
+    display: none !important;
+}
+
+.iomanagement .el-radio+.el-radio {
+    margin-left: 10px;
+}
+
+.iomanagement .el-transfer-panel {
+    width: 40%;
+}
+
+.edui-default .edui-colorpicker-nocolor {
+    box-sizing: content-box;
 }

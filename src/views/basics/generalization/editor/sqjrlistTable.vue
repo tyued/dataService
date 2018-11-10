@@ -1,5 +1,5 @@
 <template>
-    <!-- <el-table  :data="tableData" style="width: 100%" height="333">
+  <!-- <el-table  :data="tableData" style="width: 100%" height="333">
         <el-table-column prop="name" label="服务名称" width="120"></el-table-column>
         <el-table-column prop="producer" label="服务提供方" width="120"></el-table-column>
         <el-table-column label="数据分类" width="120">
@@ -17,7 +17,7 @@
         </el-table-column>
     
     </el-table> -->
-<el-col :span="24" class="review-container">
+  <el-col :span="24" class="review-container">
     <el-table v-loading.body="listLoading" :data="tableData">
       <el-table-column prop="servUuid" label="UID" sortable></el-table-column>
       <el-table-column prop="servName" label="服务名称" sortable></el-table-column>
@@ -32,7 +32,7 @@
       <el-table-column prop="apiVer" label="发布版本" sortable></el-table-column>
       <el-table-column prop="servTag" label="服务分类" sortable>
         <template slot-scope="scope">
-          <el-tag size="small">{{scope.row.servTag}}</el-tag>
+          <el-tag v-for="(item, index) in servTagArr" v-if="scope.row.servTag == item.key" :key="index" size="small">{{item.value}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="状态" sortable>
@@ -40,7 +40,7 @@
           <el-tag type="success" size="small">{{scope.row.apiStatus==1?'在线':(scope.row.apiStatus==2?'暂停':'下线')}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="150">
+      <el-table-column label="操作" width="80">
         <template slot-scope="scope">
           <el-button size="small" type="primary" @click="openLayerPage(scope.row)">查看</el-button>
           <!--<el-button size="small" type="primary" @click="openLayerPage(scope.row.servId,scope.row.servType,scope.row.apiId,scope.row.servTag,scope.row._servType)">查看</el-button>-->
@@ -59,15 +59,20 @@
           <ol>
             <li>服务名称：{{ ckRow._servType }}</li>
             <li>服务分类：
-              <el-tag size="small">{{ckRow.servTag}}</el-tag>
+              <el-tag v-for="(item, index) in servTagArr" v-if="ckRow.servTag == item.key" :key="index" size="small">{{item.value}}</el-tag>
             </li>
             <li>接口中文名称：{{ contentData.name }}</li>
-            <li>接口地址：{{ contentData.url }}</li>
-            <li>返回格式：
-              <el-tag size="small" type="success">{{ contentData.resp }}</el-tag>
+            <li v-if="type != '3'">原始接口地址：{{ contentData.url }}</li>
+            <li v-if="type != '3'">返回格式：
+              <el-tag v-if="type == '2'" size="small" type="success">XML</el-tag>
+              <el-tag v-else size="small" type="success">{{ contentData.resp }}</el-tag>
             </li>
-            <li>请求方式：
+            <li v-if="type == '2'">请求方式：
               <el-tag size="small">{{ contentData.method }}</el-tag>
+            </li>
+            <li v-if="type == '3'">返回内容：
+              <span v-if="contentData.rtType == '0'">受影响记录数</span>
+              <span v-if="contentData.rtType == '1'">操作状态</span>
             </li>
             <li>请求示例：{{expUrl}}</li>
             <li>接口备注：<span v-html="contentData.intro"></span></li>
@@ -108,7 +113,8 @@
           </el-tabs>
         </el-col>
         <el-col :span="12" class="right-box">
-          <el-button type="primary">{{contentData.resp}}</el-button>
+          <el-button v-if="type == '2'" type="primary">XML</el-button>
+          <el-button v-else type="primary">{{contentData.resp}}</el-button>
           <h3>返回示例</h3>
           <pre>{{ contentData.example }}</pre>
         </el-col>
@@ -144,7 +150,7 @@
       </el-dialog>
       <!-- 驳回弹出层 -->
       <el-dialog class="review-complete-layer" title="驳回申请" width="400px" :visible.sync="innerAnotherVisible" append-to-body>
-        <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="form.opinion"></el-input>
+        <el-input type="textarea"  :autosize="{ minRows: 2, maxRows: 6 }" placeholder="请输入内容" v-model.trim="form.opinion"></el-input>
 
         <!-- <VueUEditor :ueditorConfig='editorConfig' @ready="editorReady"></VueUEditor> -->
 
@@ -171,13 +177,13 @@
 //         return {
 //             tableData:[],
 //             servTypeList:[],
-            
+
 //         }
 //     },
 //     created(){
 //         this.getBaseData()
 //     },
-//     mounted(){        
+//     mounted(){
 //         this.init()
 
 //     },
@@ -187,18 +193,18 @@
 //             var query = {group:'servType'}
 //             dicty.getBaseData(query).then(response => {
 //                 this.servTypeList = response.data
-//             });         
-            
+//             });
+
 //         },
 //         // 最近10条服务发布申请记录
-//         init(){          
+//         init(){
 //             api.pubTop10().then(response => {
 //                 this.tableData = response.data
 //                 var that = this;
 //                 this.tableData.forEach(function(item,index){
 //                     item.tagname = '';
 //                     that.servTypeList.forEach(function(obj,ind){
-//                         if(item.tag == obj.key){                          
+//                         if(item.tag == obj.key){
 //                             item.tagname = obj.value
 //                         }
 //                     })
@@ -208,22 +214,24 @@
 //         showDetail(id) {
 //             api.showServiceDetail({
 //                 subId: id
-//             }).then((res) => {  
+//             }).then((res) => {
 //                 console.log(res, 'showServiceDetail')
 //             })
 //         }
 //     },
 // }
 
-
-
 import * as api from "api/service/management";
 import * as dicty from "api/dictionary";
 import VueUEditor from "vue-ueditor";
+import { mapGetters } from "vuex";
 export default {
   name: "checked",
   components: {
     VueUEditor
+  },
+  computed: {
+    ...mapGetters(["servTagArr"])
   },
   data() {
     return {
@@ -234,19 +242,24 @@ export default {
             "bold",
             "italic",
             "underline",
+            "forecolor",
             "|",
             "justifyleft",
             "justifycenter",
             "justifyright",
             "justifyjustify",
-            "|"
+            "|",
+            "link",
+            "unlink",
+            "removeformat",
+            "formatmatch",
           ]
         ]
       },
       diaData: {},
       commandMsg: "选择适配器",
       selectState: false,
-      listLoading: true,
+      listLoading: false,
       isActiveBtn1: true,
       isActiveBtn2: false,
       currentPage: 1,
@@ -260,6 +273,7 @@ export default {
         pubStatus: "0", // 0:待审核|1:审核通过|2:审核不通过
         sortOrder: "desc"
       },
+      type: "",
       total: null,
       tableData: [],
       requestData: [], // 弹出层表格数据
@@ -281,6 +295,9 @@ export default {
   created() {
     this.getBaseData();
     this.init();
+  },
+  mounted() {
+
   },
   methods: {
     init() {
@@ -314,6 +331,7 @@ export default {
         if (status === 200 && statusText === "OK") {
           this.listLoading = false;
           data.rows.map(item => {
+            item.apiVer = "v" + item.apiVer;
             switch (item.servType) {
               case "1":
                 item._servType = "HTTP API";
@@ -334,6 +352,7 @@ export default {
       });
     },
     openLayerPage(row) {
+      this.type = row.servType;
       this.ckRow = row;
       this.outerVisible = true;
       this.diaData = {
@@ -343,29 +362,38 @@ export default {
       };
       api.getApiParamForms(this.diaData).then(res => {
         const { status, statusText, data } = res;
+        data.apiVer = "v" + data.apiVer;
+        switch (data.servType) {
+          case "1":
+            data._servType = "HTTP API";
+            break;
+          case "2":
+            data._servType = "WebService API";
+            break;
+          case "3":
+            data._servType = "数据源 API";
+            break;
+        }
         this.contentData = data;
 
         var uuid = row.servUuid ? row.servUuid : "";
-        var reg = new RegExp("\\.", "g");
-        var apiVer = row.apiVer.replace(reg, "_");
         if (row.servType == 1) {
           //soap---http
-          this.expUrl =
-            this.Settings + "/rest/" + uuid + "/" + data.ename + "/V" + apiVer;
+          this.expUrl = `${this.Settings}/http/${uuid}/v${data.version}${
+            data.path ? "/" + data.path : ""
+          }`;
         }
         if (row.servType == 2) {
           //webservice----soap
-          this.expUrl =
-            this.Settings + "/soap/" + uuid + "/" + data.method + "_V" + apiVer;
+          this.expUrl = `${this.Settings}/http/${uuid}/v${data.method}${
+            data.version ? "/" + data.version : ""
+          }`;
         }
         if (row.servType == 3) {
-          //数据源-----rest
-          this.expUrl =
-            this.Settings + "/rest/" + uuid + "/" + data.ename + "/V" + apiVer;
-        }
-        if (row.servType == 4) {
-          //第三方
-          this.expUrl = this.Settings + "/rest/" + data.ename;
+          //数据源-----dataset
+          this.expUrl = `${this.Settings}/http/${uuid}/v${data.version}${
+            data.path ? "/" + data.path : ""
+          }`;
         }
       });
     },
@@ -443,7 +471,7 @@ export default {
             this.innerAnotherVisible = false;
             this.listQuery.pageNo = "1";
             this.getReviewList();
-            this.$store.dispatch('getNoticeNumber')
+            this.$store.dispatch("getNoticeNumber");
           } else {
             this.$notify({
               title: "失败",
@@ -459,12 +487,10 @@ export default {
     }
   }
 };
-
-
 </script>
 
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 .el-tabs--border-card {
   margin-top: 10px;
 }
@@ -498,18 +524,13 @@ export default {
   .el-dialog {
     overflow: hidden;
   }
-  .el-dialog__header {
-    // display: none;
-  }
   .el-dialog__body {
     padding: 10px 20px 30px;
   }
-  height: auto;
   .right-box {
+    overflow: auto;
     padding: 20px;
-
-    // margin-bottom: -20000px;
-    // padding-bottom: 20000px;
+    max-height: 900px;
     h3 {
       padding: 20px 0;
     }
@@ -518,10 +539,9 @@ export default {
     background-color: #e3e6ec;
   }
   .left-box {
+    overflow: auto;
     padding: 20px;
-
-    // margin-bottom: -20000px;
-    // padding-bottom: 20000px;
+    max-height: 900px;
     h2 {
       padding-bottom: 20px;
       text-align: center;

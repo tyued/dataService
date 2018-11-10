@@ -1,14 +1,14 @@
 <template>
   <div class="right">
-    <el-tabs v-model="activeName">
+    <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane v-if="rightInfoObj['user']" label="用户管理" name="1">
-        <User />
+        <User ref="user" />
       </el-tab-pane>
       <el-tab-pane v-if="rightInfoObj['role']" label="角色管理" name="2">
-        <Role />
+        <Role ref="role" />
       </el-tab-pane>
       <el-tab-pane v-if="rightInfoObj['producer']" label="数据提供商" name="3">
-        <Producer />
+        <Producer ref="pro" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -34,6 +34,22 @@ export default {
       activeName: "1"
     };
   },
-  methods: {}
+  methods: {
+    handleClick(tab, event) {
+      const { index } = tab;
+      // 刷新数据
+      switch (index) {
+        case "1":
+          this.$refs.user.getList();
+          break;
+        case "2":
+          this.$refs.role.getList();
+          break;
+        case "3":
+          this.$refs.pro.getList();
+          break;
+      }
+    }
+  }
 };
 </script>

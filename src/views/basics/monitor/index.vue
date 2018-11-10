@@ -1,13 +1,13 @@
 <template>
   <div class="monitor" id="monitor">
-    <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tabs v-model="activeName">
       <el-tab-pane v-if="rightInfoObj['sys-monitor']" label="系统监控" name="first">
         <Systerm />
       </el-tab-pane>
       <el-tab-pane v-if="rightInfoObj['serv-monitor']" label="服务监控" name="second">
         <Service />
       </el-tab-pane>
-      <el-tab-pane v-if="rightInfoObj['bizLogs']" label="系统日志" name="third">
+      <el-tab-pane v-if="rightInfoObj['sys-logs']" label="系统日志" name="third">
         <Journal />
       </el-tab-pane>
     </el-tabs>
@@ -29,14 +29,15 @@ export default {
   computed: {
     ...mapGetters(["rightInfoObj"])
   },
+  created() {
+    if (this.$route.params.activeName) {
+      this.activeName = this.$route.params.activeName;
+    }
+  },
   data() {
     return {
       activeName: "first"
     };
-  },
-  methods: {
-    handleClick(tab) {
-    }
   }
 };
 </script>

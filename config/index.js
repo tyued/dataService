@@ -14,6 +14,8 @@ module.exports = {
     proxyTable: {
       '/dsb':{
         // target: 'http://47.96.114.14:8083/dsb',
+        // target: 'localhost:8083',
+        // target: 'http://192.168.0.111:8083',
         target: 'http://vincent1003.oicp.net:12673',
         changeOrigin: true,
         pathRewrite: {
@@ -65,7 +67,7 @@ module.exports = {
     },
 
     // Various Dev Server settings
-    host: '0.0.0.0', // can be overwritten by process.env.HOST
+    host: 'localhost', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

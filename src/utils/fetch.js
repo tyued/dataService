@@ -6,6 +6,7 @@ import { Message, MessageBox } from 'element-ui';
 const service = axios.create({
   //baseURL: process.env.BASE_API, // api的base_url
   // baseURL: 'http://vincent1003.oicp.net:12673',
+  // baseURL: 'localhost:8083',
   // timeout: 20000 // 请求超时时间
 });
 
@@ -42,11 +43,14 @@ service.interceptors.response.use(function (res) {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          store.dispatch('logOut')
-            .then(() => {
-              location.reload(); // 为了重新实例化vue-router对象 避免bug
-              return 
-            })
+          store.commit('LOG_OUT')
+          location.reload(); // 为了重新实例化vue-router对象 避免bug
+          return 
+          // store.dispatch('logOut')
+          //   .then(() => {
+          //     location.reload(); // 为了重新实例化vue-router对象 避免bug
+          //     return 
+          //   })
         }).catch(() => {
           store.commit('SET_ISOUT', false)
         })

@@ -69,7 +69,7 @@
                 <el-card class="box-card">
                     <div slot="header" class="box-card-header">
                         最新服务异常
-                        <!-- <span class="more">更多</span> -->
+                        <span class="more" @click="goToServiceMonitor">更多</span>
                     </div>
                     <ZxfwycTable></ZxfwycTable>
                 </el-card>
@@ -87,7 +87,7 @@
             <el-col :span="24   ">
                 <el-card class="box-card pb20">
                     <div slot="header" class="box-card-header">
-                        申请接入列表
+                        最新发布
                         <!-- <span class="more">更多</span> -->
                     </div>
                     <SqjrlistTable></SqjrlistTable>
@@ -132,6 +132,15 @@ export default {
       api.survey().then(response => {
         this.listData = response.data;
       });
+    },
+    goToServiceMonitor() {
+        this.$store.commit('SET_SIDEBAR', '3')
+        this.$router.push({
+            name: 'main',
+            params: {
+                activeName: 'second'
+            }
+        })
     }
   }
 };
