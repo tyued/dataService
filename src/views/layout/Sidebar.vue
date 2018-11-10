@@ -1,6 +1,10 @@
 <template>
   <el-menu :default-active="activePath" @select="handleClick" class="el-menu-vertical-demo">
-    <el-menu-item index="1">
+    <el-menu-item v-if="rightInfoObj['survey-customer']" index="0">
+      <i class="menuico menu_gl"></i>
+      <span slot="title">概览</span>
+    </el-menu-item>
+    <el-menu-item v-if="rightInfoObj['survey-admin']" index="1">
       <i class="menuico menu_gl"></i>
       <span slot="title">概览</span>
     </el-menu-item>
@@ -37,6 +41,9 @@ export default {
   created() {
     let s = this.$route.path;
     switch (this.$route.path.slice(0, 3)) {
+      case "/cu":
+        s = '0'
+        break;
       case "/ge":
         s = '1'
         break;
@@ -60,8 +67,11 @@ export default {
     handleClick(index, indexPath) {
       this.$store.commit("SET_SIDEBAR", index);
       switch (index) {
+        case "0":
+          this.$router.push("/customer");
+          break;
         case "1":
-          this.$router.push("/");
+          this.$router.push("/generalization");
           break;
         case "2":
           this.$router.push("/service");

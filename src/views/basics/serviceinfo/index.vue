@@ -36,7 +36,7 @@
     </el-row>
     <el-row :gutter="12">
       <el-col :span="14">
-        <el-card shadow="always" class="card-item" :body-style="{'height': '392px'}">
+        <el-card shadow="always" class="card-item-intro" :body-style="{'height': '392px'}">
           <h5>服务简介</h5>
           <section v-html="infoData.detail"></section>
         </el-card>
@@ -1054,6 +1054,16 @@ export default {
     i {
       color: #50a1fc;
     }
+  }
+}
+
+.card-item-intro {
+  h5 {
+    height: 52px;
+  }
+  section {
+    overflow: auto;
+    height: 300px;
   }
 }
 </style>

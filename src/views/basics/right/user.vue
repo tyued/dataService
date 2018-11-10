@@ -87,7 +87,7 @@
       <el-form :model="ruleFormEdit" :rules="rulesEdit" ref="ruleFormEdit" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名称" prop="username">
           <el-input disabled clearable maxlength="50" v-model.trim="ruleFormEdit.username"></el-input>
-        </el-form-item> v-if="rightInfoObj['serv-ds']['serv-ds:new']"
+        </el-form-item>
         <el-form-item label="用户密码" prop="password">
           <el-input clearable maxlength="50" v-model.trim="ruleFormEdit.password"></el-input>
         </el-form-item>

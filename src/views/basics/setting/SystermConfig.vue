@@ -16,7 +16,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button v-if="rightInfoObj['sets']['sets:reset']" type="primary" @click="submitFormEdit('ruleFormEdit')">确定提交</el-button>
+          <el-button v-if="rightInfoObj['setting']['setting:reset']" type="primary" @click="submitFormEdit('ruleFormEdit')">确定提交</el-button>
           <el-button @click="resetForm('ruleFormEdit')">重置</el-button>
         </el-form-item>
       </el-form>

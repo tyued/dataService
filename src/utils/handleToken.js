@@ -26,6 +26,5 @@ export const setToken = (token) => {
 }
 
 export const removeToken = () => {
-  // window.localStorage.removeItem('database_token_obj')
   Cookies.remove(TokenKey)
 }

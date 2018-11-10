@@ -9,10 +9,11 @@ router.beforeEach((to, from, next) => {
     next()
   } else {
     if (store.getters.token) {
-      if (!store.getters.isDone) { // 判断当前用户是否已拉取完user_info信息      // 服务类型到处要调用，真的服了
-        Promise.all([store.dispatch('getUserInfo'), store.dispatch('getRightObj'), store.dispatch("setServTagArr")]).then((resArr) => {
+      if (!store.getters.isDone) { // 判断当前用户是否已拉取完user_info信息     
+        Promise.all([store.dispatch('getUserInfo'), store.dispatch("setServTagArr")]).then((resArr) => {
 
-          const rightInfoObj = store.getters.rightInfoObj;
+          // const rightInfoObj = store.getters.rightInfoObj;
+          const rightInfoObj = JSON.parse(window.sessionStorage.getItem('rightInfoObj'));
 
           store.dispatch('GenerateRoutes', {
             rightInfoObj

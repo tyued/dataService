@@ -174,7 +174,7 @@ export default {
       switch (command) {
         case "e":
           this.$store.commit('LOG_OUT')
-          location.reload()
+          window.location.reload()
           // this.$store.dispatch("logOut").then(() => {
           //   // this.$router.push("/login");
           //   location.reload()

@@ -42,7 +42,7 @@
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
         <el-form-item label="基础数据分组" prop="group">
           <!-- <el-input clearable maxlength="50" v-model="ruleForm.group"></el-input> -->
-          <el-autocomplete clearable maxlength="50" class="inline-input" v-model.trim="ruleForm.group" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect"></el-autocomplete>
+          <el-autocomplete clearable maxlength="50" class="inline-input" v-model.trim="ruleForm.group" :fetch-suggestions="querySearch" placeholder="请输入内容"></el-autocomplete>
         </el-form-item>
         <el-form-item label="基础数据标签" prop="label">
           <el-input clearable maxlength="50" v-model.trim="ruleForm.label"></el-input>

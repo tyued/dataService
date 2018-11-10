@@ -1,7 +1,7 @@
 <template>
   <div class="setting">
     <el-tabs v-model="activeName">
-      <el-tab-pane v-if="rightInfoObj['sets']" label="系统参数" name="1">
+      <el-tab-pane v-if="rightInfoObj['setting']" label="系统参数" name="1">
         <SystermConfig />
       </el-tab-pane>
       <el-tab-pane v-if="rightInfoObj['basedata']" label="基础数据" name="2">
@@ -22,16 +22,19 @@ export default {
     SystermConfig,
   },
   computed: {
-    ...mapGetters(["rightInfoObj"])
+    ...mapGetters(["rightInfoObj"]),
+    activeName() {
+      let n = 3
+      if (this.rightInfoObj['sets']) {
+        n--
+      }
+      if (this.rightInfoObj['basedata']) {
+        n--
+      }
+      return n + ''
+    }
+    
   },
-  created() {
-
-  },
-  data() {
-    return {
-      activeName: "1"
-    };
-  }
 };
 </script>
 

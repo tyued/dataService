@@ -1,11 +1,12 @@
 import * as api from 'api/login'
-import { getToken, setToken, removeToken } from 'utils/handleToken'
+import { getToken, setToken, removeToken} from 'utils/handleToken'
+
 const login = {
   state: {
     token: getToken(),
     noticeNumber: 0,
     userInfoObj: {},
-    rightInfoObj: {},
+    rightInfoObj: JSON.parse(window.sessionStorage.getItem('rightInfoObj')) || {},
     isOut: false,
     activePath: '' // sidebar 高亮
   },
@@ -31,6 +32,7 @@ const login = {
     // 登出
     LOG_OUT: () => {
       removeToken()
+      window.sessionStorage.removeItem('rightInfoObj')
     }
   },
   actions: {

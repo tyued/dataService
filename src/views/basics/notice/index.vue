@@ -8,7 +8,7 @@
     <el-card v-else class="box-card">
       <div slot="header" class="clearfix">
         <span>通知中心</span>
-        <el-button @click="handleDeleteAll" style="float: right; padding: 3px 0;margin-left:10px;" type="text">全部删除</el-button>
+        <el-button @click="handleDeleteAll" style="float: right; padding: 3px 0;margin-left:10px;" type="text">批量删除</el-button>
         <el-button @click="handleReadAll" style="float: right; padding: 3px 0;" type="text">全部已读</el-button>
       </div>
       <!-- <el-collapse @change="handleTabClick" accordion>
@@ -61,7 +61,7 @@ export default {
   },
   computed: {
     ids() {
-      return this.multipleSelection.map(item => item.id)
+      return this.multipleSelection.map(item => item.id);
     }
   },
   data() {
@@ -71,7 +71,7 @@ export default {
       multipleSelection: [],
       total: 0,
       current: 0,
-      size: 10, // 缓存一下每页大小
+      size: 10 // 缓存一下每页大小
     };
   },
   methods: {
@@ -147,24 +147,32 @@ export default {
     },
     handleDeleteAll() {
       if (this.ids.length === 0) {
-        return 
+        return;
       }
-      api.deleteNotice({
-        ids: this.ids.join(',')
-      }).then(res => {
-        const { status, data } = res;
-        if (status === 200 && data) {
-          if (data.status === "success") {
-            this.getList(this.current, this.size);
-            this.changeNoticeNumber();
-            this.$message({
-              type: "success",
-              message: data.message
-            });
-          } else {
-            this.$message.error(data.message);
-          }
-        }
+      this.$confirm(`确定要删除${this.ids.length}条通知吗?`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        api
+          .deleteNotice({
+            ids: this.ids.join(",")
+          })
+          .then(res => {
+            const { status, data } = res;
+            if (status === 200 && data) {
+              if (data.status === "success") {
+                this.getList(this.current, this.size);
+                this.changeNoticeNumber();
+                this.$message({
+                  type: "success",
+                  message: data.message
+                });
+              } else {
+                this.$message.error(data.message);
+              }
+            }
+          });
       });
     }
   }
@@ -185,13 +193,10 @@ export default {
 .already {
   color: #9a9a9a;
 }
-.title {
-  position: relative;
-  padding-left: 12px;
-  i {
+i {
     position: absolute;
     left: 0;
-    top: 0;
+    top: 13px;
     // top: 50%;
     // transform: translateY(-50%);
     // -webkit-transform: translateY(-50%);
@@ -200,8 +205,6 @@ export default {
     background-color: #f56c6c;
     border-radius: 50%;
   }
-}
-
 .demo-table-expand {
   font-size: 0;
 }

@@ -9,7 +9,7 @@ import Layout from '../views/layout/Layout';
 export const constantRouterMap = [{
   path: '/',
   component: Layout,
-  redirect: 'generalization',
+  // redirect: 'generalization',
   name: '/',
   children: [{
     path: '/notice',
@@ -56,17 +56,21 @@ export default new Router({
 export const asyncRouterMap = [{
   path: '/',
   component: Layout,
-  redirect: 'generalization',
+  // redirect: 'generalization',
   name: '/',
-  meta: {
-    right: ['serv-home']
-  },
   children: [{
-    path: 'generalization', // 概览模块
+    path: 'generalization', // 概览模块-管理员
     name: 'generalization', // 概览模块
     component: _import('basics/generalization/index'),
     meta: {
-      right: ['serv-home']
+      right: ['survey-admin']
+    }
+  },{
+    path: 'customer', // 概览模块-用户
+    name: 'customer', // 概览模块
+    component: _import('basics/customer/index'),
+    meta: {
+      right: ['survey-customer']
     }
   }, {
     name: 'right', // 权限模块

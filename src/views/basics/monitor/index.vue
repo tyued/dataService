@@ -27,18 +27,26 @@ export default {
     Journal
   },
   computed: {
-    ...mapGetters(["rightInfoObj"])
+    ...mapGetters(["rightInfoObj"]),
+    activeName() {
+      let n = 4
+      if (this.rightInfoObj['sys-monitor']) {
+        n--
+      }
+      if (this.rightInfoObj['serv-monitor']) {
+        n--
+      }
+      if (this.rightInfoObj['sys-logs']) {
+        n--
+      }
+      return n + ''
+    }
   },
   created() {
     if (this.$route.params.activeName) {
       this.activeName = this.$route.params.activeName;
     }
   },
-  data() {
-    return {
-      activeName: "first"
-    };
-  }
 };
 </script>
 

@@ -140,11 +140,17 @@ export default {
             })
             .then(data => {
               this.loading = false;
-
               const { message, status, captcha } = data;
               switch (status) {
                 case "success":
-                  this.$router.push('/');
+                  this.$store.dispatch('getRightObj').then((data) => {
+                    window.sessionStorage.setItem('rightInfoObj', JSON.stringify(data))
+                    if (data['survey-admin']) {
+                      this.$router.push('/generalization');
+                    } else {
+                      this.$router.push('/customer');
+                    }
+                  })
                   break;
 
                 default:

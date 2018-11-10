@@ -46,7 +46,7 @@
       <el-table-column label="操作" width="370">
         <template slot-scope="scope">
           <template v-if="rightInfoObj['serv-api']['serv-api:restore']">
-            <el-button v-if="rightInfoObj['serv-api']['serv-api:restore'] && scope.row.apiStatus=='2'" type="success" size="small" @click="openChange(scope.row)">启用</el-button>
+              <el-button v-if="scope.row.apiStatus=='2'" type="success" size="small" @click="openChange(scope.row)">启用</el-button>
           </template>
           <template v-if="rightInfoObj['serv-api']['serv-api:pause']">
               <el-button v-if="scope.row.apiStatus=='1'" type="danger" size="small" @click="handleForbidden(scope.row)">禁用</el-button>
@@ -64,7 +64,7 @@
               <el-button v-if="scope.row.apiStatus=='3'" type="success" size="small" @click="handleOn(scope.row)">上线</el-button>
           </template>
           <template v-if="rightInfoObj['serv-api']['serv-api:destroy']">
-              <el-button v-if="scope.row.apiStatus=='1' || scope.row.apiStatus=='2'" type="danger" size="small" @click="handleOf(scope.row)">下线</el-button>
+              <el-button v-if="scope.row.apiStatus=='1' || scope.row.apiStatus=='2'" type="danger" size="small" @click="handleOff(scope.row)">下线</el-button>
           </template>
         </template>
       </el-table-column>

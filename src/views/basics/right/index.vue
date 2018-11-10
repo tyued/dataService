@@ -27,12 +27,20 @@ export default {
     User
   },
   computed: {
-    ...mapGetters(["rightInfoObj"])
-  },
-  data() {
-    return {
-      activeName: "1"
-    };
+    ...mapGetters(["rightInfoObj"]),
+    activeName() {
+      let n = 4
+      if (this.rightInfoObj['user']) {
+        n--
+      }
+      if (this.rightInfoObj['role']) {
+        n--
+      }
+      if (this.rightInfoObj['producer']) {
+        n--
+      }
+      return n + ''
+    }
   },
   methods: {
     handleClick(tab, event) {

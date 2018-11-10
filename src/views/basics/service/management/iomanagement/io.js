@@ -523,7 +523,7 @@ export default {
             .runService({
               servId: row.servId,
               apiId: row.apiId,
-              ver: row.apiVer
+              ver: row.apiVer.slice(1)
             })
             .then(res => {
               const {
@@ -561,7 +561,7 @@ export default {
             .forbiddenService({
               servId: row.servId,
               apiId: row.apiId,
-              ver: row.apiVer
+              ver: row.apiVer.slice(1)
             })
             .then(res => {
               const {
@@ -599,7 +599,7 @@ export default {
             .deployService({
               servId: row.servId,
               apiId: row.apiId,
-              ver: row.apiVer
+              ver: row.apiVer.slice(1)
             })
             .then(res => {
               const {
@@ -637,7 +637,7 @@ export default {
             .destroyService({
               servId: row.servId,
               apiId: row.apiId,
-              ver: row.apiVer
+              ver: row.apiVer.slice(1)
             })
             .then(res => {
               const {
