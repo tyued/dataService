@@ -60,7 +60,7 @@
                     <el-form-item :rules="[{ required: true, message: '请输入原始命名空间', trigger: 'blur' },{ max: 200, min: 3, message: '长度3-200个字符', trigger: 'blur' }]" label="原始命名空间" v-if="selSerType==2" prop="namespace">
                       <el-input v-model.trim="item.namespace" placeholder="3-200个字符"></el-input>
                     </el-form-item>
-                    <el-form-item  v-if="selSerType == 2" :rules="[{ required: true, message: '请输入原始方法名称', trigger: 'blur' },{ max: 200, min: 3, message: '长度3-200个字符', trigger: 'blur' }]" label="原始方法名称" prop="method">
+                    <el-form-item v-if="selSerType == 2" :rules="[{ required: true, message: '请输入原始方法名称', trigger: 'blur' },{ max: 200, min: 3, message: '长度3-200个字符', trigger: 'blur' }]" label="原始方法名称" prop="method">
                       <el-input v-model.trim="item.method" placeholder="3-200个字符"></el-input>
                     </el-form-item>
                     <el-form-item required label="外部访问地址" v-if="selSerType!=4">
@@ -95,14 +95,14 @@
                       </el-radio-group>
                     </el-form-item>
                     <el-form-item :rules="[{ required: true, message: '请输入接口返回示例', trigger: 'blur' }]" label="接口返回示例" v-if="item.resp!='XML'" prop="example">
-                      <el-input type="textarea"  :rows="11" placeholder="请输入字符" v-model.trim="item.example"></el-input>
+                      <el-input type="textarea" :rows="11" placeholder="请输入字符" v-model.trim="item.example"></el-input>
                     </el-form-item>
                     <el-form-item :rules="[{ required: true, message: '请选择接口返回示例', trigger: 'change' }]" label="接口返回示例" v-if="item.resp=='XML'" prop="selexample">
                       <el-radio-group v-model="item.selexample" @change="changeExample">
                         <el-radio label="1">Soap 1.1</el-radio>
                         <el-radio label="2">Soap 1.2</el-radio>
                       </el-radio-group>
-                      <el-input type="textarea"  :autosize="true" placeholder="请输入字符" v-model.trim="item.example"></el-input>
+                      <el-input type="textarea" :autosize="true" placeholder="请输入字符" v-model.trim="item.example"></el-input>
                     </el-form-item>
                     <el-form-item :rules="[{ required: true, message: '请选择数据源', trigger: 'change' }]" label="选择数据源" v-if="selSerType==3" class="dbType_sel" prop="dsId">
                       <el-select v-model="item.dsId" placeholder="请选择" clearable @change="selDataSource(item)">
@@ -202,7 +202,7 @@
                               <i class="el-icon-plus" @click="addTabNozz('nozz')"></i>
                             </div>
                           </div>
-                          <el-form-item label="返回内容" required>
+                          <el-form-item prop="rtType" label="返回内容" :rules="[{ required: true, message: '请选择返回内容', trigger: 'change' }]">
                             <el-radio-group v-model="item.rtType">
                               <el-radio label="0">受影响记录数</el-radio>
                               <el-radio label="1">操作状态</el-radio>
@@ -211,10 +211,10 @@
                         </div>
                       </el-tab-pane>
                     </el-tabs>
-                    <el-form-item required class="topFormBox" label='接口简介'>
+                    <el-form-item class="topFormBox" label='接口简介'>
                       <VueUEditor :ueditorConfig='editorConfig' @ready="editorReady"></VueUEditor>
                     </el-form-item>
-                    <el-form-item required class="topFormBox" label='服务分类'>
+                    <el-form-item class="topFormBox" label='服务分类'>
                       <el-tabs type="border-card">
                         <el-tab-pane label="输入参数">
                           <el-table :data="item.params" style="width: 100%">
@@ -329,7 +329,7 @@
         </el-form>
       </div>
       <div class="stepBtnr">
-        <el-button @click='prev' v-if='active!=3'>取 消</el-button>
+        <el-button @click='prev' v-if='active!=3 && active!=0'>上一步</el-button>
         <el-button type="primary" :disabled="nextActive" @click='next' v-if="active!=3">{{active==2?'保存':'下一步'}}</el-button>
         <el-button type="primary" :disabled="sureRegActive" @click='sureReg' v-if="active==3">提交审核</el-button>
       </div>
@@ -423,8 +423,8 @@ export default {
       OptTypes: [], //查询数据源操作类型信息
       textMap: {
         //判断弹层
-        useragree: "用户许可协议",
-        nazzagree: "接口须知"
+        agreeuser: "用户许可协议",
+        agreenazz: "接口须知"
       },
       dialogVisible_user: false, //用户许可协议
       dialogStatus: "",
@@ -463,7 +463,7 @@ export default {
           selObjType: 1,
           target: "",
           column: [],
-          rtType: 0,
+          rtType: '0',
           intro: "",
           selexample: "1",
           example: "",
@@ -533,21 +533,21 @@ export default {
             "link",
             "unlink",
             "removeformat",
-            "formatmatch",
+            "formatmatch"
           ]
-        //   [
-        //   'fullscreen', 'source', '|', 'undo', 'redo', '|',
-        //   'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
-        //   'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
-        //   'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
-        //   'directionalityltr', 'directionalityrtl', 'indent', '|',
-        //   'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
-        //   'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
-        //   'simpleupload', 'insertimage', 'emotion', 'scrawl', 'insertvid eo', 'music', 'attachment', 'map', 'gmap', 'insertframe', 'insertcode', 'webapp', 'pagebreak', 'template', 'background', '|',
-        //   'horizontal', 'date', 'time', 'spechars', 'snapscreen', 'wordimage', '|',
-        //   'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
-        //   'print', 'preview', 'searchreplace', 'drafts', 'help'
-        // ]
+          //   [
+          //   'fullscreen', 'source', '|', 'undo', 'redo', '|',
+          //   'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
+          //   'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
+          //   'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
+          //   'directionalityltr', 'directionalityrtl', 'indent', '|',
+          //   'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
+          //   'link', 'unlink', 'anchor', '|', 'imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
+          //   'simpleupload', 'insertimage', 'emotion', 'scrawl', 'insertvid eo', 'music', 'attachment', 'map', 'gmap', 'insertframe', 'insertcode', 'webapp', 'pagebreak', 'template', 'background', '|',
+          //   'horizontal', 'date', 'time', 'spechars', 'snapscreen', 'wordimage', '|',
+          //   'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
+          //   'print', 'preview', 'searchreplace', 'drafts', 'help'
+          // ]
         ]
       },
       datatype: ["String", "Boolean", "Number"], //数据类型
@@ -573,6 +573,13 @@ export default {
     this.ediTabNum = this.editableTabs.length;
   },
   watch: {
+    active(val) {
+      if (val === 2) {
+        this.$store.commit('SET_formLeave', true)
+      } else {
+        this.$store.commit('SET_formLeave', false)
+      }
+    },
     ediTabNum() {
       let tabs = this.editableTabs;
       let active = this.editableTabsValue;
@@ -602,68 +609,74 @@ export default {
         this.active--;
       }
       if (actpart == 2) {
-        this.editableTabsValue = "1";
-        this.editableTabs = [
-          {
-            title: "接口1",
-            ObjTypeList: [],
-            ObjTransferList: [],
-            tabInd: "1",
-            opt: "query",
-            selObjType: 1,
-            target: "",
-            column: [],
-            rtType: 0,
-            intro: "",
-            selexample: "1",
-            example: "",
-            resp: "JSON", //返回格式
-            method: "", //返回格式
-            queryList: [
-              // {
-              //   //输入参数
-              //   name: "appKey",
-              //   required: true, //0：否  1：是
-              //   type: "String",
-              //   desc: "申请调用的appKey",
-              //   state: "0" //0 编辑  1 保存
-              // },
-              {
-                name: "新增参数"
-              }
-            ],
-            params: [
-              {
-                //输入参数
-                name: "appKey",
-                required: true, //0：否  1：是
-                type: "String",
-                desc: "申请调用的appKey",
-                foucs: false,
-                state: "0" //0 编辑  1 保存
-              }
-            ],
-            responses: [
-              {
-                //输出参数
-                state: "1" //0 编辑  1 保存
-              }
-            ],
-            errors: [
-              {
-                //错误代码
-                state: "1" //0 编辑  1 保存
-              }
-            ],
-            conditions: [
-              {
-                state: "1" //0 编辑  1 保存
-              }
-            ]
-          }
-        ];
-        this.tabIndex = 1;
-        this.active--;
+        this.$confirm("数据尚未保存，确定要离开吗?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          this.editableTabsValue = "1";
+          this.editableTabs = [
+            {
+              title: "接口1",
+              ObjTypeList: [],
+              ObjTransferList: [],
+              tabInd: "1",
+              opt: "query",
+              selObjType: 1,
+              target: "",
+              column: [],
+              rtType: '0',
+              intro: "",
+              selexample: "1",
+              example: "",
+              resp: "JSON", //返回格式
+              method: "", //返回格式
+              queryList: [
+                // {
+                //   //输入参数
+                //   name: "appKey",
+                //   required: true, //0：否  1：是
+                //   type: "String",
+                //   desc: "申请调用的appKey",
+                //   state: "0" //0 编辑  1 保存
+                // },
+                {
+                  name: "新增参数"
+                }
+              ],
+              params: [
+                {
+                  //输入参数
+                  name: "appKey",
+                  required: true, //0：否  1：是
+                  type: "String",
+                  desc: "申请调用的appKey",
+                  foucs: false,
+                  state: "0" //0 编辑  1 保存
+                }
+              ],
+              responses: [
+                {
+                  //输出参数
+                  state: "1" //0 编辑  1 保存
+                }
+              ],
+              errors: [
+                {
+                  //错误代码
+                  state: "1" //0 编辑  1 保存
+                }
+              ],
+              conditions: [
+                {
+                  state: "1" //0 编辑  1 保存
+                }
+              ]
+            }
+          ];
+          this.tabIndex = 1;
+          this.active--;
+        });
       }
       // if (this.active < 1) return false;
       // if (this.active-- < 1) return false;
@@ -672,28 +685,19 @@ export default {
     next() {
       var actpart = this.active;
       if (actpart == 0) {
-        var localagreeuser = window.localStorage.getItem("agreeuser");
-        if (localagreeuser == "false" || localagreeuser == null) {
-          this.dialogVisible_user = true;
-          this.dialogStatus = "useragree";
-        } else {
-          this.active++;
-        }
+        this.agreeuser = false;
+        this.dialogVisible_user = true;
+        this.dialogStatus = "agreeuser";
       }
       if (actpart == 1) {
         // 清空表单
         this.formLabelStep3 = {};
-        var localagreenazz = window.localStorage.getItem("agreenazz");
-        if (localagreenazz == "false" || localagreenazz == null) {
-          this.dialogVisible_nazz = true;
-          this.dialogStatus = "nazzagree";
-        } else {
-          this.active++;
-        }
-        var that = this;
-        this.stepTypeList.forEach(function(item, index) {
+        this.agreenazz = false;
+        this.dialogVisible_nazz = true;
+        this.dialogStatus = "agreenazz";
+        this.stepTypeList.forEach((item, index) => {
           if (item.sel) {
-            that.selSerType = item.type;
+            this.selSerType = item.type;
           }
         });
         if (this.selSerType == 2) {
@@ -778,12 +782,13 @@ export default {
             submitD.apis[index].url = item.url; //接口地址
             // submitD.apis[index].method = item.method; //请求方式
             submitD.apis[index].resp = item.resp; //返回格式
-            that.dataSourceList.forEach(function(objData, ind) {
-              //数据源
-              if (item.dsId == objData.uid) {
-                submitD.apis[index].dsId = objData.id;
-              }
-            });
+            submitD.apis[index].dsId = item.dsId; 
+            // that.dataSourceList.forEach(function(objData, ind) {
+            //   //数据源
+            //   if (item.dsId == objData.uid) {
+            //     submitD.apis[index].dsId = objData.id;
+            //   }
+            // });
             submitD.apis[index].opt = item.opt; //选择操作类型
             submitD.apis[index].rtType = item.rtType; //返回内容
             submitD.apis[index].columns = []; //返回属性
@@ -859,15 +864,23 @@ export default {
     },
     //同意 用户协议
     Clickagreeuser() {
+      if (!this.agreeuser) {
+        this.$message.error("请先同意服务条款");
+        return;
+      }
       this.dialogVisible_user = false;
-      window.localStorage.setItem("agreeuser", this.agreeuser);
-      this.active++;
+      // window.localStorage.setItem("agreeuser", this.agreeuser);
+      this.active = 1;
     },
     //同意 接口须知
     Clickagreenazz() {
+      if (!this.agreenazz) {
+        this.$message.error("请先同意服务条款");
+        return;
+      }
       this.dialogVisible_nazz = false;
-      window.localStorage.setItem("agreenazz", this.agreenazz);
-      this.active++;
+      // window.localStorage.setItem("agreenazz", this.agreenazz);
+      this.active = 2;
     },
     // 第二步选择服务类型
     selStepType(item) {

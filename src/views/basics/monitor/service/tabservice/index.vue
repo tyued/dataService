@@ -1,12 +1,12 @@
 <template>
   <el-row id="monitor-tabbox">
-    <el-col :span="4">
+    <el-col :span="5">
       <ul class="io-tree">
         <li v-for="(item, index) in tabData" :key="index" @click="changeTab(item)" :class="{'active': item.active}">{{item.name}}</li>
       </ul>
     </el-col>
-    <el-col :span="20">
-      <el-card class="tabbox-card">
+    <el-col :span="19">
+      <el-card :v-loading="flag" class="tabbox-card">
         <el-row class="row">
           <el-radio-group v-model="tabDateValue">
             <el-radio-button label="小时报"></el-radio-button>
@@ -119,21 +119,21 @@
               </span>
             </p>
             <el-table id="out-table" :data="tableData" stripe style="width: 100%;margin: 10px 0;">
-              <el-table-column  prop="date" label="时间" sortable>
+              <el-table-column prop="date" label="时间" sortable>
               </el-table-column>
-              <el-table-column v-if="byType === '1'"  prop="hour" label="小时">
+              <el-table-column v-if="byType === '1'" prop="hour" label="小时">
               </el-table-column>
-              <el-table-column  prop="calltimes" label="调用次数">
+              <el-table-column prop="calltimes" label="调用次数">
               </el-table-column>
-              <el-table-column  prop="failures" label="失败次数">
+              <el-table-column prop="failures" label="失败次数">
               </el-table-column>
-              <el-table-column  prop="failurePct" label="失败率">
+              <el-table-column prop="failurePct" label="失败率">
               </el-table-column>
-              <el-table-column  prop="sumdur" label="总共耗时(毫秒)">
+              <el-table-column prop="sumdur" label="总共耗时(毫秒)">
               </el-table-column>
-              <el-table-column  prop="avgdur" label="平均耗时(毫秒)">
+              <el-table-column prop="avgdur" label="平均耗时(毫秒)">
               </el-table-column>
-              <el-table-column  prop="maxdur" label="最大耗时(毫秒)">
+              <el-table-column prop="maxdur" label="最大耗时(毫秒)">
               </el-table-column>
             </el-table>
             <!-- 分页 组件-->
@@ -149,7 +149,6 @@
 
 <script>
 import * as api from "api/monitor";
-// import Key from "./key";
 import Max from "./max";
 import Uses from "./uses";
 import Avg from "./avg";
@@ -161,9 +160,8 @@ import XLSX from "xlsx"; // Excel
 
 export default {
   name: "tabservice",
-  props: ["servId", "servType", 'date'], // 服务的id和服务的类型
+  props: ["servId", "servType", "date"], // 服务的id和服务的类型
   components: {
-    // Key,
     Uses,
     Max,
     Avg,
@@ -171,13 +169,13 @@ export default {
     PageBar
   },
   created() {
-    this.init()
+    this.init();
   },
   watch: {
     servId(id) {
       // 更新试图   切换服务重新拉去服务器信息
       this.init();
-    },
+    }
   },
   computed: {
     byType() {
@@ -196,7 +194,8 @@ export default {
       tabDateValue: "日报", // 默认为日报
       yesObj: {},
       apiId: "",
-      tabName: "0"
+      tabName: "0",
+      flag: true
     };
   },
   methods: {
@@ -212,10 +211,10 @@ export default {
         })
         .then(res => {
           const { data } = res;
-          data.forEach((item) => {
-            item.active = false
-          })
-          data[0].active = true // 默认第一个高亮
+          data.forEach(item => {
+            item.active = false;
+          });
+          data[0].active = true; // 默认第一个高亮
           this.tabData = data;
           // 初始化第一个tab 把第一个id传进去
           this.initTab(data[0].id);
@@ -224,75 +223,74 @@ export default {
       this.activeNameTable = "0";
     },
     changeTab(item) {
+      if (this.flag) {
+        return;
+      }
+      this.flag = true;
       // 改变接口tab
       if (!item) {
         // 防止报错
         return;
       }
-      this.tabData.forEach((item) => {
-        item.active = false
-      })
-      item.active = true
+      this.tabData.forEach(item => {
+        item.active = false;
+      });
+      item.active = true;
       let id = item.id;
       this.initTab(id);
-      
-      
     },
-    initEcharts() {
-      this.$refs.uses.init()
-      this.$refs.max.init()
-      this.$refs.fail.init()
-      this.$refs.avg.init()
+    async initEcharts() {
+      // 请求太多，控制频繁请求
+      await this.$refs.uses.init();
+      await this.$refs.max.init();
+      await this.$refs.fail.init();
+      await this.$refs.avg.init();
     },
-    initTab(id) {
+    async initTab(id) {
       // 每个接口tab的初始化及切换
       this.apiId = id;
       // // 改变小时和日报
       this.tabDateValue = "日报"; // 重置默认为日报 改变type
       // 昨日信息
-      this.getYesterday(id);
+      await this.getYesterday(id);
       // 获取下面表格
-      this.getTable();
+      await this.getTable();
       // 获取4 个 echarts
-      this.initEcharts()
+      await this.initEcharts();
+
+      this.flag = false;
     },
-    getYesterday(id) {
+    async getYesterday(id) {
       // 昨日信息
-      api
-        .postYesterday({
-          servId: this.servId,
-          apiId: id
-        })
-        .then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            formatData(data);
-            this.yesObj = data;
-          }
-        });
+      let res = await api.postYesterday({
+        servId: this.servId,
+        apiId: id
+      });
+      const { status, data } = res;
+      if (status === 200 && data) {
+        formatData(data);
+        this.yesObj = data;
+      }
     },
     changeTabs(tab) {
       // 改变echarts tab
       this.tabName = tab.name;
     },
-    getTable(pageNo = 1, limit = this.size) {
+    async getTable(pageNo = 1, limit = this.size) {
       // 渲染表格
-      api
-        .postDetail({
-          pageNo,
-          limit,
-          byType: this.byType,
-          servId: this.servId,
-          apiId: this.apiId
-        })
-        .then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            this.tableData = data.rows;
-            this.total = parseInt(data.total);
-            this.current = parseInt(data.current);
-          }
-        });
+      let res = await api.postDetail({
+        pageNo,
+        limit,
+        byType: this.byType,
+        servId: this.servId,
+        apiId: this.apiId
+      });
+      const { status, data } = res;
+      if (status === 200 && data) {
+        this.tableData = data.rows;
+        this.total = parseInt(data.total);
+        this.current = parseInt(data.current);
+      }
     },
     handlePage(number) {
       // 分页
@@ -362,19 +360,19 @@ export default {
   padding: 10px 0px;
   li {
     cursor: pointer;
-    white-space: nowrap;
-    line-height: 30px;
-    height: 30px;
+    line-height: 1em;
     font-size: 14px;
-    text-align: right;
+    text-align: center;
     padding-right: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
     &:hover {
       background-color: #f5f7fa;
     }
     &.active {
-      color: #409EFF;
+      color: #409eff;
     }
-    transition: all .2s;
+    transition: all 0.2s;
   }
 }
 </style>

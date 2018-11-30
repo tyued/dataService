@@ -72,7 +72,7 @@ export default {
   methods: {
     getList(pageNo = 1, limit = this.size, status = "0") {
       api
-        .getRetrieveList({
+        .getRetrieveListUn({
           pageNo,
           limit,
           status

@@ -1,5 +1,5 @@
 <template>
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" height="300px">
         <el-table-column prop="servName" label="服务名称"></el-table-column>
         <el-table-column prop="apiName" label="接口名称"></el-table-column>
         <!-- <el-table-column prop="reqAddr" label="请求地址"></el-table-column>

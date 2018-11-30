@@ -8,7 +8,9 @@ const service = {
   state: {
     getfuwindex_on: [true, false, false, false], //服务首页高亮
     servTagArr: [],
-    compName: 'mainService' // 当前的动态组件
+    compName: 'mainService', // 当前的动态组件
+    sysEchartsActIndex: '0',
+    formLeave: false
   },
   mutations: {
     SET_fuwindex_on: (state, data) => {
@@ -19,7 +21,13 @@ const service = {
     },
     SET_compName: (state, data) => {
       state.compName = data
-    }
+    },
+    SET_sysEchartsActIndex: (state, data) => {
+      state.sysEchartsActIndex = data
+    },
+    SET_formLeave: (state, data) => {
+      state.formLeave = data
+    },
   },
   actions: {
     GET_fuwindex_on: ({

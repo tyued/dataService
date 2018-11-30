@@ -19,26 +19,28 @@ export default {
   name: "setting",
   components: {
     BaseConfig,
-    SystermConfig,
+    SystermConfig
+  },
+  created() {
+    this.activeName = this.act;
+  },
+  data() {
+    return {
+      activeName: ""
+    };
   },
   computed: {
     ...mapGetters(["rightInfoObj"]),
-    activeName() {
-      let n = 3
-      if (this.rightInfoObj['sets']) {
-        n--
+    act() {
+      let n = 3;
+      if (this.rightInfoObj["setting"]) {
+        n--;
       }
-      if (this.rightInfoObj['basedata']) {
-        n--
+      if (this.rightInfoObj["basedata"]) {
+        n--;
       }
-      return n + ''
+      return n + "";
     }
-    
-  },
+  }
 };
 </script>
-
-<style lang="scss" scoped>
-</style>
-
-

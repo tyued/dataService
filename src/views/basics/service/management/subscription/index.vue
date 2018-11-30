@@ -28,10 +28,13 @@
       </el-table-column>
       <el-table-column label="操作" width="250">
         <template slot-scope="scope">
-          <el-button v-if="rightInfoObj['serv-subscribe']['serv-sub:review']" type="primary" size="small" @click="showDetail(scope.row)">审核</el-button>
+          <template v-if="rightInfoObj['serv-subscribe']['serv-sub:review']">
+            <el-button v-if="scope.row.status == '0'" type="primary" size="small" @click="showDetail(scope.row)">审核</el-button>
+          </template>
+          
           <el-button v-if="rightInfoObj['serv-subscribe']['serv-sub:detail']" type="info" size="small" @click="goToServiceInfo(scope.row)">详情</el-button>
           <template  v-if="rightInfoObj['serv-subscribe']['serv-sub:list']">
-            <el-button v-if="scope.row.status !== '0'" type="danger" size="small" @click="showDialog(scope.row)">授权管理</el-button>
+            <el-button v-if="scope.row.status == '1'" type="danger" size="small" @click="showDialog(scope.row)">授权管理</el-button>
           </template>
         </template>
       </el-table-column>
@@ -281,14 +284,14 @@ export default {
       this.ruleForm.status = row.status;
       this.dialogTableVisibleSee = true;
     },
-    submitForm(formName) {
+    submitForm(formName, st) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           api
             .passReviewKey({
               id: this.ruleForm.id,
               opinion: this.ruleForm.opinion,
-              status: "1",
+              status: st,
               userId: this.ruleForm.userId
             })
             .then(res => {

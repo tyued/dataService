@@ -36,28 +36,28 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["rightInfoObj", "activePath"])
+    ...mapGetters(["rightInfoObj", "activePath", "formLeave"])
   },
   created() {
     let s = this.$route.path;
     switch (this.$route.path.slice(0, 3)) {
       case "/cu":
-        s = '0'
+        s = "0";
         break;
       case "/ge":
-        s = '1'
+        s = "1";
         break;
       case "/se":
-        s = '2'
+        s = "2";
         break;
       case "/mo":
-        s = '3'
+        s = "3";
         break;
       case "/ri":
-        s = '4'
+        s = "4";
         break;
       case "/se":
-        s = '5'
+        s = "5";
         break;
     }
     this.$store.commit("SET_SIDEBAR", s);
@@ -65,26 +65,59 @@ export default {
   },
   methods: {
     handleClick(index, indexPath) {
-      this.$store.commit("SET_SIDEBAR", index);
-      switch (index) {
-        case "0":
-          this.$router.push("/customer");
-          break;
-        case "1":
-          this.$router.push("/generalization");
-          break;
-        case "2":
-          this.$router.push("/service");
-          break;
-        case "3":
-          this.$router.push("/monitor");
-          break;
-        case "4":
-          this.$router.push("/right");
-          break;
-        case "5":
-          this.$router.push("/setting");
-          break;
+      if (this.formLeave) {
+        // 是否数据注册表单页面，离开要进行提示
+        this.$confirm("数据尚未保存，确定要离开吗?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          this.$store.commit("SET_formLeave", false);
+
+          this.$store.commit("SET_SIDEBAR", index);
+          switch (index) {
+            case "0":
+              this.$router.push("/customer");
+              break;
+            case "1":
+              this.$router.push("/generalization");
+              break;
+            case "2":
+              this.$router.push("/service");
+              break;
+            case "3":
+              this.$router.push("/monitor");
+              break;
+            case "4":
+              this.$router.push("/right");
+              break;
+            case "5":
+              this.$router.push("/setting");
+              break;
+          }
+        });
+      } else {
+        this.$store.commit("SET_SIDEBAR", index);
+        switch (index) {
+          case "0":
+            this.$router.push("/customer");
+            break;
+          case "1":
+            this.$router.push("/generalization");
+            break;
+          case "2":
+            this.$router.push("/service");
+            break;
+          case "3":
+            this.$router.push("/monitor");
+            break;
+          case "4":
+            this.$router.push("/right");
+            break;
+          case "5":
+            this.$router.push("/setting");
+            break;
+        }
       }
     }
   }

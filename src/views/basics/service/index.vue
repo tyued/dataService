@@ -1,7 +1,7 @@
 <template>
   <div class="fw-container">
-    <el-row v-if="n !== 1" class="fw-rowbox fw-rowbox-part" :gutter="20" type="flex" justify="space-between">
-      <el-col v-if="rightInfoObj['serv-home']">
+    <el-row v-if="n !== 1" class="fw-rowbox fw-rowbox-part" :gutter="20">
+      <el-col :span="24/n" v-if="rightInfoObj['serv-home']">
         <div @click="clickIndex" :class="{'on':getfuwindex_on[0]}">
           <el-card class="box-card">
             <i class="fuwindex-ico fw-topico"></i>
@@ -9,7 +9,7 @@
           </el-card>
         </div>
       </el-col>
-      <el-col v-if="rightInfoObj['serv-registry']">
+      <el-col :span="24/n" v-if="rightInfoObj['serv-registry']">
         <div @click="clickRegister" :class="{'on':getfuwindex_on[1]}">
           <el-card class="box-card">
             <i class="zhuc-ico fw-topico"></i>
@@ -17,7 +17,7 @@
           </el-card>
         </div>
       </el-col>
-      <el-col v-if="rightInfoObj['serv-mgr']">
+      <el-col :span="24/n" v-if="rightInfoObj['serv-mgr']">
         <div @click="clickServiceManegement" :class="{'on':getfuwindex_on[2]}">
           <el-card class="box-card">
             <i class="guanl-ico fw-topico"></i>
@@ -25,7 +25,7 @@
           </el-card>
         </div>
       </el-col>
-      <el-col v-if="rightInfoObj['serv-ds']">
+      <el-col :span="24/n" v-if="rightInfoObj['serv-ds']">
         <div @click="clickDataservice" :class="{'on':getfuwindex_on[3]}">
           <el-card class="box-card">
             <i class="shujuy-ico fw-topico"></i>
@@ -80,32 +80,106 @@ export default {
     this.rightInfoObj["serv-ds"] && this.n++;
   },
   computed: {
-    ...mapGetters(["getfuwindex_on", "rightInfoObj", "getServiceComponentName"])
+    ...mapGetters([
+      "getfuwindex_on",
+      "rightInfoObj",
+      "getServiceComponentName",
+      "formLeave"
+    ])
   },
   methods: {
     clickIndex() {
+      // 如果当前高亮了，就不用再设置高亮以及其他操作了
+      if (this.getfuwindex_on[0]) {
+        return 
+      }
       //服务首页
-      this.$store.commit("SET_compName", "mainService");
-      this.$store.dispatch("GET_fuwindex_on", [true, false, false, false]);
-      this.toggleCompo(this.getServiceComponentName);
+      if (this.formLeave) {
+        // 如果有标记，提问
+        this.$confirm("数据尚未保存，确定要离开吗?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: '取消',
+          type: "warning"
+        }).then(() => {
+          this.$store.commit("SET_compName", "mainService");
+          this.$store.dispatch("GET_fuwindex_on", [true, false, false, false]);
+          this.toggleCompo(this.getServiceComponentName);
+          this.$store.commit('SET_formLeave', false)
+        });
+      } else {
+        this.$store.commit("SET_compName", "mainService");
+        this.$store.dispatch("GET_fuwindex_on", [true, false, false, false]);
+        this.toggleCompo(this.getServiceComponentName);
+      }
     },
     clickRegister() {
       //注册
-      this.$store.commit("SET_compName", "register");
-      this.$store.dispatch("GET_fuwindex_on", [false, true, false, false]);
-      this.toggleCompo(this.getServiceComponentName);
+      if (this.getfuwindex_on[1]) {
+        return 
+      }
+      if (this.formLeave) {
+        // 如果有标记，提问
+        this.$confirm("数据尚未保存，确定要离开吗?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: '取消',
+          type: "warning"
+        }).then(() => {
+          this.$store.commit("SET_compName", "register");
+          this.$store.dispatch("GET_fuwindex_on", [false, true, false, false]);
+          this.toggleCompo(this.getServiceComponentName);
+          this.$store.commit('SET_formLeave', false)
+        });
+      } else {
+        this.$store.commit("SET_compName", "register");
+        this.$store.dispatch("GET_fuwindex_on", [false, true, false, false]);
+        this.toggleCompo(this.getServiceComponentName);
+      }
     },
     clickServiceManegement() {
       // 管理
-      this.$store.commit("SET_compName", "management");
-      this.$store.dispatch("GET_fuwindex_on", [false, false, true, false]);
-      this.toggleCompo(this.getServiceComponentName);
+      if (this.getfuwindex_on[2]) {
+        return 
+      }
+      if (this.formLeave) {
+        // 如果有标记，提问
+        this.$confirm("数据尚未保存，确定要离开吗?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: '取消',
+          type: "warning"
+        }).then(() => {
+          this.$store.commit("SET_compName", "management");
+          this.$store.dispatch("GET_fuwindex_on", [false, false, true, false]);
+          this.toggleCompo(this.getServiceComponentName);
+          this.$store.commit('SET_formLeave', false)
+        });
+      } else {
+        this.$store.commit("SET_compName", "management");
+        this.$store.dispatch("GET_fuwindex_on", [false, false, true, false]);
+        this.toggleCompo(this.getServiceComponentName);
+      }
     },
     clickDataservice() {
       //数据源
-      this.$store.commit("SET_compName", "dataService");
-      this.$store.dispatch("GET_fuwindex_on", [false, false, false, true]);
-      this.toggleCompo(this.getServiceComponentName);
+      if (this.getfuwindex_on[3]) {
+        return 
+      }
+      if (this.formLeave) {
+        // 如果有标记，提问
+        this.$confirm("数据尚未保存，确定要离开吗?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: '取消',
+          type: "warning"
+        }).then(() => {
+          this.$store.commit("SET_compName", "dataService");
+          this.$store.dispatch("GET_fuwindex_on", [false, false, false, true]);
+          this.toggleCompo(this.getServiceComponentName);
+          this.$store.commit('SET_formLeave', false)
+        });
+      } else {
+        this.$store.commit("SET_compName", "dataService");
+        this.$store.dispatch("GET_fuwindex_on", [false, false, false, true]);
+        this.toggleCompo(this.getServiceComponentName);
+      }
     },
     toggleCompo(name) {
       switch (name) {

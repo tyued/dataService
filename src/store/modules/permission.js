@@ -68,10 +68,7 @@ const permission = {
   actions: {
     GenerateRoutes({
       commit
-    }, data) {
-      let {
-        rightInfoObj
-      } = data
+    }, rightInfoObj) {
       return new Promise(resolve => {
         let accessedRouters
         accessedRouters = filterAsyncRouter(asyncRouterMap, rightInfoObj)

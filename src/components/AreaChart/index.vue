@@ -24,7 +24,7 @@ export default {
     },
     point: {
       type: String,
-      default: ''
+      default: ""
     }
   },
   data() {
@@ -34,7 +34,6 @@ export default {
       dataArr: []
     };
   },
-  computed: {},
   created() {
     this.dataArr = this.types.slice(0, -1).map((item, index) => {
       return {
@@ -59,7 +58,7 @@ export default {
       this.dataArr.map((item, index) => {
         item.data.push(this.arr[index]);
       });
-      this.time.push(moment().format("h:mm:ss")); // 更新时间数组
+      this.time.push(moment().format("HH:mm:ss")); // 更新时间数组
       this.chart.setOption({
         xAxis: [
           {
@@ -67,7 +66,7 @@ export default {
           }
         ],
         series: this.dataArr
-      });
+      })
     }
   },
   methods: {
@@ -84,15 +83,15 @@ export default {
           }
           // formatter: '{a0}{c0}万'
         },
-        color: ["#ffdd57", "#209cee","#42d3a5"],
+        color: ["#ffdd57", "#209cee", "#42d3a5"],
         legend: {
           data: this.types // 类型数据
         },
         grid: {
           top: "17%",
-          left: "3%",
-          right: "3%",
-          bottom: "3%",
+          left: "5%",
+          right: "5%",
+          bottom: "5%",
           containLabel: true
         },
         xAxis: [
@@ -151,7 +150,8 @@ export default {
     }
     window.removeEventListener("resize", this.__resizeHanlder);
     const sidebarElm = document.getElementsByClassName("sidebar-container")[0];
-    sidebarElm.removeEventListener("transitionend", this.__resizeHanlder);
+    sidebarElm &&
+      sidebarElm.removeEventListener("transitionend", this.__resizeHanlder);
     this.chart.dispose();
     this.chart = null;
   }

@@ -26,20 +26,28 @@ export default {
     Producer,
     User
   },
+  data() {
+    return {
+      activeName: ""
+    };
+  },
+  created() {
+    this.activeName = this.act;
+  },
   computed: {
     ...mapGetters(["rightInfoObj"]),
-    activeName() {
-      let n = 4
-      if (this.rightInfoObj['user']) {
-        n--
+    act() {
+      let n = 4;
+      if (this.rightInfoObj["user"]) {
+        n--;
       }
-      if (this.rightInfoObj['role']) {
-        n--
+      if (this.rightInfoObj["role"]) {
+        n--;
       }
-      if (this.rightInfoObj['producer']) {
-        n--
+      if (this.rightInfoObj["producer"]) {
+        n--;
       }
-      return n + ''
+      return n + "";
     }
   },
   methods: {

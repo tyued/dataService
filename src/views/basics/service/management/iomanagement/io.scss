@@ -22,7 +22,8 @@
 // 审核弹出层样式
 .review-layer {
   .layer-container {
-    overflow: hidden;
+    overflow: auto;
+    max-height: 700px;
     margin-top: -30px;
   }
   .activeBtn {
@@ -43,8 +44,6 @@
   }
   .right-box {
     padding: 20px;
-    overflow: auto;
-    max-height: 900px;
     h3 {
       padding: 20px 0;
     }
@@ -53,8 +52,6 @@
   }
   .left-box {
     padding: 20px;
-    overflow: auto;
-    max-height: 900px;
     h2 {
       padding-bottom: 20px;
       text-align: center;

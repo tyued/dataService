@@ -84,3 +84,12 @@ export function showServiceDetail(params) {
         method: 'post',
     });
 }
+
+// ======================== customer index page io ===============================
+// 用户的首页总接口
+export function getAllInfoForCustomer() {
+    return fetch({
+        url: `/dsb/customer/homepage/metircs`,
+        method: 'post',
+    });
+}

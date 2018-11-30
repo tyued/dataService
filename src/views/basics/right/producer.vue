@@ -1,23 +1,49 @@
 <template>
   <div class="producer">
     <el-row class="row">
-      <el-button v-if="rightInfoObj['producer']['producer:registry']" type="primary" @click="addUser">信息注册</el-button>
+      <el-button
+        v-if="rightInfoObj['producer']['producer:registry']"
+        type="primary"
+        @click="addUser"
+      >信息注册</el-button>
     </el-row>
     <el-row class="row">
-      <el-table v-loading="loading" :data="tableData" style="width: 100%">
-        <el-table-column prop="id" label="ID编号" sortable>
+      <el-table
+        v-loading="loading"
+        :data="tableData"
+        style="width: 100%"
+      >
+        <!-- <el-table-column prop="id" label="ID编号" sortable>
+        </el-table-column> -->
+        <el-table-column
+          prop="code"
+          label="代码"
+        >
         </el-table-column>
-        <el-table-column prop="code" label="代码">
+        <el-table-column
+          prop="name"
+          label="名称"
+        >
         </el-table-column>
-        <el-table-column prop="name" label="名称">
+        <el-table-column
+          prop="addr"
+          label="地址"
+        >
         </el-table-column>
-        <el-table-column prop="addr" label="地址">
+        <el-table-column
+          prop="trade"
+          label="行业"
+        >
         </el-table-column>
-        <el-table-column prop="trade" label="行业">
+        <el-table-column
+          prop="contact"
+          label="联系人姓名"
+        >
         </el-table-column>
-        <el-table-column prop="contact" label="联系人姓名">
-        </el-table-column>
-        <el-table-column prop="timestamp" label="注册时间">
+        <el-table-column
+          prop="timestamp"
+          label="注册时间"
+        >
         </el-table-column>
         <!-- <el-table-column  prop="status" label="账号状态">
           <template slot-scope="scope">
@@ -26,10 +52,24 @@
             <el-tag size="small" v-show="scope.row.status == '2'" type="warning">锁定</el-tag>
           </template>
         </el-table-column> -->
-        <el-table-column width="150" label="操作">
+        <el-table-column
+          width="150"
+          label="操作"
+        >
           <template slot-scope="scope">
-            <el-button v-if="rightInfoObj['producer']['producer:edit']" size="small" type="warning" @click="editItem(scope.row)">编辑</el-button>
-            <el-button v-if="rightInfoObj['producer']['producer:del']" size="small" type="danger" @click="deleteItem(scope.row)" :disabled="scope.row.username === 'admin'">删除</el-button>
+            <el-button
+              v-if="rightInfoObj['producer']['producer:edit']"
+              size="small"
+              type="warning"
+              @click="editItem(scope.row)"
+            >编辑</el-button>
+            <el-button
+              v-if="rightInfoObj['producer']['producer:del']"
+              size="small"
+              type="danger"
+              @click="deleteItem(scope.row)"
+              :disabled="scope.row.username === 'admin'"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -37,30 +77,83 @@
 
     <el-row class="row">
       <!-- 分页组件here -->
-      <PageBar :total="total" :currentpage="current" @handlePage="handlePage" @handlePageSize="handlePageSize" />
+      <PageBar
+        :total="total"
+        :currentpage="current"
+        @handlePage="handlePage"
+        @handlePageSize="handlePageSize"
+      />
     </el-row>
 
     <!-- 添加弹层 -->
-    <el-dialog title="信息注册" :visible.sync="dialogFormVisible" width="460px">
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="名称" prop="name">
-          <el-input clearable maxlength="100" v-model.trim="ruleForm.name"></el-input>
+    <el-dialog
+      title="信息注册"
+      :visible.sync="dialogFormVisible"
+      width="460px"
+    >
+      <el-form
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
+        <el-form-item
+          label="名称"
+          prop="name"
+        >
+          <el-input
+            clearable
+            maxlength="100"
+            v-model.trim="ruleForm.name"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="代码" prop="code">
-          <el-input clearable maxlength="100" v-model.trim="ruleForm.code"></el-input>
+        <el-form-item
+          label="代码"
+          prop="code"
+        >
+          <el-input
+            clearable
+            maxlength="100"
+            v-model.trim="ruleForm.code"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="地址" prop="addr">
-          <el-input clearable maxlength="100" v-model.trim="ruleForm.addr"></el-input>
+        <el-form-item
+          label="地址"
+          prop="addr"
+        >
+          <el-input
+            clearable
+            maxlength="100"
+            v-model.trim="ruleForm.addr"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="行业" prop="trade">
-          <el-input clearable maxlength="100" v-model.trim="ruleForm.trade"></el-input>
+        <el-form-item
+          label="行业"
+          prop="trade"
+        >
+          <el-input
+            clearable
+            maxlength="100"
+            v-model.trim="ruleForm.trade"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="联系人姓名" prop="contact">
-          <el-input clearable maxlength="50" v-model.trim="ruleForm.contact"></el-input>
+        <el-form-item
+          label="联系人姓名"
+          prop="contact"
+        >
+          <el-input
+            clearable
+            maxlength="50"
+            v-model.trim="ruleForm.contact"
+          ></el-input>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
+          <el-button
+            type="primary"
+            @click="submitForm('ruleForm')"
+          >确定</el-button>
           <el-button @click="dialogFormVisible = false">取消</el-button>
         </el-form-item>
       </el-form>
@@ -68,26 +161,74 @@
     <!-- /添加弹层 -->
 
     <!-- 修改弹层 -->
-    <el-dialog title="修改数据提供商" :visible.sync="dialogFormVisibleEdit" width="460px">
-      <el-form :model="ruleFormEdit" :rules="rulesEdit" ref="ruleFormEdit" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="名称" prop="name">
-          <el-input clearable maxlength="100" v-model.trim="ruleFormEdit.name"></el-input>
+    <el-dialog
+      title="修改数据提供商"
+      :visible.sync="dialogFormVisibleEdit"
+      width="460px"
+    >
+      <el-form
+        :model="ruleFormEdit"
+        :rules="rulesEdit"
+        ref="ruleFormEdit"
+        label-width="100px"
+        class="demo-ruleForm"
+      >
+        <el-form-item
+          label="名称"
+          prop="name"
+        >
+          <el-input
+            clearable
+            maxlength="100"
+            v-model.trim="ruleFormEdit.name"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="代码" prop="code">
-          <el-input clearable maxlength="100" v-model.trim="ruleFormEdit.code"></el-input>
+        <el-form-item
+          label="代码"
+          prop="code"
+        >
+          <el-input
+            clearable
+            maxlength="100"
+            v-model.trim="ruleFormEdit.code"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="地址" prop="addr">
-          <el-input clearable maxlength="100" v-model.trim="ruleFormEdit.addr"></el-input>
+        <el-form-item
+          label="地址"
+          prop="addr"
+        >
+          <el-input
+            clearable
+            maxlength="100"
+            v-model.trim="ruleFormEdit.addr"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="行业" prop="trade">
-          <el-input clearable maxlength="100" v-model.trim="ruleFormEdit.trade"></el-input>
+        <el-form-item
+          label="行业"
+          prop="trade"
+        >
+          <el-input
+            clearable
+            maxlength="100"
+            v-model.trim="ruleFormEdit.trade"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="联系人姓名" prop="contact">
-          <el-input clearable maxlength="50" v-model.trim="ruleFormEdit.contact"></el-input>
+        <el-form-item
+          label="联系人姓名"
+          prop="contact"
+        >
+          <el-input
+            clearable
+            maxlength="50"
+            v-model.trim="ruleFormEdit.contact"
+          ></el-input>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitFormEdit('ruleFormEdit')">确定</el-button>
+          <el-button
+            type="primary"
+            @click="submitFormEdit('ruleFormEdit')"
+          >确定</el-button>
           <el-button @click="dialogFormVisibleEdit = false">取消</el-button>
         </el-form-item>
       </el-form>
@@ -125,7 +266,7 @@ export default {
         status: ""
       },
       rules: {
-        code: [{ required: true, message: "请输入代码", trigger: "blur" }],
+        code: [{ required: true, type:"number", message: "请输入数字代码", trigger: "blur" }],
         name: [{ required: true, message: "请输入名称", trigger: "blur" }],
         addr: [{ required: true, message: "请输入地址", trigger: "blur" }],
         trade: [{ required: true, message: "请输入行业", trigger: "blur" }],
@@ -143,7 +284,7 @@ export default {
         status: ""
       },
       rulesEdit: {
-        code: [{ required: true, message: "请输入代码", trigger: "blur" }],
+        code: [{ required: true, type:"number", message: "请输入数字代码", trigger: "blur" }],
         name: [{ required: true, message: "请输入名称", trigger: "blur" }],
         addr: [{ required: true, message: "请输入地址", trigger: "blur" }],
         trade: [{ required: true, message: "请输入行业", trigger: "blur" }],

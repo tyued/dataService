@@ -15,55 +15,14 @@ module.exports = {
       '/dsb':{
         // target: 'http://47.96.114.14:8083/dsb',
         // target: 'localhost:8083',
+        target: 'http://192.168.0.49',
+        // target: 'http://vincent1003.oicp.net:12673',
         // target: 'http://192.168.0.111:8083',
-        target: 'http://vincent1003.oicp.net:12673',
         changeOrigin: true,
         pathRewrite: {
           '^/dsb': '/dsb'
         }
       }
-    //   // '/platform':{
-    //   //   // target: 'http://192.168.0.111:8083/dsb',
-    //   //   // target: 'http://47.96.114.14:8083/dsb',
-    //   //   target: 'http://vincent1003.oicp.net:12673/dsb',
-
-    //   //   changeOrigin: true,
-    //   //   pathRewrite: {
-    //   //     '^/platform': '/platform'
-    //   //   }
-    //   // },
-    //   // '/admin':{
-    //   //   // target: 'http://47.96.114.14:8083/dsb',
-    //   //   target: 'http://vincent1003.oicp.net:12673/dsb',
-    //   //   changeOrigin: true,
-    //   //   pathRewrite: {
-    //   //     '^/admin': '/admin'
-    //   //   }
-    //   // },
-    //   // '/authz':{
-    //   //   // target: 'http://47.96.114.14:8083/dsb',
-    //   //   target: 'http://vincent1003.oicp.net:12673/dsb',
-    //   //   changeOrigin: true,
-    //   //   pathRewrite: {
-    //   //     '^/authz': '/authz'
-    //   //   }
-    //   // },
-    //   // '/kaptcha':{
-    //   //   // target: 'http://47.96.114.14:8083/dsb',
-    //   //   target: 'http://vincent1003.oicp.net:12673/dsb',
-    //   //   changeOrigin: true,
-    //   //   pathRewrite: {
-    //   //     '^/kaptcha': '/kaptcha'
-    //   //   }
-    //   // },
-    //   // '/logout':{
-    //   //   // target: 'http://47.96.114.14:8083/dsb',
-    //   //   target: 'http://vincent1003.oicp.net:12673/dsb',
-    //   //   changeOrigin: true,
-    //   //   pathRewrite: {
-    //   //     '^/logout': '/logout'
-    //   //   }
-    //   // }
     },
 
     // Various Dev Server settings

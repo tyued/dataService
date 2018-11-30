@@ -52,7 +52,7 @@
       </el-pagination>
     </el-row>
     <!-- 审核弹出层 -->
-    <el-dialog class="review-layer" :title="contentData.name+'新增审核'" :visible.sync="outerVisible" width="1000px">
+    <el-dialog class="review-layer" :title="contentData.name+'新增审核'" :visible.sync="outerVisible" width="70%">
       <el-row class="layer-container">
         <el-col :span="12" class="left-box">
           <h3>基本信息</h3>
@@ -385,13 +385,13 @@ export default {
         }
         if (row.servType == 2) {
           //webservice----soap
-          this.expUrl = `${this.Settings}/http/${uuid}/v${data.method}${
-            data.version ? "/" + data.version : ""
+          this.expUrl = `${this.Settings}/soap/${uuid}/${data.method}_v${
+            data.version
           }`;
         }
         if (row.servType == 3) {
           //数据源-----dataset
-          this.expUrl = `${this.Settings}/http/${uuid}/v${data.version}${
+          this.expUrl = `${this.Settings}/dataset/${uuid}/v${data.version}${
             data.path ? "/" + data.path : ""
           }`;
         }
@@ -509,7 +509,8 @@ export default {
 // 审核弹出层样式
 .review-layer {
   .layer-container {
-    overflow: hidden;
+    max-height: 700px;
+    overflow: auto;
   }
   .activeBtn {
     background-color: #449afc;
@@ -528,9 +529,7 @@ export default {
     padding: 10px 20px 30px;
   }
   .right-box {
-    overflow: auto;
     padding: 20px;
-    max-height: 900px;
     h3 {
       padding: 20px 0;
     }
@@ -539,9 +538,7 @@ export default {
     background-color: #e3e6ec;
   }
   .left-box {
-    overflow: auto;
     padding: 20px;
-    max-height: 900px;
     h2 {
       padding-bottom: 20px;
       text-align: center;

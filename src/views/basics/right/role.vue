@@ -5,8 +5,8 @@
     </el-row>
     <el-row class="row">
       <el-table v-loading="loading" :data="tableData" style="width: 100%">
-        <el-table-column prop="id" label="角色ID" sortable>
-        </el-table-column>
+        <!-- <el-table-column prop="id" label="角色ID" sortable>
+        </el-table-column> -->
         <el-table-column prop="name" label="角色名称">
         </el-table-column>
         <!-- <el-table-column  prop="type" label="角色类型">
@@ -29,8 +29,8 @@
         </el-table-column>
         <el-table-column width="150" label="操作">
           <template slot-scope="scope">
-            <el-button v-if="rightInfoObj['role']['role:edit']" size="small" type="warning" @click="editItem(scope.row)">编辑</el-button>
-            <el-button v-if="rightInfoObj['role']['role:del']" size="small" type="danger" @click="deleteItem(scope.row)">删除</el-button>
+            <el-button :disabled="scope.row.name === '超级管理员'" v-if="rightInfoObj['role']['role:edit']" size="small" type="warning" @click="editItem(scope.row)">编辑</el-button>
+            <el-button :disabled="scope.row.name === '超级管理员'" v-if="rightInfoObj['role']['role:del']" size="small" type="danger" @click="deleteItem(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -46,6 +46,7 @@
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="角色名称" prop="name">
           <el-input maxlength="50" v-model.trim="ruleForm.name"></el-input>
+
         </el-form-item>
         <!-- <el-form-item label="角色类型" prop="type">
           <el-select v-model="ruleForm.type" placeholder="请选择角色类型">
@@ -77,6 +78,7 @@
       <el-form :model="ruleFormEdit" :rules="rulesEdit" ref="ruleFormEdit" label-width="100px" class="demo-ruleForm">
         <el-form-item label="角色名称" prop="name">
           <el-input maxlength="50" v-model.trim="ruleFormEdit.name"></el-input>
+          
         </el-form-item>
         <!-- <el-form-item label="角色类型" prop="type">
           <el-select v-model="ruleFormEdit.type" placeholder="请选择角色类型">
@@ -136,11 +138,11 @@ export default {
         intro: ""
       },
       rules: {
-        name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
+        name: [{ required: true, message: "请输入角色名称", trigger: "blur" },{ min: 2, max: 20, message: "长度为2-20个字符", trigger: "blur" }],
         // type: [
         //   { required: true, message: "请选择角色类型", trigger: "change" }
         // ],
-        intro: [{ required: true, message: "请填写角色简介", trigger: "blur" }],
+        intro: [{ required: true, message: "请填写角色简介", trigger: "blur" },{ min: 1, max: 500, message: "长度为1-500个字符", trigger: "blur" }],
         right: [
           { required: true, message: "请指定角色权限", trigger: "change" }
         ]
@@ -153,11 +155,11 @@ export default {
         id: ""
       },
       rulesEdit: {
-        name: [{ required: true, message: "请输入角色名称", trigger: "blur" }],
+        name: [{ required: true, message: "请输入角色名称", trigger: "blur" },{ min: 2, max: 20, message: "长度为2-20个字符", trigger: "blur" }],
         // type: [
         //   { required: true, message: "请选择角色类型", trigger: "change" }
         // ],
-        intro: [{ required: true, message: "请填写角色简介", trigger: "blur" }],
+        intro: [{ required: true, message: "请填写角色简介", trigger: "blur" },{ min: 1, max: 500, message: "长度为1-500个字符", trigger: "blur" }],
         right: [
           { required: true, message: "请指定角色权限", trigger: "change" }
         ]

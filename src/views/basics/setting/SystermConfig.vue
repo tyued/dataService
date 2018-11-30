@@ -1,7 +1,7 @@
 <template>
   <div class='sys'>
     <el-row>
-      <el-form :model="form" ref="ruleFormEdit" :label-width="labelWidth" class="demo-ruleForm">
+      <el-form v-loading.body="isShow" :model="form" ref="ruleFormEdit" :label-width="labelWidth" class="demo-ruleForm">
         <el-form-item v-for="(item, index) in arr" :key="index" :label="item.label" :prop="item.key" :rules="item.rules">
           <el-input v-if="item.type === 'text'" clearable maxlength="50" v-model.trim="form[item.key]" :placeholder="item.placeholder"></el-input>
           <el-input :autosize="{ minRows: 2, maxRows: 6 }" v-if="item.type === 'textarea'" clearable maxlength="1000" type="textarea" v-model.trim="form[item.key]" :placeholder="item.placeholder"></el-input>
@@ -16,8 +16,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button v-if="rightInfoObj['setting']['setting:reset']" type="primary" @click="submitFormEdit('ruleFormEdit')">确定提交</el-button>
-          <el-button @click="resetForm('ruleFormEdit')">重置</el-button>
+          <el-button v-if="rightInfoObj['setting']['setting:reset']" type="primary" @click="submitFormEdit('ruleFormEdit')">确认保存</el-button>
         </el-form-item>
       </el-form>
     </el-row>
@@ -33,7 +32,8 @@ export default {
     return {
       labelWidth: "220px",
       arr: [],
-      form: {}
+      form: {},
+      isShow: true,
     };
   },
   computed: {
@@ -62,6 +62,7 @@ export default {
             this.$set(this.form, item.key, item.value);
           });
           this.arr = data.rows;
+          this.isShow = false
         }
       });
     },
@@ -116,22 +117,6 @@ export default {
         }
       });
     },
-    resetForm(formName) {
-      this.$confirm("确定要重置表单吗?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.$refs[formName].resetFields();
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消"
-          });
-        });
-    }
   }
 };
 </script>

@@ -16,12 +16,13 @@
 
       <el-card v-else class="box-card" v-loading.body="listLoading">
         <el-row class="fw-rowbox" :gutter="20">
-          <el-col :span="8" v-for="item in fwserTypeList" :key="item.id">
+          <el-col style="margin: 6px 0;" :lg="12" :xl="8" v-for="item in fwserTypeList" :key="item.id">
             <el-card class="box-card">
               <div slot="header" class="box-card-header">
                 {{item.name}}
                 <el-tag class="fw-part-tag" size="small">{{item.tagname?item.tagname:'其他'}}</el-tag>
-                <el-tag v-if="item.subscribed === '1'" class="fw-part-tag" size="small" type="warning">已订阅</el-tag>
+                <el-tag v-if="item.subscribed === '1'" class="fw-part-tag" size="small" type="success">已订阅</el-tag>
+                <el-tag v-if="item.subscribed === '0'" class="fw-part-tag" size="small" type="warning">审批中</el-tag>
                 <el-button class="box-card-hbtn" type="success" size="small" @click="toStudentInfo(item.type,item.id,item.subscribed)">查看</el-button>
               </div>
 
@@ -82,11 +83,11 @@ export default {
   mounted() {
     this.getList();
   },
-  watch: {
-    // servTypeList(){
-    //     this.getList()
-    // }
-  },
+  // watch: {
+  //   // servTypeList(){
+  //   //     this.getList()
+  //   // }
+  // },
   methods: {
     // 获取服务分类
     getBaseData() {
@@ -101,7 +102,10 @@ export default {
     },
     // 获取全部服务
     getList() {
-      api.getRetrieveList(this.listQuery).then(response => {
+      api.getRetrieveList({
+        ...this.listQuery,
+        status: '1'
+      }).then(response => {
         this.fwserTypeList = response.data.rows;
         this.total = response.data.total;
         var that = this;
@@ -151,5 +155,8 @@ export default {
   text-align: center;
   font-size: 14px;
   color: #9a9a9a;
+}
+.box-card-header {
+  /* line-height: 40px; */
 }
 </style>

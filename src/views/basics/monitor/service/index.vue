@@ -2,115 +2,125 @@
   <div class="detail-service">
     <!-- ==========服务监控============ -->
     <el-card class="box-card">
-      <div slot="header" class="clearfix">
+      <div slot="header" style="overflow:hidden">
         <span>服务信息</span>
+        <el-select clearable style="float:right;line-height:40px;width:300px" clear="sel" @change="searchServById" v-model="typeId" filterable placeholder="请选择">
+          <el-option v-for="item in servArr" :key="item.key" :label="item.value" :value="item.key">
+          </el-option>
+        </el-select>
       </div>
-      <el-collapse v-if="tabData.length > 0" v-model="activeName" accordion>
-        <el-collapse-item v-loading="loading" v-for="(item, index) in tabData" :key="index" :name="index">
-          <template slot="title">
-            <span style="font-size: 14px;">{{item.servName}}</span>
-            <el-button class="btn" type="text" @click.stop="showIOList(item.servId, item.servType)">点击查看接口信息</el-button>
+
+      <el-table v-loading="loading" :show-header="false" ref="multipleTable" :data="tabData" tooltip-effect="dark" style="width: 100%">
+        <el-table-column type="servName">
+          <template slot-scope="scope">
+            <span>{{scope.row.servName}}</span>
+            <el-button class="btn" type="text" @click.stop="showIOList(scope.row.servId, scope.row.servType)">点击查看接口信息</el-button>
           </template>
-          <el-row>
-            <el-col class="itembox" :span="7">
-              <div class="name-box">服务名称：
-                <span>{{item.servName}}</span>
-              </div>
-            </el-col>
-            <el-col class="itembox" :span="5">
-              <div class="number-box">
-                <p>订阅用户数</p>
-                <p>
-                  <span>{{item.subscribers}}</span>
-                </p>
-                <p>七日内新增：
-                  <span>{{item.incrementWeek}}</span>
-                </p>
-                <p>七日内退订：
-                  <span>{{item.decrementWeek}}</span>
-                </p>
-              </div>
-            </el-col>
-            <el-col class="itembox" :span="12">
-              <el-row style="padding: 30px 0;">
-                <el-col class="keybox" :span="6">
-                  <p>调用次数</p>
-                  <h2>{{item.calltimes}}</h2>
-                  <div>
-                    <p>日&emsp;
-                      <span>
-                        <i></i>{{item.calltimesPctDay}}</span>
-                    </p>
-                    <p>周&emsp;
-                      <span>
-                        <i></i>{{item.calltimesPctWeek}}</span>
-                    </p>
-                    <p>月&emsp;
-                      <span>
-                        <i></i>{{item.calltimesPctMonth}}</span>
-                    </p>
-                  </div>
-                </el-col>
-                <el-col class="keybox" :span="6">
-                  <p>失败率</p>
-                  <h2>{{item.failurePct}}</h2>
-                  <div>
-                    <p>日&emsp;
-                      <span>
-                        <i></i>{{item.failurePctDay}}</span>
-                    </p>
-                    <p>周&emsp;
-                      <span>
-                        <i></i>{{item.failurePctWeek}}</span>
-                    </p>
-                    <p>月&emsp;
-                      <span>
-                        <i></i>{{item.failurePctMonth}}</span>
-                    </p>
-                  </div>
-                </el-col>
-                <el-col class="keybox" :span="6">
-                  <p>平均耗时(毫秒)</p>
-                  <h2>{{item.avgdur}}</h2>
-                  <div>
-                    <p>日&emsp;
-                      <span>
-                        <i></i>{{item.avgdurPctDay}}</span>
-                    </p>
-                    <p>周&emsp;
-                      <span>
-                        <i></i>{{item.avgdurPctWeek}}</span>
-                    </p>
-                    <p>月&emsp;
-                      <span>
-                        <i></i>{{item.avgdurPctMonth}}</span>
-                    </p>
-                  </div>
-                </el-col>
-                <el-col class="keybox" :span="6">
-                  <p>最大耗时(毫秒)</p>
-                  <h2>{{item.maxdur}}</h2>
-                  <div>
-                    <p>日&emsp;
-                      <span>
-                        <i></i>{{item.maxdurPctDay}}</span>
-                    </p>
-                    <p>周&emsp;
-                      <span>
-                        <i></i>{{item.maxdurPctWeek}}</span>
-                    </p>
-                    <p>月&emsp;
-                      <span>
-                        <i></i>{{item.maxdurPctMonth}}</span>
-                    </p>
-                  </div>
-                </el-col>
-              </el-row>
-            </el-col>
-          </el-row>
-        </el-collapse-item>
-      </el-collapse>
-      <div v-else class="empty">暂无数据</div>
+        </el-table-column>
+
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-row>
+              <el-col class="itembox" :span="7">
+                <div class="name-box">服务名称：
+                  <span>{{props.row.servName}}</span>
+                </div>
+              </el-col>
+              <el-col class="itembox" :span="5">
+                <div class="number-box">
+                  <p>订阅用户数</p>
+                  <p>
+                    <span>{{props.row.subscribers}}</span>
+                  </p>
+                  <p>七日内新增：
+                    <span>{{props.row.incrementWeek}}</span>
+                  </p>
+                  <p>七日内退订：
+                    <span>{{props.row.decrementWeek}}</span>
+                  </p>
+                </div>
+              </el-col>
+              <el-col class="itembox" :span="12">
+                <el-row style="padding: 30px 0;">
+                  <el-col class="keybox" :span="6">
+                    <p>调用次数</p>
+                    <h2>{{props.row.calltimes}}</h2>
+                    <div>
+                      <p>日&emsp;
+                        <span>
+                          <i></i>{{props.row.calltimesPctDay}}</span>
+                      </p>
+                      <p>周&emsp;
+                        <span>
+                          <i></i>{{props.row.calltimesPctWeek}}</span>
+                      </p>
+                      <p>月&emsp;
+                        <span>
+                          <i></i>{{props.row.calltimesPctMonth}}</span>
+                      </p>
+                    </div>
+                  </el-col>
+                  <el-col class="keybox" :span="6">
+                    <p>失败率</p>
+                    <h2>{{props.row.failurePct}}</h2>
+                    <div>
+                      <p>日&emsp;
+                        <span>
+                          <i></i>{{props.row.failurePctDay}}</span>
+                      </p>
+                      <p>周&emsp;
+                        <span>
+                          <i></i>{{props.row.failurePctWeek}}</span>
+                      </p>
+                      <p>月&emsp;
+                        <span>
+                          <i></i>{{props.row.failurePctMonth}}</span>
+                      </p>
+                    </div>
+                  </el-col>
+                  <el-col class="keybox" :span="6">
+                    <p>平均耗时(毫秒)</p>
+                    <h2>{{props.row.avgdur}}</h2>
+                    <div>
+                      <p>日&emsp;
+                        <span>
+                          <i></i>{{props.row.avgdurPctDay}}</span>
+                      </p>
+                      <p>周&emsp;
+                        <span>
+                          <i></i>{{props.row.avgdurPctWeek}}</span>
+                      </p>
+                      <p>月&emsp;
+                        <span>
+                          <i></i>{{props.row.avgdurPctMonth}}</span>
+                      </p>
+                    </div>
+                  </el-col>
+                  <el-col class="keybox" :span="6">
+                    <p>最大耗时(毫秒)</p>
+                    <h2>{{props.row.maxdur}}</h2>
+                    <div>
+                      <p>日&emsp;
+                        <span>
+                          <i></i>{{props.row.maxdurPctDay}}</span>
+                      </p>
+                      <p>周&emsp;
+                        <span>
+                          <i></i>{{props.row.maxdurPctWeek}}</span>
+                      </p>
+                      <p>月&emsp;
+                        <span>
+                          <i></i>{{props.row.maxdurPctMonth}}</span>
+                      </p>
+                    </div>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+          </template>
+        </el-table-column>
+      </el-table>
+
       <PageBar :total="total" :currentpage="current" @handlePage="handlePage" @handlePageSize="handlePageSize" />
     </el-card>
 
@@ -126,7 +136,7 @@ import * as api from "api/monitor";
 import TabService from "./tabservice/index";
 import PageBar from "components/PageBar/index";
 import formatData from "utils/formatData";
-
+import { getServList } from "api/service/management";
 export default {
   name: "mservice",
   components: {
@@ -148,12 +158,43 @@ export default {
       total: 0,
       current: 0,
       size: 10,
-      loading: true
+      loading: true,
+      servArr: [],
+      typeId: ""
     };
   },
   methods: {
+    searchServById() {
+      api
+        .postQueryList({
+          limit: this.size,
+          pageNo: 1,
+          servId: this.typeId
+        })
+        .then(res => {
+          const { status, data } = res;
+          if (status === 200 && data) {
+            this.loading = false;
+            data.rows.forEach(item => {
+              formatData(item);
+            });
+            this.tabData = data.rows;
+            this.total = parseInt(data.total);
+            this.current = parseInt(data.current);
+          }
+        });
+    },
+    handleType() {
+      // 拉去服务list
+      getServList().then(({ status, data }) => {
+        if (status == 200 && data) {
+          this.servArr = data;
+        }
+      });
+    },
     init() {
       this.getList();
+      this.handleType();
     },
     getList(pageNo = 1, limit = this.size) {
       api
@@ -270,6 +311,8 @@ export default {
 .keybox {
   border-right: 1px solid #ebeef5;
   text-align: center;
+  font-size: 14px;
+  line-height: 1.8em;
   &:last-child {
     border-right: none;
   }
@@ -285,23 +328,13 @@ export default {
     margin: 0 auto;
   }
 }
-.tab-title {
-  line-height: 40px;
-}
-.status-ft {
-  float: right;
-  font-weight: bold;
-}
 .btn {
   padding: 0;
   float: right;
-  line-height: 48px;
+  line-height: 23px;
   border: none;
 }
-.empty {
-  text-align: center;
-  padding: 140px 0;
-  font-size: 14px;
-  color: #9a9a9a;
+.box-card {
+  line-height: 40px;
 }
 </style>

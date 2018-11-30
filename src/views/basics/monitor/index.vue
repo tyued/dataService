@@ -1,13 +1,13 @@
 <template>
   <div class="monitor" id="monitor">
-    <el-tabs v-model="activeName">
-      <el-tab-pane v-if="rightInfoObj['sys-monitor']" label="系统监控" name="first">
-        <Systerm />
+    <el-tabs @tab-click="changeTabs" v-model="activeName">
+      <el-tab-pane v-if="rightInfoObj['sys-monitor']" label="系统监控" name="1">
+        <Systerm :activeName="activeName" />
       </el-tab-pane>
-      <el-tab-pane v-if="rightInfoObj['serv-monitor']" label="服务监控" name="second">
+      <el-tab-pane v-if="rightInfoObj['serv-monitor']" label="服务监控" name="2">
         <Service />
       </el-tab-pane>
-      <el-tab-pane v-if="rightInfoObj['sys-logs']" label="系统日志" name="third">
+      <el-tab-pane v-if="rightInfoObj['sys-logs']" label="系统日志" name="3">
         <Journal />
       </el-tab-pane>
     </el-tabs>
@@ -28,7 +28,7 @@ export default {
   },
   computed: {
     ...mapGetters(["rightInfoObj"]),
-    activeName() {
+    act() {
       let n = 4
       if (this.rightInfoObj['sys-monitor']) {
         n--
@@ -42,14 +42,22 @@ export default {
       return n + ''
     }
   },
+  data() {
+    return {
+      activeName: ''
+    }
+  },
   created() {
     if (this.$route.params.activeName) {
       this.activeName = this.$route.params.activeName;
+    } else {
+      this.activeName = this.act
     }
   },
+  methods: {
+    changeTabs({index}) {
+      this.$store.commit('SET_sysEchartsActIndex', index) 
+    }
+  }
 };
 </script>
-
-<style lang="scss" scoped>
-</style>
-

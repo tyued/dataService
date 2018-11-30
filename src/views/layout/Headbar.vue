@@ -10,7 +10,7 @@
           <el-dropdown @command="handleCommand" trigger="click">
             <div class="el-dropdown-link">
               <!-- <img class="user-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjMiIGhlaWdodD0iNTkiIHZpZXdCb3g9IjAgMCA2MyA1OSIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KPGcgaWQ9IkNhbnZhcyIgZmlsbD0ibm9uZSI+CjxnIGlkPSJkdW90YWktaWNvbiI+CjxnIGlkPSJSZWN0YW5nbGUiPgo8cmVjdCB3aWR0aD0iNDEuMTQwMiIgaGVpZ2h0PSI0Mi4xNDI5IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyMS41OTg3IDE2Ljg1NzEpIiBmaWxsPSIjRkY3MjYyIi8+CjwvZz4KPGcgaWQ9IlZlY3RvciAyIj4KPHBhdGggZD0iTSAwIDI1LjI4NTdMIDIxLjU5ODYgMEwgNDMuMTk3MiAyNS4yODU3TCAwIDI1LjI4NTdaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDMzLjcxNDIpIiBmaWxsPSIjMEFDRjgzIi8+CjwvZz4KPGcgaWQ9IkVsbGlwc2UiPgo8ZWxsaXBzZSBjeD0iMTYuNDU2MSIgY3k9IjE2Ljg1NzIiIHJ4PSIxNi40NTYxIiByeT0iMTYuODU3MiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNS4xNDI0OSAwKSIgZmlsbD0iIzFBQkNGRSIvPgo8L2c+CjwvZz4KPC9nPgo8L3N2Zz4KCg==" alt="">  -->
-              {{$store.getters.userInfoObj.username}}
+              {{$store.getters.userInfoObj.alias}}
               <i class="el-icon-arrow-down el-icon--right"></i>
             </div>
             <el-dropdown-menu slot="dropdown">
@@ -25,7 +25,7 @@
       <li>
         <span class="el-dropdown-link">
           <el-badge :value="number" class="item">
-            <i class="el-icon-bell" @click="$router.push('/notice')"></i>
+            <i class="el-icon-bell" @click="goToNotice"></i>
           </el-badge>
         </span>
       </li>
@@ -37,12 +37,13 @@
     <el-dialog width="700px" title="个人信息" :visible.sync="personInfoVisible">
       <el-form :model="personInfoForm" :rules="rules" ref="ruleForm">
         <el-form-item prop="roleId" label="我的角色" :label-width="formLabelWidth">
-          <el-select style="width:280px;" v-model="personInfoForm.roleId">
+          <el-input clearable :maxlength="50" style="width:280px;" v-model.trim="personInfoForm.roleName" auto-complete="off" disabled></el-input>
+          <!-- <el-select style="width:280px;" v-model="personInfoForm.roleId">
             <el-option label="超级管理员" value="1"></el-option>
-            <el-option disabled label="普通管理员" value="2"></el-option>
-            <el-option disabled label="普通用户" value="3"></el-option>
-          </el-select>
-          <span>&nbsp;当前角色不可更改为其它角色</span>
+            <el-option disabled label="数据提供方" value="2"></el-option>
+            <el-option disabled label="普通消费者" value="3"></el-option>
+          </el-select> -->
+          <span>&nbsp;由后台管理员统一设置</span>
         </el-form-item>
         <el-form-item prop="username" label="用户名" :label-width="formLabelWidth">
           <el-input clearable :maxlength="50" style="width:280px;" v-model.trim="personInfoForm.username" auto-complete="off" disabled></el-input>
@@ -68,7 +69,7 @@
           <el-input clearable :maxlength="50" style="width:280px;" v-model.trim="personInfoForm.email" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item prop="remark" label="备注" :label-width="formLabelWidth">
-          <el-input clearable :maxlength="250" :autosize="{ minRows: 2, maxRows: 6 }" type="textarea" v-model.trim="personInfoForm.remark" placeholder="请输入内容"></el-input>
+          <el-input clearable :autosize="{ minRows: 2, maxRows: 6 }" type="textarea" v-model.trim="personInfoForm.remark" placeholder="请输入内容"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -86,7 +87,6 @@
         </el-form-item>
         <el-form-item prop="newPassword" label="新密码" :label-width="formLabelWidth">
           <el-input clearable :maxlength="50" style="width:280px;" v-model.trim="passwordInfoForm.newPassword" auto-complete="off"></el-input>
-          <span>&nbsp;6-16个字符</span>
         </el-form-item>
         <el-form-item prop="checkNewPassword" label="确认新密码" :label-width="formLabelWidth">
           <el-input clearable :maxlength="50" style="width:280px;" v-model.trim="passwordInfoForm.checkNewPassword" auto-complete="off"></el-input>
@@ -94,6 +94,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="updatePassWord('ruleFormPwd')">确认修改</el-button>
+        <el-button @click="changePasswordVisible = false">取消</el-button>
       </div>
     </el-dialog>
     <!-- /修改密码弹出层 -->
@@ -103,6 +104,7 @@
 <script>
 import * as api from "api/login";
 import Base64 from "utils/base64";
+import { mapGetters } from "vuex";
 export default {
   data() {
     var checkPwd = (rule, value, callback) => {
@@ -110,6 +112,50 @@ export default {
         callback(new Error("请再次输入密码"));
       } else if (value !== this.passwordInfoForm.newPassword) {
         callback(new Error("两次输入密码不一致!"));
+      } else {
+        callback();
+      }
+    };
+    var validatePassNew = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入新密码"));
+      } else if (!/^[a-zA-Z0-9]{6,16}$/.test(value)) {
+        callback(new Error("请输入字母或数字，长度在 6 到 16 个字符"));
+      } else {
+        callback();
+      }
+    };
+    var validatePassOld = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入旧密码"));
+      } else if (/[\u4E00-\u9FA5]/.test(value)) {
+        callback(new Error("不能包含中文"));
+      } else if (
+        Base64.encode(value) !== this.$store.getters.userInfoObj.password
+      ) {
+        callback(new Error("旧密码输入错误"));
+      } else {
+        callback();
+      }
+    };
+    var phoneCheck = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入号码"));
+      } else if (!/^\d{11}$/.test(Number(value))) {
+        callback(new Error("请输入11位有效手机号码"));
+      } else {
+        callback();
+      }
+    };
+    var emailCheck = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入邮箱"));
+      } else if (
+        !/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(
+          value
+        )
+      ) {
+        callback(new Error("请输入正确的邮箱"));
       } else {
         callback();
       }
@@ -131,18 +177,31 @@ export default {
         birthday: ""
       },
       rules: {
-        alias: [{ required: true, message: "请输入昵称", trigger: "blur" }],
-        phone: [{ required: true, message: "请填写手机", trigger: "blur" }],
-        email: [{ required: true, message: "请填写邮箱", trigger: "blur" }],
-        remark: [{ required: true, message: "请填写备注", trigger: "blur" }]
+        alias: [
+          { required: true, message: "请输入昵称", trigger: "blur" },
+          { min: 2, max: 20, message: "长度为2-20个字符", trigger: "blur" }
+        ],
+        phone: [{ required: true, validator: phoneCheck, trigger: "blur" }],
+        email: [{ required: true, validator: emailCheck, trigger: "blur" }],
+        remark: [
+          { required: true, message: "请填写备注", trigger: "blur" },
+          { min: 1, max: 500, message: "长度为1-500个字符", trigger: "blur" }
+        ]
       },
       rulesPwd: {
         currentPassword: [
-          { required: true, message: "请输入旧密码", trigger: "blur" }
+          {
+            required: true,
+            validator: validatePassOld,
+            trigger: "blur"
+          }
         ],
         newPassword: [
-          { required: true, message: "请输入新密码", trigger: "blur" },
-          { min: 6, max: 16, message: "长度在 6 到 16 个字符", trigger: "blur" }
+          {
+            required: true,
+            validator: validatePassNew,
+            trigger: "blur"
+          }
         ],
         checkNewPassword: [
           { required: true, validator: checkPwd, trigger: "blur" }
@@ -158,6 +217,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["formLeave"]),
     number() {
       // 待处理通知数
       // return this.$store.state.login.noticeNumber // 根据依赖实时变化
@@ -173,12 +233,10 @@ export default {
     handleCommand(command) {
       switch (command) {
         case "e":
-          this.$store.commit('LOG_OUT')
-          window.location.reload()
-          // this.$store.dispatch("logOut").then(() => {
-          //   // this.$router.push("/login");
-          //   location.reload()
-          // });
+          this.$store.dispatch("logOut").then(() => {
+            // this.$router.push("/login");
+            location.reload();
+          });
           break;
         case "a": // 个人信息
           this.personInfoVisible = true;
@@ -195,7 +253,21 @@ export default {
           };
           break;
         case "c": // 我的应用
-          this.$router.push("/application");
+          if (this.formLeave) {
+            this.$confirm("数据尚未保存，确定要离开吗?", "提示", {
+              confirmButtonText: "确定",
+              cancelButtonText: "取消",
+              type: "warning"
+            }).then(() => {
+              this.$store.commit('SET_formLeave', false)
+              this.$router.push("/application");
+              this.$store.commit("SET_SIDEBAR", "");
+            });
+          } else {
+            this.$router.push("/application");
+            this.$store.commit("SET_SIDEBAR", "");
+          }
+
           break;
       }
     },
@@ -283,6 +355,22 @@ export default {
         this.$message.error("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
+    },
+    goToNotice() {
+      if (this.formLeave) {
+        this.$confirm("数据尚未保存，确定要离开吗?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          this.$store.commit('SET_formLeave', false)
+          this.$router.push("/notice");
+          this.$store.commit("SET_SIDEBAR", "");
+        });
+      } else {
+        this.$router.push("/notice");
+        this.$store.commit("SET_SIDEBAR", "");
+      }
     }
   }
 };

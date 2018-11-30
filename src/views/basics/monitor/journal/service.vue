@@ -2,41 +2,36 @@
   <div class="journal-service">
     <el-form label-position="left" label-width="70px">
       <el-form-item label="时间">
-        <el-button v-for="(item,index) in timeArr" :key="index" :class="{active: item.show}" @click="handleTime(item)">{{item.name}}</el-button>
-        <el-date-picker @change="handleTimeChange" value-format="yyyy-MM-dd" style="margin-left:10px;" v-model="valueT" type="daterange" align="right" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+        <el-button size="small" v-for="(item,index) in timeArr" :key="index" :class="{active: item.show}" @click="handleTime(item)">{{item.name}}</el-button>
+        <el-date-picker size="small" @change="handleTimeChange" value-format="yyyy-MM-dd" style="margin-left:10px;" v-model="valueT" type="daterange" align="right" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="服务类型">
-        <el-button v-for="(item,index) in servTypeArr" :key="index" :class="{active: item.show}" @click="handleServType(item)">{{item.name}}</el-button>
+        <el-button size="small" v-for="(item,index) in servTypeArr" :key="index" :class="{active: item.show}" @click="handleServType(item)">{{item.name}}</el-button>
       </el-form-item>
       <el-form-item label="服务分类">
-        <el-button v-for="(item,index) in servTagArr" :key="index" :class="{active: item.show}" @click="handleServTag(item)">{{item.name}}</el-button>
+        <el-button size="small" v-for="(item,index) in servTagArr" :key="index" :class="{active: item.show}" @click="handleServTag(item)">{{item.name}}</el-button>
       </el-form-item>
       <el-form-item label="访问状态">
-        <el-button v-for="(item,index) in status" :key="index" :class="{active: item.show}" @click="handleStatus(item)">{{item.name}}</el-button>
+        <el-button size="small" v-for="(item,index) in status" :key="index" :class="{active: item.show}" @click="handleStatus(item)">{{item.name}}</el-button>
       </el-form-item>
       <el-form-item label="关键字">
-        <el-input clearable :maxlength="50" prefix-icon="el-icon-search" placeholder="请输入服务名称关键字" v-model.trim="typeObj.inputValue" style="width: 300px;"></el-input>
+        <el-input size="small" clearable :maxlength="50" prefix-icon="el-icon-search" placeholder="请输入服务名称关键字" v-model.trim="typeObj.inputValue" style="width: 300px;"></el-input>
       </el-form-item>
-      <el-button type="primary" @click="handleSearch"><i class="el-icon-search"></i> 查询</el-button>
+      <el-button size="small" type="primary" @click="handleSearch"><i class="el-icon-search"></i> 查询</el-button>
     </el-form>
 
     <el-row style="margin: 10px 0;">
       <el-table v-loading="loading" :data="tableData" stripe style="width: 100%">
-        <el-table-column prop="userId" label="接口的用户ID/服务创建人ID" sortable>
-        </el-table-column>
         <el-table-column prop="userName" label="用户名称">
         </el-table-column>
-        <el-table-column prop="appId" label="接口的应用ID">
+        <el-table-column prop="appName" label="应用名称">
         </el-table-column>
-        <el-table-column prop="appName" label="接口的应用名称">
-        </el-table-column>
-
         <el-table-column prop="reqAddr" label="来源IP">
         </el-table-column>
         <el-table-column prop="reqURI" label="URI地址">
         </el-table-column>
-        <el-table-column prop="type" label="系统异常类型">
+        <el-table-column prop="type" label="异常类型">
         </el-table-column>
         <el-table-column prop="status" label="状态">
         </el-table-column>
@@ -44,16 +39,11 @@
         </el-table-column>
         <el-table-column prop="exception" label="异常信息">
         </el-table-column>
-        <el-table-column prop="respCode" label="响应错误对照码">
+        <el-table-column prop="respCode" label="错误代码">
         </el-table-column>
         <el-table-column prop="respMsg" label="错误信息">
         </el-table-column>
-        <el-table-column prop="timestamp" label="系统异常发生时间">
-        </el-table-column>
-        <el-table-column label="操作" width="80">
-          <template slot-scope="scope">
-            <el-button size="small" type="primary">查看</el-button>
-          </template>
+        <el-table-column width="170" prop="timestamp" label="系统异常发生时间">
         </el-table-column>
       </el-table>
     </el-row>
@@ -199,7 +189,10 @@ export default {
       this.getList(this.current, this.size);
     },
     getList(pageNo = 1, limit = this.size) {
-      let query = {};
+      let query = {
+        pageNo,
+        limit
+      };
       if (this.typeObj.timeValue.length !== 0) {
         query.begintime = this.typeObj.timeValue[0];
         query.endtime = this.typeObj.timeValue[1];
@@ -220,6 +213,14 @@ export default {
         const { status, data } = res;
         if (status === 200 && data) {
           this.loading = false;
+          data.rows.forEach((item) => {
+            item.exception = item.exception ? item.exception : '无'
+            item.type = item.type ? item.type : '无'
+            item.respMsg = item.respMsg ? item.respMsg : '无'
+
+            item.status = item.status == '1' ? '成功' : '异常'
+            item.duration = item.duration + 'ms'
+          })
           this.tableData = data.rows;
           this.current = data.current;
           this.total = data.total;

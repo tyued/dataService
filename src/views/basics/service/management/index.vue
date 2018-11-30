@@ -1,8 +1,8 @@
 <template>
   <el-card class="box-card management">
     <el-row>
-      <el-button v-if="rightInfoObj['serv-examining']" :class="{activeBtn:showArr[0]}" @click="goUncommit">待发布</el-button>
-      <el-button v-if="rightInfoObj['serv-subscribe']" :class="{activeBtn:showArr[1]}" @click="goSubscription">已订阅</el-button>
+      <el-button v-if="rightInfoObj['serv-examining']" :class="{activeBtn:showArr[0]}" @click="goUncommit">待提交</el-button>
+      <el-button v-if="rightInfoObj['serv-subscribe']" :class="{activeBtn:showArr[1]}" @click="goSubscription">订阅审核</el-button>
       <el-button v-if="rightInfoObj['serv-api']" :class="{activeBtn:showArr[2]}" @click="goIO">服务接口</el-button>
     </el-row>
     <component @handleEdit="handleEdit" :is="listId"></component>

@@ -138,7 +138,7 @@ export default {
         this.$router.push({
             name: 'main',
             params: {
-                activeName: 'second'
+                activeName: '2'
             }
         })
     }

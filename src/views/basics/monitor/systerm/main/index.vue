@@ -54,11 +54,22 @@ import * as api from "api/monitor";
 export default {
   created() {
     this.getInstance();
+    if (!this.queryTimer) {
+      this.queryTimer = setInterval(() => {
+        this.list.forEach(item => {
+          this.circleData(item);
+        });
+      }, 60000);
+    }
+  },
+  beforeDestroy() {
+    window.clearInterval(this.queryTimer);
   },
   data() {
     return {
       list: [],
-      empty: false
+      empty: false,
+      queryTimer: null
     };
   },
   methods: {
@@ -72,6 +83,7 @@ export default {
           data.forEach(item => {
             this.circleData(item);
           });
+
           this.list = data;
         }
       });

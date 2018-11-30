@@ -109,7 +109,7 @@ export function postInterfaceList(params) {
  */
 export function postQueryList(data) {
   return fetch({
-    url: 'dsb/admin/service/api/stats/list',
+    url: 'dsb/admin/service/stats/list',
     method: 'post',
     data
   });

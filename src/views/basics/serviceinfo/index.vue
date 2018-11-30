@@ -1,5 +1,8 @@
 <template>
-  <div class="container" v-loading.body="listLoading">
+  <div
+    class="container"
+    v-loading.body="listLoading"
+  >
     <h1>{{infoData.name}}</h1>
     <el-row class="top-nav">
       <el-col :span="24">
@@ -11,53 +14,120 @@
           <li>{{infoData.subCount}}</li>
           <li>{{infoData.evalCount}}</li>
           <li>
-            <el-rate v-model="valRate" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate>
+            <el-rate
+              v-model="valRate"
+              disabled
+              show-score
+              text-color="#ff9900"
+              score-template="{value}"
+            ></el-rate>
           </li>
-          <li class="nav-back" @click="handleBack">返回</li>
+          <li
+            class="nav-back"
+            @click="handleBack"
+          >返回</li>
           <!-- <li class="nav-forbidden" v-if="$store.getters.userInfoObj.roleId == '1'">
             <span v-if="sub == '0'">禁用</span>
             <span v-else>发布</span>
           </li> -->
-          <li class="nav-monitor" v-if="$store.getters.userInfoObj.roleId == '1'" @click="goToMonitor">&nbsp;监控</li>
+          <li
+            class="nav-monitor"
+            v-if="$store.getters.userInfoObj.roleId == '1'"
+            @click="goToMonitor"
+          >&nbsp;监控</li>
           <template v-if="rightInfoObj['serv-home']['serv:sub']">
-            <li @click="subscribe" v-if="sub == '0'" class="nav-sub">
+            <li
+              @click="subscribe"
+              v-if="sub != '0' && sub != '1'"
+              class="nav-sub"
+            >
               <span>订阅</span>
             </li>
           </template>
+          <!--  v-if="rightInfoObj['serv-home']['serv:unsub']" -->
+          <template>
+            <li
+              v-if="sub == '0'"
+              class="nav-sub"
+            >
+              <span style="color: #409EFF">订阅审批中</span>
+            </li>
+          </template>
           <template v-if="rightInfoObj['serv-home']['serv:unsub']">
-            <li @click="unSubscribe" v-if="sub != '0'" class="nav-sub">
+            <li
+              @click="unSubscribe"
+              v-if="sub == '1'"
+              class="nav-sub"
+            >
               <span>取消订阅</span>
             </li>
           </template>
-          
-          <li v-if="rightInfoObj['serv-home']['serv:eval']" class="nav-res" @click="handleList">意见反馈</li>
+
+          <li
+            v-if="rightInfoObj['serv-home']['serv:eval']"
+            class="nav-res"
+            @click="handleList"
+          >意见反馈</li>
         </ul>
       </el-col>
     </el-row>
     <el-row :gutter="12">
       <el-col :span="14">
-        <el-card shadow="always" class="card-item-intro" :body-style="{'height': '392px'}">
+        <el-card
+          shadow="always"
+          class="card-item-intro"
+          :body-style="{'height': '392px'}"
+        >
           <h5>服务简介</h5>
           <section v-html="infoData.detail"></section>
         </el-card>
       </el-col>
       <el-col :span="10">
-        <el-card shadow="always" class="card-item">
+        <el-card
+          shadow="always"
+          class="card-item"
+        >
           <div class="card-item-title">
             <h5>猜你喜欢</h5>
             <!--<a href="javascript:;">换一批</a>-->
           </div>
-          <div class="card-itembox" v-for="item in enjoyList" :key="item.id">
+          <div
+            class="card-itembox"
+            v-for="item in enjoyList"
+            :key="item.id"
+          >
             <div class="card-item-top">
               <span>{{item.name}}</span>
-              <el-button type="success" size="small" @click="toStudentInfo(item.type,item.id)">查看</el-button>
+              <el-button
+                type="success"
+                size="small"
+                @click="toStudentInfo(item.type,item.id)"
+              >查看</el-button>
             </div>
             <el-row class="card-item-bottom">
-              <el-col class="li" :span="5">{{item.producer}}</el-col>
-              <el-col class="li" :span="5">{{item.subCount}}</el-col>
-              <el-col class="li" :span="5">{{item.evalCount}}</el-col>
-              <el-col class="li" :span="9">
-                <el-rate v-model="item.evalRank" disabled show-score text-color="#ff9900" score-template="{value}"></el-rate>
+              <el-col
+                class="li"
+                :span="5"
+              >{{item.producer}}</el-col>
+              <el-col
+                class="li"
+                :span="5"
+              >{{item.subCount}}</el-col>
+              <el-col
+                class="li"
+                :span="5"
+              >{{item.evalCount}}</el-col>
+              <el-col
+                class="li"
+                :span="9"
+              >
+                <el-rate
+                  v-model="item.evalRank"
+                  disabled
+                  show-score
+                  text-color="#ff9900"
+                  score-template="{value}"
+                ></el-rate>
               </el-col>
             </el-row>
           </div>
@@ -65,18 +135,38 @@
       </el-col>
     </el-row>
 
-    <el-row :gutter="12" class="main">
+    <el-row
+      :gutter="12"
+      class="main"
+    >
       <el-col :span="24">
-        <el-card shadow="always" class="card-item">
+        <el-card
+          shadow="always"
+          class="card-item"
+        >
           <section>
-            <el-radio-group v-model="tabPosition" style="margin-bottom: 30px;" :stretch="true">
+            <el-radio-group
+              v-model="tabPosition"
+              style="margin-bottom: 30px;"
+              :stretch="true"
+            >
               <el-radio-button label="left">API文档</el-radio-button>
               <el-radio-button label="top">错误代码</el-radio-button>
             </el-radio-group>
             <el-tabs :tab-position="tabPosition">
-              <el-tab-pane v-for="item in apisList" :key="item.id" :label="item.name">
-                <el-row :gutter="14" v-if='tabPosition=="left"'>
-                  <el-col :span="12" class="left-box">
+              <el-tab-pane
+                v-for="item in apisList"
+                :key="item.id"
+                :label="item.name"
+              >
+                <el-row
+                  :gutter="14"
+                  v-if='tabPosition=="left"'
+                >
+                  <el-col
+                    :span="12"
+                    class="left-box"
+                  >
                     <h5>基本信息</h5>
                     <ol>
                       <li>服务名称：{{ infoData.name }}</li>
@@ -86,12 +176,20 @@
                       <li>接口中文名称：{{ item.name }}</li>
                       <li v-if="type != '3'"><span class="li-title">接口原始地址：</span><span class="li-cont">{{item.url}}</span></li>
                       <li v-if="type != '3'"><span class="li-title">返回格式：</span><span class="li-cont">
-                          <el-tag v-if="type == '2'" size="small" type="success">XML</el-tag>
-                          <el-tag v-else size="small" type="success">{{item.resp}}</el-tag>
+                          <el-tag
+                            v-if="type == '2'"
+                            size="small"
+                            type="success"
+                          >XML</el-tag>
+                          <el-tag
+                            v-else
+                            size="small"
+                            type="success"
+                          >{{item.resp}}</el-tag>
                         </span>
                       </li>
                       <li v-if="type == '2'"><span class="li-title">请求方式：</span><span class="li-cont">
-                          <el-tag>{{item.method}}</el-tag>
+                          <el-tag size="small">{{item.method}}</el-tag>
                         </span>
                       </li>
                       <li v-if="type == '3'">返回内容：
@@ -99,51 +197,108 @@
                         <span v-if="item.rtType == '1'">操作状态</span>
                       </li>
                       <li><span class="li-title">请求示例：</span><span class="li-cont">{{item.expUrl}}</span></li>
-                      <li><span class="li-title">接口备注：</span><span class="li-cont" v-html="item.intro"></span>
+                      <li><span class="li-title">接口备注：</span><span
+                          class="li-cont"
+                          v-html="item.intro"
+                        ></span>
                       </li>
                     </ol>
                     <h5>请求参数说明</h5>
-                    <el-tabs class="exact" type="border-card">
+                    <el-tabs
+                      class="exact"
+                      type="border-card"
+                    >
                       <el-tab-pane label="输入参数">
-                        <el-table :data="item.params" style="width: 100%">
-                          <el-table-column prop="name" label="名称"></el-table-column>
-                          <el-table-column prop="required" label="必填">
+                        <el-table
+                          :data="item.params"
+                          style="width: 100%"
+                        >
+                          <el-table-column
+                            prop="name"
+                            label="名称"
+                          ></el-table-column>
+                          <el-table-column
+                            prop="required"
+                            label="必填"
+                          >
                             <template slot-scope="scope">
                               {{scope.row.required=="1"?'是':'否'}}
                             </template>
                           </el-table-column>
-                          <el-table-column prop="type" label="类型"></el-table-column>
-                          <el-table-column prop="desc" label="说明"></el-table-column>
+                          <el-table-column
+                            prop="type"
+                            label="类型"
+                          ></el-table-column>
+                          <el-table-column
+                            prop="desc"
+                            label="说明"
+                          ></el-table-column>
                         </el-table>
                       </el-tab-pane>
                       <el-tab-pane label="输出参数">
-                        <el-table :data="item.responses" style="width: 100%">
-                          <el-table-column prop="name" label="名称"></el-table-column>
-                          <el-table-column prop="key" label="类型"></el-table-column>
-                          <el-table-column prop="desc" label="说明"></el-table-column>
+                        <el-table
+                          :data="item.responses"
+                          style="width: 100%"
+                        >
+                          <el-table-column
+                            prop="name"
+                            label="名称"
+                          ></el-table-column>
+                          <el-table-column
+                            prop="key"
+                            label="类型"
+                          ></el-table-column>
+                          <el-table-column
+                            prop="desc"
+                            label="说明"
+                          ></el-table-column>
                         </el-table>
                       </el-tab-pane>
                     </el-tabs>
                   </el-col>
-                  <el-col :span="12" class="right-box">
+                  <el-col
+                    :span="12"
+                    class="right-box"
+                  >
                     <!-- <el-button v-if="type == '2'" type="primary">XML</el-button>
                     <el-button v-else type="primary">{{infoData.resp}}</el-button> -->
                     <!-- <h5>&emsp;{{item.resp?item.resp:(type==2?'XML':'空')}}返回示例</h5> -->
                     <h5>&emsp;返回示例</h5>
-                    <div class="respBox" v-html="item.example"></div>
+                    <div
+                      class="respBox"
+                      v-html="item.example"
+                    ></div>
                   </el-col>
                 </el-row>
                 <el-row v-else>
                   <el-col :span="24">
                     <h5>服务级错误码参照</h5>
-                    <el-table :data="item.errors" style="width: 100%">
-                      <el-table-column prop="code" label="错误码"></el-table-column>
-                      <el-table-column prop="text" label="说明"></el-table-column>
+                    <el-table
+                      :data="item.errors"
+                      style="width: 100%"
+                    >
+                      <el-table-column
+                        prop="code"
+                        label="错误码"
+                      ></el-table-column>
+                      <el-table-column
+                        prop="text"
+                        label="说明"
+                      ></el-table-column>
                     </el-table>
                     <h5>系统级错误码参照</h5>
-                    <el-table :data="ErrorCode" style="width: 100%">
-                      <el-table-column prop="code" label="错误码"></el-table-column>
-                      <el-table-column prop="text" label="说明"></el-table-column>
+                    <el-table
+                      :data="ErrorCode"
+                      style="width: 100%"
+                    >
+                      <el-table-column
+                        prop="code"
+                        label="错误码"
+                      ></el-table-column>
+                      <el-table-column
+                        prop="text"
+                        label="说明"
+                      ></el-table-column>
                     </el-table>
                   </el-col>
                 </el-row>
@@ -155,63 +310,141 @@
     </el-row>
 
     <!-- 对话框 -->
-    <el-dialog title="意见反馈" :visible.sync="centerDialogVisible" width="600px" center>
+    <el-dialog
+      title="意见反馈"
+      :visible.sync="centerDialogVisible"
+      width="600px"
+      center
+    >
       <el-row class="dialog-topbox">
         <el-col :span="6">
           <h4>评论及评分</h4>
           <h2>{{evalself.alleval}}</h2>
           <span>满分为5分</span>
         </el-col>
-        <el-col :span="18" class="evalsbox">
+        <el-col
+          :span="18"
+          class="evalsbox"
+        >
           <el-row>
-            <el-col class="dialog-stars" :span="10">
-              <el-rate v-model="evalsinfo.star5" disabled :colors="['#606266', '#606266', '#606266']"></el-rate>
+            <el-col
+              class="dialog-stars"
+              :span="10"
+            >
+              <el-rate
+                v-model="evalsinfo.star5"
+                disabled
+                :colors="['#606266', '#606266', '#606266']"
+              ></el-rate>
             </el-col>
             <el-col :span="14">
-              <el-progress class="dialog-line" :percentage="evalself.rank5" color="#909399" :show-text="false"></el-progress>
+              <el-progress
+                class="dialog-line"
+                :percentage="evalself.rank5"
+                color="#909399"
+                :show-text="false"
+              ></el-progress>
             </el-col>
           </el-row>
           <el-row>
-            <el-col class="dialog-stars" :span="10">
-              <el-rate v-model="evalsinfo.star4" disabled :colors="['#606266', '#606266', '#606266']"></el-rate>
+            <el-col
+              class="dialog-stars"
+              :span="10"
+            >
+              <el-rate
+                v-model="evalsinfo.star4"
+                disabled
+                :colors="['#606266', '#606266', '#606266']"
+              ></el-rate>
             </el-col>
             <el-col :span="14">
-              <el-progress class="dialog-line" :percentage="evalself.rank4" color="#909399" :show-text="false"></el-progress>
+              <el-progress
+                class="dialog-line"
+                :percentage="evalself.rank4"
+                color="#909399"
+                :show-text="false"
+              ></el-progress>
             </el-col>
           </el-row>
           <el-row>
-            <el-col class="dialog-stars" :span="10">
-              <el-rate v-model="evalsinfo.star3" disabled :colors="['#606266', '#606266', '#606266']"></el-rate>
+            <el-col
+              class="dialog-stars"
+              :span="10"
+            >
+              <el-rate
+                v-model="evalsinfo.star3"
+                disabled
+                :colors="['#606266', '#606266', '#606266']"
+              ></el-rate>
             </el-col>
             <el-col :span="14">
-              <el-progress class="dialog-line" :percentage="evalself.rank3" color="#909399" :show-text="false"></el-progress>
+              <el-progress
+                class="dialog-line"
+                :percentage="evalself.rank3"
+                color="#909399"
+                :show-text="false"
+              ></el-progress>
             </el-col>
           </el-row>
           <el-row>
-            <el-col class="dialog-stars" :span="10">
-              <el-rate v-model="evalsinfo.star2" disabled :colors="['#606266', '#606266', '#606266']"></el-rate>
+            <el-col
+              class="dialog-stars"
+              :span="10"
+            >
+              <el-rate
+                v-model="evalsinfo.star2"
+                disabled
+                :colors="['#606266', '#606266', '#606266']"
+              ></el-rate>
             </el-col>
             <el-col :span="14">
-              <el-progress class="dialog-line" :percentage="evalself.rank2" color="#909399" :show-text="false"></el-progress>
+              <el-progress
+                class="dialog-line"
+                :percentage="evalself.rank2"
+                color="#909399"
+                :show-text="false"
+              ></el-progress>
             </el-col>
           </el-row>
           <el-row>
-            <el-col class="dialog-stars" :span="10">
-              <el-rate v-model="evalsinfo.star1" disabled :colors="['#606266', '#606266', '#606266']"></el-rate>
+            <el-col
+              class="dialog-stars"
+              :span="10"
+            >
+              <el-rate
+                v-model="evalsinfo.star1"
+                disabled
+                :colors="['#606266', '#606266', '#606266']"
+              ></el-rate>
             </el-col>
             <el-col :span="14">
-              <el-progress class="dialog-line" :percentage="evalself.rank1" color="#909399" :show-text="false"></el-progress>
+              <el-progress
+                class="dialog-line"
+                :percentage="evalself.rank1"
+                color="#909399"
+                :show-text="false"
+              ></el-progress>
             </el-col>
           </el-row>
         </el-col>
       </el-row>
-      <el-row class="dialog-middlebox" v-if="isMiddle">
+      <el-row
+        class="dialog-middlebox"
+        v-if="isMiddle"
+      >
         <el-col :span="12">
-          <a href="javascript:;" @click="isMiddle = !isMiddle"><i class="el-icon-edit"></i>&emsp;撰写评论</a>
+          <a
+            href="javascript:;"
+            @click="isMiddle = !isMiddle"
+          ><i class="el-icon-edit"></i>&emsp;撰写评论</a>
         </el-col>
         <el-col :span="12">
           <span>给我打分&nbsp;&nbsp;</span>
-          <el-rate v-model="submitParams.rank" class="dialog-stars" @change="rateChange"></el-rate>
+          <el-rate
+            v-model="submitParams.rank"
+            class="dialog-stars"
+            @change="rateChange"
+          ></el-rate>
         </el-col>
       </el-row>
 
@@ -219,19 +452,46 @@
         <el-row class="dialog-bottombox">
           <div class="dialog-title">
             <span>&emsp;给我打分&nbsp;&nbsp;</span>
-            <el-rate v-model="submitParams.rank" class="dialog-stars" @change="rateChange"></el-rate>
+            <el-rate
+              v-model="submitParams.rank"
+              class="dialog-stars"
+              @change="rateChange"
+            ></el-rate>
           </div>
 
-          <el-form :model="submitParams" :rules="rules" ref="submitParams" label-width="70px" class="demo-ruleForm">
-            <el-form-item label="标题" prop="text">
+          <el-form
+            :model="submitParams"
+            :rules="rules"
+            ref="submitParams"
+            label-width="70px"
+            class="demo-ruleForm"
+          >
+            <el-form-item
+              label="标题"
+              prop="text"
+            >
               <el-input v-model.trim="submitParams.text"></el-input>
             </el-form-item>
-            <el-form-item label="评论" prop="title">
-              <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 6 }" v-model.trim="submitParams.title"></el-input>
+            <el-form-item
+              label="评论"
+              prop="title"
+            >
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 2, maxRows: 6 }"
+                v-model.trim="submitParams.title"
+              ></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button size="small" type="primary" @click="submitForm('submitParams')">确 定</el-button>
-              <el-button size="small" @click="isMiddle = !isMiddle">取 消</el-button>
+              <el-button
+                size="small"
+                type="primary"
+                @click="submitForm('submitParams')"
+              >确 定</el-button>
+              <el-button
+                size="small"
+                @click="isMiddle = !isMiddle"
+              >取 消</el-button>
             </el-form-item>
           </el-form>
 
@@ -249,21 +509,41 @@
               <el-dropdown-item command="最新评价">按最新评价排序</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <el-col v-for="(item, index) in accessList" :key="index" :span="24" class="dialog-assessbox">
+          <el-col
+            v-for="(item, index) in accessList"
+            :key="index"
+            :span="24"
+            class="dialog-assessbox"
+          >
             <h4>{{item.title}}</h4>
             <div class="dialog-title">
               <span>{{item.userName}}</span>&nbsp;<span>{{item.timestamp}}</span>
-              <el-rate v-model="item.rank" class="dialog-stars" disabled></el-rate>
+              <el-rate
+                v-model="item.rank"
+                class="dialog-stars"
+                disabled
+              ></el-rate>
             </div>
             <div class="dialog-message">
               <p>{{item.text}}&nbsp;</p>
             </div>
           </el-col>
-          <el-col :span="24" class="dialog-links">
-            <a v-if="lessControll" @click="handleLessMsg" href="javascript:;">收起
+          <el-col
+            :span="24"
+            class="dialog-links"
+          >
+            <a
+              v-if="lessControll"
+              @click="handleLessMsg"
+              href="javascript:;"
+            >收起
               <i class="el-icon-arrow-up"></i>
             </a>
-            <a v-if="totalNumber > 5 && accessList.length != totalNumber" @click="handleMoreMsg" href="javascript:;">更多
+            <a
+              v-if="totalNumber > 5 && accessList.length != totalNumber"
+              @click="handleMoreMsg"
+              href="javascript:;"
+            >更多
               <i class="el-icon-arrow-down"></i>
             </a>
           </el-col>
@@ -272,26 +552,64 @@
     </el-dialog>
 
     <!-- 接口的弹出层 -->
-    <el-dialog width="76%" title="接口监控信息" :visible.sync="dialogIOVisible">
-      <TabService :servId="servId" :servType="type" ref="tab-service" />  
+    <el-dialog
+      width="76%"
+      title="接口监控信息"
+      :visible.sync="dialogIOVisible"
+    >
+      <TabService
+        :servId="servId"
+        :servType="type"
+        ref="tab-service"
+      />
     </el-dialog>
     <!-- /接口的弹出层 -->
 
     <!-- 订阅弹出层 -->
-    <el-dialog width="40%" title="选择要订阅的应用" :visible.sync="dialogIOVisibleSub">
+    <el-dialog
+      width="40%"
+      title="选择要订阅的应用"
+      :visible.sync="dialogIOVisibleSub"
+    >
 
-      <el-form ref="form" :rules="rulesApp" :model="form" label-width="80px">
+      <el-form
+        ref="form"
+        :rules="rulesApp"
+        :model="form"
+        label-width="80px"
+      >
 
-        <el-form-item label="应用" prop="appId">
-          <el-select v-model="form.appId" placeholder="请选择应用">
-            <el-option v-for="(item, index) in appArr" :key="index" :label="item.value" :value="item.key"></el-option>
+        <el-form-item
+          label="应用"
+          prop="appId"
+        >
+          <el-select
+            v-model="form.appId"
+            placeholder="请选择应用"
+          >
+            <el-option
+              v-for="(item, index) in appArr"
+              :key="index"
+              :label="item.value"
+              :value="item.key"
+            ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="描述" prop="desc">
-          <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 6 }" v-model.trim="form.desc"></el-input>
+        <el-form-item
+          label="描述"
+          prop="desc"
+        >
+          <el-input
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 6 }"
+            v-model.trim="form.desc"
+          ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="subscribeDone('form')">确定</el-button>
+          <el-button
+            type="primary"
+            @click="subscribeDone('form')"
+          >确定</el-button>
           <el-button @click="dialogIOVisibleSub = false">取消</el-button>
         </el-form-item>
 
@@ -312,7 +630,7 @@ export default {
     TabService
   },
   computed: {
-    ...mapGetters(["servTagArr", 'rightInfoObj'])
+    ...mapGetters(["servTagArr", "rightInfoObj"])
   },
   data() {
     return {
@@ -400,9 +718,9 @@ export default {
   created() {
     this.type = this.$route.query.type;
     this.servId = this.$route.query.servId;
-    // this.sub = this.$route.query.sub;
-    this.DetailQuery.servId = this.servId;
-    this.submitParams.servId = this.servId;
+    // this.sub = this.$route.params.sub;
+    this.DetailQuery.servId = this.$route.query.servId;
+    this.submitParams.servId = this.$route.query.servId;
     this.getBaseData();
     this.getErrorCode();
 
@@ -440,24 +758,10 @@ export default {
           });
           var uuid = this.infoData.uuid;
           this.apisList.forEach((item, index) => {
-            if (this.type == 1) {
-              //soap---http
-              item.expUrl = `${this.Settings}/http/${uuid}/v${item.version}${
-                item.path ? "/" + item.path : ""
-              }`;
-            }
-            if (this.type == 2) {
-              //webservice----soap
-              item.expUrl = `${this.Settings}/http/${uuid}/v${item.method}${
-                item.version ? "/" + item.version : ""
-              }`;
-            }
-            if (this.type == 3) {
-              //数据源-----dataset
-              item.expUrl = `${this.Settings}/http/${uuid}/v${item.version}${
-                item.path ? "/" + item.path : ""
-              }`;
-            }
+            //soap---http
+            item.expUrl = `${this.Settings}/http/${uuid}/v${item.version}${
+              item.path ? "/" + item.path : ""
+            }`;
           });
 
           this.infoData.tagname = this.infoData.tagname
@@ -484,24 +788,10 @@ export default {
           });
           var uuid = this.infoData.uuid;
           this.apisList.forEach((item, index) => {
-            if (this.type == 1) {
-              //soap---http
-              item.expUrl = `${this.Settings}/http/${uuid}/v${item.version}${
-                item.path ? "/" + item.path : ""
-              }`;
-            }
-            if (this.type == 2) {
-              //webservice----soap
-              item.expUrl = `${this.Settings}/http/${uuid}/v${item.method}${
-                item.version ? "/" + item.version : ""
-              }`;
-            }
-            if (this.type == 3) {
-              //数据源-----dataset
-              item.expUrl = `${this.Settings}/http/${uuid}/v${item.version}${
-                item.path ? "/" + item.path : ""
-              }`;
-            }
+            //webservice----soap
+            item.expUrl = `${this.Settings}/soap/${uuid}/${item.method}_v${
+              item.version
+            }`;
           });
           this.infoData.tagname = this.infoData.tagname
             ? this.infoData.tagname
@@ -514,7 +804,6 @@ export default {
       if (this.type == "3") {
         //数据源
         api.getDataset(this.DetailQuery).then(response => {
-          console.log(response)
           this.infoData = response.data;
           this.sub = response.data.subscribed;
           this.apisList = response.data.apis;
@@ -527,24 +816,10 @@ export default {
           });
           var uuid = this.infoData.uuid;
           this.apisList.forEach((item, index) => {
-            if (this.type == 1) {
-              //soap---http
-              item.expUrl = `${this.Settings}/http/${uuid}/v${item.version}${
-                item.path ? "/" + item.path : ""
-              }`;
-            }
-            if (this.type == 2) {
-              //webservice----soap
-              item.expUrl = `${this.Settings}/http/${uuid}/v${item.method}${
-                item.version ? "/" + item.version : ""
-              }`;
-            }
-            if (this.type == 3) {
-              //数据源-----dataset
-              item.expUrl = `${this.Settings}/http/${uuid}/v${item.version}${
-                item.path ? "/" + item.path : ""
-              }`;
-            }
+            //数据源-----dataset
+            item.expUrl = `${this.Settings}/dataset/${uuid}/v${item.version}${
+              item.path ? "/" + item.path : ""
+            }`;
           });
           this.infoData.tagname = this.infoData.tagname
             ? this.infoData.tagname
@@ -728,7 +1003,7 @@ export default {
             if (status == 200 && data) {
               if (data.status == "success") {
                 this.infoData.subCount--;
-                this.sub = "0";
+                this.sub = "";
                 this.$message({
                   type: "success",
                   message: data.message
@@ -767,7 +1042,7 @@ export default {
                 if (data.status == "success") {
                   this.dialogIOVisibleSub = false;
                   this.infoData.subCount++;
-                  this.sub = "1";
+                  this.sub = "0";
                   this.$message({
                     type: "success",
                     message: data.message
@@ -784,7 +1059,7 @@ export default {
       });
     },
     handleBack() {
-      if (this.$route.query.from == "mgr") {
+      if (this.$route.params.from == "mgr") {
         this.$store.dispatch("GET_fuwindex_on", [false, false, true, false]);
         this.$router.push({
           name: "service",
@@ -818,7 +1093,9 @@ export default {
   }
   ul li {
     float: left;
-    padding: 20px 0;
+    // padding: 20px 0;
+    margin-top: 20px;
+    margin-bottom: 20px;
     margin-left: 26px;
     box-sizing: content-box;
     line-height: 32px;
@@ -1060,6 +1337,8 @@ export default {
 .card-item-intro {
   h5 {
     height: 52px;
+    line-height: 52px;
+    font-size: 20px;
   }
   section {
     overflow: auto;

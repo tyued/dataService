@@ -65,7 +65,7 @@
     <el-dialog title="修改数据" :visible.sync="dialogFormVisibleEdit" width="600px">
       <el-form :model="ruleFormEdit" :rules="rulesEdit" ref="ruleFormEdit" label-width="120px" class="demo-ruleForm">
         <el-form-item label="基础数据ID" prop="id">
-          <el-input clearable maxlength="50" v-model.trim="ruleFormEdit.id"></el-input>
+          <el-input disabled maxlength="50" v-model.trim="ruleFormEdit.id"></el-input>
         </el-form-item>
         <el-form-item label="基础数据标签" prop="label">
           <el-input clearable maxlength="50" v-model.trim="ruleFormEdit.label"></el-input>

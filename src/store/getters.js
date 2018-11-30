@@ -2,6 +2,7 @@ let getters = {
     getfuwindex_on: state => state.service.getfuwindex_on,
     token: state => state.login.token,
     noticeNumber: state => state.login.noticeNumber,
+    sysEchartsActIndex: state => state.service.sysEchartsActIndex,
     userInfoObj: state => state.login.userInfoObj,
     rightInfoObj: state => state.login.rightInfoObj,
     isOut: state => state.login.isOut,
@@ -11,5 +12,6 @@ let getters = {
     addRouters: state => state.permission.addRouters,
     servTagArr: state => state.service.servTagArr,
     getServiceComponentName: state => state.service.compName,
+    formLeave: state => state.service.formLeave,
 };
 export default getters

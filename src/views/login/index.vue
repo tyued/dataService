@@ -7,12 +7,12 @@
       <el-form-item prop="username">
         <span class="svg-container username-icon">
         </span>
-        <el-input clearable :maxlength="50" name="username" type="text" v-model.trim="loginForm.username" autoComplete="on" placeholder="账号"></el-input>
+        <el-input clearable :maxlength="50" name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="账号"></el-input>
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container password-icon">
         </span>
-        <el-input clearable :maxlength="50" name="password" type="password" @keyup.enter.native="handleLogin" v-model.trim="loginForm.password" autoComplete="on" placeholder="密码"></el-input>
+        <el-input clearable :maxlength="50" name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="密码"></el-input>
       </el-form-item>
       <el-form-item prop="captcha" v-if="captchaFlag">
         <el-input :maxlength="4" name="captcha" type="text" @keyup.enter.native="handleLogin" v-model.trim="loginForm.captcha"></el-input>
@@ -130,10 +130,9 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true;
-
           this.$store
             .dispatch("userLogin", {
-              username: this.loginForm.username.trim(),
+              username: this.loginForm.username,
               password: Base64.encode(this.loginForm.password),
               captcha: this.loginForm.captcha,
               failureRetries: this.loginForm.failureRetries++ // 用于后台判断是否显示验证码的字段
@@ -143,16 +142,8 @@ export default {
               const { message, status, captcha } = data;
               switch (status) {
                 case "success":
-                  this.$store.dispatch('getRightObj').then((data) => {
-                    window.sessionStorage.setItem('rightInfoObj', JSON.stringify(data))
-                    if (data['survey-admin']) {
-                      this.$router.push('/generalization');
-                    } else {
-                      this.$router.push('/customer');
-                    }
-                  })
+                  this.$router.push('/')
                   break;
-
                 default:
                   if (captcha) {
                     this.captchaFlag = 'active'

@@ -1,12 +1,11 @@
 import * as api from 'api/login'
 import { getToken, setToken, removeToken} from 'utils/handleToken'
-
 const login = {
   state: {
-    token: getToken(),
+    token: getToken() || '',
     noticeNumber: 0,
     userInfoObj: {},
-    rightInfoObj: JSON.parse(window.sessionStorage.getItem('rightInfoObj')) || {},
+    rightInfoObj: {},
     isOut: false,
     activePath: '' // sidebar 高亮
   },
@@ -29,11 +28,6 @@ const login = {
     SET_SIDEBAR: (state, activePath) => {
       state.activePath = activePath
     },
-    // 登出
-    LOG_OUT: () => {
-      removeToken()
-      window.sessionStorage.removeItem('rightInfoObj')
-    }
   },
   actions: {
     // 登录
@@ -55,7 +49,6 @@ const login = {
               setToken(token)
               commit('SET_TOKEN', token);
             }
-            // commit('SET_USERNAME', username);
             resolve(data);
           }
         }).catch(error => {
@@ -64,11 +57,12 @@ const login = {
       });
     },
     // 登出
-    // logOut({ commit, rootState }) {
-    //   // commit('SET_TOKEN', '');
-    //   // commit('SET_ISDONE', false)
-    //   removeToken()
-    // },
+    logOut({ commit, rootState }) {
+      commit('SET_TOKEN', '');
+      commit('SET_ISDONE', false)
+      commit('SET_RIGHTINFO', {})
+      removeToken()
+    },
     // 获取通知数
     getNoticeNumber({ commit }) {
       return new Promise((resolve, reject) => {
@@ -111,6 +105,12 @@ const login = {
                 obj[item.code][ele] = true
               })
             })
+
+            // if (!store.getters.isadmin) {
+            //   obj['serv-api']['serv-api:review'] = false
+            //   obj['serv-api']['serv-api:deploy'] = false
+            //   obj['serv-api']['serv-api:destroy'] = false
+            // }
             commit('SET_RIGHTINFO', obj)
             resolve(obj);
           }

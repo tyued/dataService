@@ -45,7 +45,7 @@ export default {
             api.errorRatio().then(response => {
                 var dataList = response.data
                 dataList.forEach(function(item,index){
-                    that.piedata.push({value:item.count,name:item.text})
+                    that.piedata.push({value:item.count,name:item.code})
                 })
                 
                 this.initChart();
@@ -64,11 +64,11 @@ export default {
                     trigger: 'item',
                     formatter: "{b} : {c} ({d}%)"
                 },   
-                color:['#f66b6b','#e6a23c','#d6a23c','#c6a23c','#d6a23c'],
+                color:['#f66b6b','#e6a23c','#a081f2','#42d3a5','#209cee'],
                 series: [
                     {
                         type: 'pie',
-                        roseType: 'radius',
+                        // roseType: 'radius',
                         // radius : '55%',
                         center: ['40%', '50%'],
                         label:{

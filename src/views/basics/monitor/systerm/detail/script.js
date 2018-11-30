@@ -5,6 +5,16 @@ export default {
   components: {
     AreaChart
   },
+  // computed: {
+  //   act() {
+  //     console.log(this.$store.getters)
+  //     if (this.$store.getters.sysEchartsActIndex === '0') {
+  //       return true
+  //     } else {
+  //       return false
+  //     }
+  //   }
+  // },
   created() {
     this.id = this.$route.query.id // 获取传过来的服务ID
     api.getInstance({  // 信息列表的显示
@@ -20,9 +30,9 @@ export default {
 
     this.circleData() // 页面初始化调用一次，之后循环调用
     if (!this.queryTimer) {
-      this.queryTimer = setInterval(() => { // 之后每10s循环一次
+      this.queryTimer = setInterval(() => {
         this.circleData()
-      }, 30000)
+      }, 20000)
     }
   },
   data() {
@@ -180,140 +190,68 @@ export default {
         this.errorObj.process.show = true
         this.errorObj.process.message = error.message
       })
+
+
       // 线程信息
-      api.getDetail({
+      Promise.all([api.getDetail({
         id: this.id,
         type: 'jvm.threads.live'
-      }).then((res) => {
-        const { data, status } = res
-        if (status === 200 && data) {
-          this.errorObj.threads.show = false
-          this.$set(this.threadsArr, 0, data.measurements[0].value)
-        }
-      }).catch((error) => {
-        this.errorObj.threads.show = true
-        this.errorObj.threads.message = error.message
-      })
-      api.getDetail({
+      }), api.getDetail({
         id: this.id,
         type: 'jvm.threads.daemon'
-      }).then((res) => {
-        const { data, status } = res
-        if (status === 200 && data) {
-          this.errorObj.threads.show = false
-          this.$set(this.threadsArr, 1, data.measurements[0].value)
-        }
-      }).catch((error) => {
-        this.errorObj.threads.show = true
-        this.errorObj.threads.message = error.message
-      })
-      api.getDetail({
+      }), api.getDetail({
         id: this.id,
         type: 'jvm.threads.peak'
-      }).then((res) => {
-        const { data, status } = res
-        if (status === 200 && data) {
-          this.errorObj.threads.show = false
-          this.$set(this.threadsArr, 2, data.measurements[0].value)
-        }
+      })]).then((resArr) => {
+        this.errorObj.threads.show = false
+        this.threadsArr = resArr.map(({data}) => data.measurements[0].value)
       }).catch((error) => {
         this.errorObj.threads.show = true
         this.errorObj.threads.message = error.message
       })
 
+      
+
       // 堆内存信息
-      api.getDetail({
+      Promise.all([api.getDetail({
         id: this.id,
         type: 'jvm.memory.used?tag=area:heap'
-      }).then((res) => {
-        const { data, status } = res
-        if (status === 200 && data) {
-          this.errorObj.heap.show = false
-          this.$set(this.heapArr, 0, Number((data.measurements[0].value / 10e8).toFixed(2)))
-        }
-      }).catch((error) => {
-        this.errorObj.heap.show = true
-        this.errorObj.heap.message = error.message
-      })
-      api.getDetail({
+      }), api.getDetail({
         id: this.id,
         type: 'jvm.memory.committed?tag=area:heap'
-      }).then((res) => {
-        const { data, status } = res
-        if (status === 200 && data) {
-          this.errorObj.heap.show = false
-          this.$set(this.heapArr, 1, Number((data.measurements[0].value / 10e8).toFixed(2)))
-        }
-      }).catch((error) => {
-        this.errorObj.heap.show = true
-        this.errorObj.heap.message = error.message
-      })
-      api.getDetail({
+      }), api.getDetail({
         id: this.id,
         type: 'jvm.memory.max?tag=area:heap'
-      }).then((res) => {
-        const { data, status } = res
-        if (status === 200 && data) {
-          this.errorObj.heap.show = false
-          this.$set(this.heapArr, 2, Number((data.measurements[0].value / 10e8).toFixed(2)))
-        }
+      })]).then((resArr) => {
+        this.errorObj.heap.show = false
+        this.heapArr = resArr.map(({data}) => Number((data.measurements[0].value / 10e8).toFixed(2)))
       }).catch((error) => {
         this.errorObj.heap.show = true
         this.errorObj.heap.message = error.message
       })
-      // 非堆内存信息
-      api.getDetail({
+
+      // // 非堆内存信息
+      Promise.all([api.getDetail({
         id: this.id,
         type: 'jvm.memory.used?tag=area:nonheap&id=Metaspace'
-      }).then((res) => {
-        const { data, status } = res
-        if (status === 200 && data) {
-          this.errorObj.noHeap.show = false
-          this.$set(this.nonHeapArr, 0, Number((data.measurements[0].value / 10e8).toFixed(2)))
-        }
-      }).catch((error) => {
-        this.errorObj.noHeap.show = true
-        this.errorObj.noHeap.message = error.message
-      })
-      api.getDetail({
+      }), api.getDetail({
         id: this.id,
         type: 'jvm.memory.used?tag=area:nonheap'
-      }).then((res) => {
-        const { data, status } = res
-        if (status === 200 && data) {
-          this.errorObj.noHeap.show = false
-          this.$set(this.nonHeapArr, 1, Number((data.measurements[0].value / 10e8).toFixed(2)))
-        }
-      }).catch((error) => {
-        this.errorObj.noHeap.show = true
-        this.errorObj.noHeap.message = error.message
-      })
-      api.getDetail({
+      }), api.getDetail({
         id: this.id,
         type: 'jvm.memory.committed?tag=area:nonheap'
-      }).then((res) => {
-        const { data, status } = res
-        if (status === 200 && data) {
-          this.errorObj.noHeap.show = false
-          this.$set(this.nonHeapArr, 2, Number((data.measurements[0].value / 10e8).toFixed(2)))
-        }
-      }).catch((error) => {
-        this.errorObj.noHeap.show = true
-        this.errorObj.noHeap.message = error.message
-      })
-      api.getDetail({
+      }), api.getDetail({
         id: this.id,
         type: 'jvm.memory.max?tag=area:nonheap'
-      }).then((res) => {
-        const { data, status } = res
-        if (status === 200 && data) {
-          this.errorObj.noHeap.show = false
-          this.$set(this.nonHeapArr, 3, Number((data.measurements[0].value / 10e8).toFixed(2)))
-        }
+      })]).then((resArr) => {
+        this.errorObj.noHeap.show = false
+        this.nonHeapArr = resArr.map(({data}) => Number((data.measurements[0].value / 10e8).toFixed(2)))
       }).catch((error) => {
         this.errorObj.noHeap.show = true
         this.errorObj.noHeap.message = error.message
       })
+
+
       // 缓存 RESOURCES
       // api.getDetail({
       //   id: this.id,

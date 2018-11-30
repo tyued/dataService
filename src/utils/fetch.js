@@ -1,12 +1,17 @@
 import axios from 'axios';
 import store from '../store';
-import { Message, MessageBox } from 'element-ui';
+import {
+  Message,
+  MessageBox
+} from 'element-ui';
 
 // 创建axios实例
 const service = axios.create({
-  //baseURL: process.env.BASE_API, // api的base_url
-  // baseURL: 'http://vincent1003.oicp.net:12673',
+  // baseURL: process.env.BASE_API, // api的base_url
+  // baseURL: 'http://192.168.0.111:8083',
+  baseURL: 'http://192.168.0.49',
   // baseURL: 'localhost:8083',
+
   // timeout: 20000 // 请求超时时间
 });
 
@@ -21,19 +26,20 @@ service.interceptors.request.use(config => {
   // Do something with request error
   //console.log(error); // for debug
   Promise.reject(error);
-}
-)
+})
 
 // respone拦截器
 service.interceptors.response.use(function (res) {
-  const { token } = res.data
+  const {
+    token
+  } = res.data
   // Do something with response data
   switch (token) {
     case 'incorrect':
-      this.$message.error('token不正确');
+      Message.error('token不正确');
       break;
     case 'invaild':
-      this.$message.error('token无效');
+      Message.error('token无效');
       break;
     case 'expiry': // be:我可以额外给你加个特殊标记 免得和其他请求数据分不清
       if (!store.getters.isOut) {
@@ -43,23 +49,21 @@ service.interceptors.response.use(function (res) {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          store.commit('LOG_OUT')
-          location.reload(); // 为了重新实例化vue-router对象 避免bug
-          return 
-          // store.dispatch('logOut')
-          //   .then(() => {
-          //     location.reload(); // 为了重新实例化vue-router对象 避免bug
-          //     return 
-          //   })
+          store.dispatch('logOut')
+            .then(() => {
+              location.reload(); // 为了重新实例化vue-router对象 避免bug
+              return 
+            })
         }).catch(() => {
           store.commit('SET_ISOUT', false)
         })
       }
-      
+
       break;
   }
   return res;
 }, function (error) {
+  Message.error(error.message);
   // Do something with response error
   return Promise.reject(error);
 });

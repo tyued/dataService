@@ -2,12 +2,12 @@
   <div class="avg">
     <el-row class="pd5">
       <span class="label">时间</span>
-      <el-button :class="{active: activeArr[0]}" @click="handleWeek">7日</el-button>
-      <el-button :class="{active: activeArr[1]}" @click="handleDoubleWeek">14日</el-button>
-      <el-button :class="{active: activeArr[2]}" @click="handleMonth">30日</el-button>
-      <el-date-picker @change="handleTimeChange" value-format="yyyy-MM-dd" style="margin:0 10px;" v-model="valueT" type="daterange" align="right" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+      <el-button size="small" :class="{active: activeArr[0]}" @click="handleWeek">7日</el-button>
+      <el-button size="small" :class="{active: activeArr[1]}" @click="handleDoubleWeek">14日</el-button>
+      <el-button size="small" :class="{active: activeArr[2]}" @click="handleMonth">30日</el-button>
+      <el-date-picker size="small" @change="handleTimeChange" value-format="yyyy-MM-dd" style="margin:0 10px;" v-model="valueT" type="daterange" align="right" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
       </el-date-picker>
-      <el-button @click="handleSearch" type="primary" class="fr"><i class="el-icon-search"></i> 查询</el-button>
+      <el-button size="small" @click="handleSearch" type="primary" class="fr"><i class="el-icon-search"></i> 查询</el-button>
     </el-row>
     <el-row class="pd5">
       <p class="tab-title"><i class="el-icon-menu"></i> 趋势图</p>
@@ -32,7 +32,7 @@ export default {
     byType() {
       // 改变小时和日报要重置表格
       this.init();
-    },
+    }
     // apiId() {
     //   // 改变接口时，也要重置表格 @ apiId  '' => '16' ： 第一次点击就会触发
     //   this.init();
@@ -55,23 +55,20 @@ export default {
     }
   },
   methods: {
-    init(time = this.defaultValueTime) {
-      this.activeArr = [false, false, true]
+    async init(time = this.defaultValueTime) {
+      this.activeArr = [false, false, true];
       // 获取echarts数据并props down
-      api
-        .postAvgTime({
-          servId: this.servId,
-          apiId: this.apiId,
-          byType: this.byType,
-          begintime: time[0],
-          endtime: time[1]
-        })
-        .then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            this.echartsArr = data;
-          }
-        });
+      let res = await api.postAvgTime({
+        servId: this.servId,
+        apiId: this.apiId,
+        byType: this.byType,
+        begintime: time[0],
+        endtime: time[1]
+      });
+      const { status, data } = res;
+      if (status === 200 && data) {
+        this.echartsArr = data;
+      }
     },
     lastDay(nowDay, n) {
       // 格式化日期-昨天

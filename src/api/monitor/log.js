@@ -22,7 +22,7 @@ export function postServiceLog(params) {
 // 登录日志
 export function postLoginLog(params) {
   return fetch({
-    url: 'dsb/admin/service/logs/authzOpts',
+    url: 'dsb/admin/service/logs/authzs',
     method: 'post',
     params
   });
@@ -36,6 +36,7 @@ export function postDoneLog(params) {
     params
   });
 }
+
 
 // 获取操作类型opts
 export function postOptTypes(params) {

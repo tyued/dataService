@@ -148,7 +148,8 @@ export default {
     var phoneCheck = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入号码"));
-      } else if (!/^1[34578]\d{9}$/.test(Number(value))) {
+        // /^1[34578]\d{9}$/
+      } else if (!/^\d{11}$/.test(Number(value))) {
         callback(new Error("请输入11位有效手机号码"));
       } else {
         callback();
@@ -163,6 +164,26 @@ export default {
         )
       ) {
         callback(new Error("请输入正确的邮箱"));
+      } else {
+        callback();
+      }
+    };
+    var checkUsername = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入用户名称"));
+      } else if (!/^\w{4,16}$/.test(value)) {
+        callback(
+          new Error("请输入字母，数字或下划线, 长度在 4 到 16 个字符")
+        );
+      } else {
+        callback();
+      }
+    };
+    var validatePassNew = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else if (!/^[a-zA-Z0-9]{6,16}$/.test(value)) {
+        callback(new Error("请输入字母或数字，长度在 6 到 16 个字符"));
       } else {
         callback();
       }
@@ -188,17 +209,25 @@ export default {
       },
       rules: {
         username: [
-          { required: true, message: "请输入用户名称", trigger: "blur" }
+          {
+            required: true,
+            validator: checkUsername,
+            trigger: "blur"
+          }
         ],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-        alias: [{ required: true, message: "请输入用户别名", trigger: "blur" }],
+        password: [
+          {
+            required: true,
+            validator: validatePassNew,
+            trigger: "blur"
+          }
+        ],
+        alias: [{ required: true, message: "请输入用户别名", trigger: "blur" },{ min: 2, max: 20, message: "长度为2-20个字符", trigger: "blur" }],
         phone: [{ required: true, validator: phoneCheck, trigger: "blur" }],
         email: [{ required: true, validator: emailCheck, trigger: "blur" }],
         gender: [{ required: true, message: "请选择性别", trigger: "change" }],
-        roleId: [{ required: true, message: "请选择角色", trigger: "change" }]
-        // pdId: [
-        //   { required: false, message: "请选择所属供应商", trigger: "change" }
-        // ]
+        roleId: [{ required: true, message: "请选择角色", trigger: "change" }],
+        pdId: [{ required: true, message: "请选择所属供应商", trigger: "change" }]
       },
       ruleFormEdit: {
         id: "",
@@ -214,17 +243,21 @@ export default {
       },
       rulesEdit: {
         username: [
-          { required: true, message: "请输入用户名称", trigger: "blur" }
+          {
+            required: true,
+            validator: checkUsername,
+            trigger: "blur"
+          }
         ],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-        alias: [{ required: true, message: "请输入用户别名", trigger: "blur" }],
+        password: [
+          { required: true, validator: validatePassNew, trigger: "blur" }
+        ],
+        alias: [{ required: true, message: "请输入用户别名", trigger: "blur" },{ min: 2, max: 20, message: "长度为2-20个字符", trigger: "blur" }],
         phone: [{ required: true, validator: phoneCheck, trigger: "blur" }],
         email: [{ required: true, validator: emailCheck, trigger: "blur" }],
         gender: [{ required: true, message: "请选择性别", trigger: "change" }],
-        roleId: [{ required: true, message: "请选择角色", trigger: "change" }]
-        // pdId: [
-        //   { required: true, message: "请选择所属供应商", trigger: "change" }
-        // ]
+        roleId: [{ required: true, message: "请选择角色", trigger: "change" }],
+        pdId: [{ required: true, message: "请选择所属供应商", trigger: "change" }]
       },
       loading: true,
       total: 0, // 分页

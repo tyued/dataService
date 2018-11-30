@@ -16,7 +16,7 @@ export function getPassSubscribeList(data) {
   })
 }
 
-// 未提交：查看、修改、撤销
+// 服务首页list
 export function getRetrieveList(data) {
   return fetch({
     url: '/dsb/admin/service/retrieve/list',
@@ -25,6 +25,14 @@ export function getRetrieveList(data) {
   })
 }
 
+// 未提交
+export function getRetrieveListUn(data) {
+  return fetch({
+    url: '/dsb/admin/service/retrieve/unsubmit',
+    method: 'post',
+    data
+  })
+}
 // 已发布（针对接口）：禁用  已禁用（针对接口）：启用  待审核：查看（审核、驳回）
 export function getApiList(data) {
   return fetch({

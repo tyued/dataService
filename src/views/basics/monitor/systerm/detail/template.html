@@ -126,7 +126,7 @@
               <p>{{threadsArr[2]}}</p>
             </el-col>
           </el-row>
-          <AreaChart :arr="threadsArr" :types="['活跃线程','守护线程','最大活跃']" />
+          <AreaChart  :arr="threadsArr" :types="['活跃线程','守护线程','最大活跃']" />
         </div>
       </el-card>
     </el-col>
@@ -158,7 +158,7 @@
               <p>{{threadsArr[2]}}</p>
             </el-col>
           </el-row>
-          <AreaChart point="MB" :arr="heapArr" :types="['已用','可用','最大']" />
+          <AreaChart  point="MB" :arr="heapArr" :types="['已用','可用','最大']" />
         </div>
       </el-card>
     </el-col>
@@ -192,7 +192,7 @@
               <p>{{threadsArr[2]}}</p>
             </el-col>
           </el-row>
-          <AreaChart point="MB" :arr="nonHeapArr" :types="['元空间','已用','可用','最大可用']" />
+          <AreaChart  point="MB" :arr="nonHeapArr" :types="['元空间','已用','可用','最大可用']" />
         </div>
       </el-card>
     </el-col>
@@ -257,4 +257,7 @@
       </el-card>
     </el-col>
   </el-row> -->
+  <el-row style="text-align:center">
+    <el-button type="primary" @click="$router.back()">返回</el-button>
+  </el-row>
 </div>

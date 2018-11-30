@@ -76,7 +76,7 @@
 .fw-part-card .box-card{ height: 310px;}
 
 /*  height: 290px; */
-.fw-rowbox .box-card .el-col{ margin: 10px 0;}
+/* .fw-rowbox .box-card .el-col{ margin: 10px 0;} */
 .fw-rowbox .box-card .el-card__header{ color: #303133; font-size: 16px; border: none; padding-bottom: 0;} 
 .box-card .box-card-hbtn{ float: right;}
 .fw-part-con{ margin-bottom: 12px; height: 120px; font-size: 14px; color: #606266; line-height: 24px;word-break:break-all; display:-webkit-box; -webkit-line-clamp:5; -webkit-box-orient:vertical;  overflow:hidden;}
@@ -152,10 +152,10 @@ div.edui-box{ float: left;}
 .edui-default .edui-editor-iframeholder{ width:100%!important;}
 
 /* 服务接口详情 */
-.main .el-tabs__nav{ white-space: normal;}
+/* .main .el-tabs__nav{ white-space: normal;}
 .main .el-tabs__nav-scroll{width: 150px;}
-.main .left-box .el-tabs__nav-scroll{width: auto;}
-.main .el-tabs__item{ height: auto; line-height: normal; padding-left: 0;padding-bottom: 10px}  
+.main .left-box .el-tabs__nav-scroll{width: auto;} */
+/* .main .el-tabs__item{ height: auto; line-height: normal; padding-left: 0;padding-bottom: 10px}   */
 .exact .el-tabs__item{padding: 0 20px;height: 40px;line-height: 40px;}
 .respBox{ padding: 0 20px 20px;}
 
@@ -230,3 +230,9 @@ div.edui-box{ float: left;}
 .edui-default .edui-colorpicker-nocolor {
     box-sizing: content-box;
 }
+
+.gl-container .el-table__row:nth-child(1) .el-progress-bar__inner{background-color: #409EFF!important;}
+.gl-container .el-table__row:nth-child(2) .el-progress-bar__inner{background-color: #aa94d2!important;}
+.gl-container .el-table__row:nth-child(3) .el-progress-bar__inner{background-color: #63c249!important;}
+.gl-container .el-table__row:nth-child(4) .el-progress-bar__inner{background-color: #f66b6b!important;}
+.gl-container .el-table__row:nth-child(5) .el-progress-bar__inner{background-color: #f19149!important;}

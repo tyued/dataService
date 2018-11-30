@@ -157,29 +157,24 @@ export default {
           name: "全部",
           show: true,
           value: ""
-        }, {
+        },
+        {
           id: 1,
-          name: "待发布",
+          name: "待审批",
           show: false,
           value: "0"
         },
         {
           id: 2,
-          name: "待审批",
+          name: "审批通过",
           show: false,
           value: "1"
         },
         {
           id: 3,
-          name: "审批通过",
-          show: false,
-          value: "2"
-        },
-        {
-          id: 4,
           name: "审批不通过",
           show: false,
-          value: "3"
+          value: "2"
         }
       ],
       apiStatus: [{
@@ -187,7 +182,8 @@ export default {
           name: "全部",
           show: true,
           value: ""
-        }, {
+        }, 
+        {
           id: 1,
           name: "在线",
           show: false,
@@ -235,6 +231,7 @@ export default {
           // 处理显示隐藏等active属性
           if (data.params) {
             this.editObj.params = data.params.forEach(item => {
+              item.required = item.required === '1' ? true : false
               item.state = '0'
               item.foucs = false
             });
@@ -274,7 +271,7 @@ export default {
               return item.column
             })
           }
-          if(this.type == 2) {
+          if (this.type == 2) {
             obj.resp = 'XML'
             obj.selexample = '1'
           }
@@ -288,13 +285,16 @@ export default {
     submitEdit() {
       this.$refs["editForm"].validate(valid => {
         if (valid) {
-
+          this.editObj.params.forEach(el => el.required = el.required === true ? '1' : '0')
           api.submitEditIo({
               ...this.editObj
             }, this.editObj.servType)
-            .then(({status, data}) => {
+            .then(({
+              status,
+              data
+            }) => {
               if (status == 200 && data) {
-                
+
                 if (data.status == 'success') {
                   this.$notify({
                     title: "成功",
@@ -340,7 +340,7 @@ export default {
           if (status == 200 && data) {
             this.loading = false;
             data.rows.map(item => {
-              item.apiVer = "v" + item.apiVer;
+              item.apiVer = item.apiVer ? "v" + item.apiVer : '';
               switch (item.servType) {
                 case "1":
                   item._servType = "HTTP API";
@@ -408,7 +408,8 @@ export default {
       this.diaData = {
         servId: row.servId,
         type: row.servType,
-        apiId: row.apiId
+        apiId: row.apiId,
+        apiVer: row.apiVer.slice(1)
       };
       api.getApiParamForms(this.diaData).then(res => {
         const {
@@ -431,13 +432,11 @@ export default {
         }
         if (row.servType == 2) {
           //webservice----soap
-          this.expUrl = `${this.Settings}/http/${uuid}/v${method}${
-            version ? "/" + version : ""
-          }`;
+          this.expUrl = `${this.Settings}/soap/${uuid}/${method}_v${version}`;
         }
         if (row.servType == 3) {
           //数据源-----dataset
-          this.expUrl = `${this.Settings}/http/${uuid}/v${version}${
+          this.expUrl = `${this.Settings}/dataset/${uuid}/v${version}${
             path ? "/" + path : ""
           }`;
         }
@@ -677,7 +676,7 @@ export default {
           this.conditionList = response.data;
         });
       }
-      
+
       // 访问前缀
       dicty.getSettings().then(response => {
         this.Settings = response.data.servUrl;

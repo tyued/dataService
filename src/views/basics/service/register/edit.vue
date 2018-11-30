@@ -163,7 +163,7 @@
                               <i class="el-icon-plus" @click="addTabNozz('nozz')"></i>
                             </div>
                           </div>
-                          <el-form-item label-width="80px" label="返回内容" required>
+                          <el-form-item prop="rtType" label-width="80px" label="返回内容" :rules="[{ required: true, message: '请选择返回内容', trigger: 'change' }]">
                             <el-radio-group v-model="item.rtType">
                               <el-radio label="0">受影响记录数</el-radio>
                               <el-radio label="1">操作状态</el-radio>
@@ -415,6 +415,7 @@ export default {
     };
   },
   created() {
+    this.$store.commit('SET_formLeave', true)
     this.selSerType = +this.editDataObj.type;
     this.getBaseData();
   },
@@ -631,7 +632,7 @@ export default {
         opt: "query",
         selObjType: 1,
         column: [],
-        rtType: 0,
+        rtType: '0',
         intro: "",
         selexample: "1",
         example: exampleSel,
@@ -1017,12 +1018,13 @@ export default {
           submitD.apis[index].url = item.url; //接口地址
           // submitD.apis[index].method = item.method; //请求方式
           submitD.apis[index].resp = item.resp; //返回格式
-          that.dataSourceList.forEach(function(objData, ind) {
-            //数据源
-            if (item.dsId == objData.uid) {
-              submitD.apis[index].dsId = objData.id;
-            }
-          });
+          submitD.apis[index].dsId = item.dsId; //返回格式
+          // that.dataSourceList.forEach(function(objData, ind) {
+          //   //数据源
+          //   if (item.dsId == objData.uid) {
+          //     submitD.apis[index].dsId = objData.id;
+          //   }
+          // });
           submitD.apis[index].opt = item.opt; //选择操作类型
           submitD.apis[index].rtType = item.rtType; //返回内容
           submitD.apis[index].columns = []; //返回属性
@@ -1072,6 +1074,7 @@ export default {
                       type: "success",
                       duration: 2000
                     });
+                    this.$store.commit('SET_formLeave', false)
                     this.$emit("clickServiceManegement");
                     this.$store.dispatch("getNoticeNumber");
                   }
@@ -1110,6 +1113,7 @@ export default {
               type: "success",
               duration: 2000
             });
+            this.$store.commit('SET_formLeave', false)
             this.$store.dispatch("GET_fuwindex_on", [
               true,
               false,

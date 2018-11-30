@@ -1,54 +1,52 @@
 <template>
   <div class="journal-login">
-    <el-form label-position="left" label-width="100px">
+    <el-form label-position="left" label-width="70px">
       <el-form-item label="时间">
-        <el-button v-for="(item,index) in timeArr" :key="index" :class="{active: item.show}" @click="handleTime(item)">{{item.name}}</el-button>
-        <el-date-picker @change="handleTimeChange" value-format="yyyy-MM-dd" style="margin-left:10px;" v-model="valueT" type="daterange" align="right" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+        <el-button size="small" v-for="(item,index) in timeArr" :key="index" :class="{active: item.show}" @click="handleTime(item)">{{item.name}}</el-button>
+        <el-date-picker size="small" @change="handleTimeChange" value-format="yyyy-MM-dd" style="margin-left:10px;" v-model="valueT" type="daterange" align="right" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="认证授权类型">
-        <el-button v-for="(item,index) in optArr" :key="index" :class="{active: item.show}" @click="handleOptType(item)">{{item.name}}</el-button>
+      <el-form-item label="认证类型">
+        <el-button size="small" v-for="(item,index) in optArr" :key="index" :class="{active: item.show}" @click="handleOptType(item)">{{item.name}}</el-button>
       </el-form-item>
       <el-form-item label="认证协议">
-        <el-button v-for="(item,index) in protocolArr" :key="index" :class="{active: item.show}" @click="handleProtocolType(item)">{{item.name}}</el-button>
+        <el-button size="small" v-for="(item,index) in protocolArr" :key="index" :class="{active: item.show}" @click="handleProtocolType(item)">{{item.name}}</el-button>
       </el-form-item>
-      <el-form-item label="认证授权结果">
-        <el-button v-for="(item,index) in status" :key="index" :class="{active: item.show}" @click="handleStatus(item)">{{item.name}}</el-button>
+      <el-form-item label="认证结果">
+        <el-button size="small" v-for="(item,index) in status" :key="index" :class="{active: item.show}" @click="handleStatus(item)">{{item.name}}</el-button>
       </el-form-item>
-      <el-button type="primary" @click="handleSearch"><i class="el-icon-search"></i> 查询</el-button>
+      <el-button size="small" type="primary" @click="handleSearch"><i class="el-icon-search"></i> 查询</el-button>
     </el-form>
 
     <el-row style="margin: 10px 0;">
       <el-table v-loading="loading" :data="tableData" stripe style="width: 100%">
-        <el-table-column prop="id" label="日志ID" sortable>
+        <!-- <el-table-column prop="id" label="日志ID" sortable>
+        </el-table-column> -->
+        <el-table-column prop="userName" label="认证对象">
+          <template slot-scope="scope">
+            <span :class="{'red': scope.row.red}">{{scope.row.userName}}</span>
+          </template>
         </el-table-column>
-        <el-table-column prop="userId" label="认证授权对象ID">
-        </el-table-column>
-        <el-table-column prop="opt" label="认证授权类型">
+        <el-table-column prop="opt" label="认证类型">
         </el-table-column>
         <el-table-column prop="protocol" label="认证协议">
         </el-table-column>
 
-        <el-table-column prop="realm" label="负责此次认证授权的realm名称">
+        <el-table-column prop="realm" label="Realm名称">
         </el-table-column>
         <el-table-column prop="level" label="日志级别">
         </el-table-column>
-        <el-table-column prop="addr" label="认证请求来源IP地址">
+        <el-table-column prop="addr" label="来源IP地址">
         </el-table-column>
-        <el-table-column prop="status" label="认证授权结果">
+        <el-table-column prop="status" label="认证结果">
         </el-table-column>
-        <el-table-column prop="msg" label="认证授权请求信息">
+        <el-table-column prop="msg" label="请求信息">
         </el-table-column>
-        <el-table-column prop="exception" label="认证授权异常信息">
+        <el-table-column prop="exception" label="异常信息">
         </el-table-column>
-        <el-table-column prop="respCode" label="响应错误对照码">
+        <el-table-column prop="respCode" label="错误对照码">
         </el-table-column>
-        <el-table-column prop="timestamp" label="认证授权发生时间">
-        </el-table-column>
-        <el-table-column label="操作" width="80">
-          <template slot-scope="scope">
-            <el-button size="small" type="primary">查看</el-button>
-          </template>
+        <el-table-column width="170" prop="timestamp" label="认证时间">
         </el-table-column>
       </el-table>
     </el-row>
@@ -210,7 +208,10 @@ export default {
       this.getList(this.current, this.size);
     },
     getList(pageNo = 1, limit = this.size) {
-      let query = {};
+      let query = {
+        pageNo,
+        limit,
+      };
       if (this.typeObj.timeValue.length !== 0) {
         query.begintime = this.typeObj.timeValue[0];
         query.endtime = this.typeObj.timeValue[1];
@@ -224,10 +225,18 @@ export default {
       if (this.typeObj.status.length !== 0) {
         query.status = this.typeObj.status;
       }
-      api.postServiceLog(query).then(res => {
+      api.postLoginLog(query).then(res => {
         const { status, data } = res;
         if (status === 200 && data) {
           this.loading = false;
+          data.rows.forEach(ele => {
+            if (!ele.userName) {
+              ele.userName = '异常账户'
+              ele.red = true
+            }
+            ele.exception = ele.exception ? ele.exception : '无'
+            ele.respCode = ele.respCode ? ele.respCode : '无'
+          });
           this.tableData = data.rows;
           this.current = data.current;
           this.total = data.total;
@@ -313,5 +322,8 @@ export default {
   background-color: #409eff;
   border-color: #409eff;
   color: #fff;
+}
+.red {
+  color: #F56C6C;
 }
 </style>

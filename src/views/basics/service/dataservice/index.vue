@@ -26,7 +26,7 @@
         <el-table-column prop="desc" label="摘要"></el-table-column>
         <el-table-column label="操作" width="150">
           <template slot-scope="scope">
-            <el-button v-if="rightInfoObj['serv-ds']['serv-ds:eidt']" size="small" type="success" @click="handleUpdate(scope.row)">编辑</el-button>
+            <el-button v-if="rightInfoObj['serv-ds']['serv-ds:edit']" size="small" type="success" @click="handleUpdate(scope.row)">编辑</el-button>
             <el-button v-if="rightInfoObj['serv-ds']['serv-ds:del']" size="small" type="danger" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -36,41 +36,41 @@
       </div>
     </el-card>
     <el-dialog center :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="670px">
-      <el-form :model="form" ref="form" label-width="122px">
-        <el-form-item label="数据源名称" prop="name" :rules="[{ required: true, message: '数据源名称不能为空'},{ max: 100, message: '100个字符以内', trigger: 'blur' }]">
+      <el-form :rules="rules" :model="form" ref="form" label-width="122px">
+        <el-form-item label="数据源名称" prop="name">
           <el-input v-model.trim="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="数据库类型" prop="dbtype" :rules="[{ required: true, message: '数据库类型不能为空'}]">
+        <el-form-item label="数据库类型" prop="dbtype">
           <el-select v-model="form.dbtype" placeholder="请数据库类型" @change="change_dbType">
             <el-option v-for='(item,index) in dbTypes' v-bind:key="index" :label="item.vendor" :value="item.key"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="数据库IP" prop="ipv4" :rules="[{ required: true, message: '数据库IP不能为空'},{ max: 255, message: '255个字符以内', trigger: 'blur' }]">
-          <el-input :value="form.ipv4" @input="handleReplace($event, 'ipv4')"></el-input>
+        <el-form-item v-if="form.ipv4Active" label="数据库IP" prop="ipv4">
+          <el-input v-model="form.ipv4"></el-input>
         </el-form-item>
-        <el-form-item label="数据库访问端口" prop="port" :rules="[{ required: true, message: '数据库访问端口不能为空'},{ max: 10, message: '10个字符以内'}]">
-          <el-input :value="form.port" @input="handleReplace($event, 'port')"></el-input>
+        <el-form-item v-if="form.portActive" label="数据库访问端口" prop="port">
+          <el-input v-model="form.port"></el-input>
         </el-form-item>
-        <el-form-item label="数据库实例名称" prop="dbname" :rules="[{ required: true, message: '数据库实例名称不能为空'},{ max: 50, message: '50个字符以内', trigger: 'blur' }]">
-          <el-input :value="form.dbname" @input="handleReplace($event, 'dbname')"></el-input>
+        <el-form-item v-if="form.dbnameActive" label="数据库实例名称" prop="dbname">
+          <el-input v-model="form.dbname"></el-input>
         </el-form-item>
-        <el-form-item label="连接字符串" class="linkBlock">
-          <el-input type="textarea" :autosize="true" :value="form.url" disabled style="width:100%"></el-input>
+        <el-form-item v-show="form.dbtype" label="连接字符串" class="linkBlock">
+          <el-input type="textarea" :autosize="true" :value="url" disabled style="width:100%"></el-input>
         </el-form-item>
-        <el-form-item label="用户名" prop="username" :rules="[{ required: true, message: '用户名不能为空'},{ max: 50, message: '50个字符以内', trigger: 'blur' }]">
+        <el-form-item label="用户名" prop="username">
           <el-input v-model.trim="form.username"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="password" :rules="[{ required: true, message: '密码不能为空'},{ max: 50, message: '50个字符以内', trigger: 'blur' }]">
+        <el-form-item label="密码" prop="password">
           <el-input v-model.trim="form.password"></el-input>
         </el-form-item>
-        <el-form-item label="数据库摘要" prop="desc" :rules="[{ required: true, message: '数据库摘要不能为空'}]">
+        <el-form-item label="数据库摘要" prop="desc">
           <el-input :autosize="{ minRows: 2, maxRows: 6 }" type="textarea" v-model.trim="form.desc"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel('form')">取 消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="create('form')" :disabled="changeSure">确 定</el-button>
-        <el-button v-else type="primary" @click="update('form')" :disabled="changeSure">确 定</el-button>
+        <el-button v-if="dialogStatus=='create'" type="primary" @click="create('form')">确 定</el-button>
+        <el-button v-else type="primary" @click="update('form')">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -90,10 +90,102 @@ export default {
     VueUEditor
   },
   computed: {
-    ...mapGetters(["rightInfoObj"])
+    ...mapGetters(["rightInfoObj"]),
+    url() {
+      return `${this.form.p1}${this.form.ipv4Active ? this.form.ipv4 : ""}${
+        this.form.p2
+      }${this.form.portActive ? this.form.port : ""}${this.form.p3}${
+        this.form.dbnameActive ? this.form.dbname : ""
+      }${this.form.last}`;
+    }
   },
   data() {
+    var checkipv4 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入数据库IP"));
+      } else if (
+        !/^(25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}$/.test(
+          value
+        )
+      ) {
+        callback(new Error("请输入正确的IP地址"));
+      } else {
+        callback();
+      }
+    };
+    var checkPort = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入端口号"));
+      } else if (
+        !/^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{4}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/.test(
+          value
+        )
+      ) {
+        callback(new Error("端口号范围为0-65535"));
+      } else {
+        callback();
+      }
+    };
+    var checkUsername = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入用户名称"));
+      } else if (!/^\w{1,50}$/.test(value)) {
+        callback(new Error("请输入字母，数字或下划线, 长度在 1 到 50 个字符"));
+      } else {
+        callback();
+      }
+    };
+    var validatePassNew = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else if (!/^[a-zA-Z0-9]{6,30}$/.test(value)) {
+        callback(new Error("请输入字母或数字，长度在 6 到 30 个字符"));
+      } else {
+        callback();
+      }
+    };
     return {
+      rules: {
+        name: [
+          { required: true, message: "请输入数据源名称", trigger: "blur" },
+          { min: 1, max: 100, message: "长度为1-100个字符", trigger: "blur" }
+        ],
+        dbtype: [
+          { required: true, message: "请选择数据库类型", trigger: "change" }
+        ],
+        ipv4: [
+          {
+            required: true,
+            validator: checkipv4,
+            trigger: "blur"
+          }
+        ],
+        port: [{ required: true, validator: checkPort, trigger: "blur" }],
+
+        dbname: [
+          { required: true, message: "请输入数据库名称", trigger: "blur" },
+          { min: 1, max: 100, message: "长度为1-100个字符", trigger: "blur" }
+        ],
+
+        username: [
+          {
+            required: true,
+            validator: checkUsername,
+            trigger: "blur"
+          }
+        ],
+        password: [
+          {
+            required: true,
+            validator: validatePassNew,
+            trigger: "blur"
+          }
+        ],
+        desc: [
+          { required: true, message: "请输入摘要", trigger: "blur" },
+          { min: 1, max: 500, message: "长度为1-500个字符", trigger: "blur" }
+        ]
+      },
       beforeName: "", // url前缀
       listLoading: true,
       listQuery: {
@@ -120,14 +212,20 @@ export default {
       },
       tabPosition: "left",
       form: {
-        placeholder: "",
-        ipv4: "[host-name]",
-        port: "[port]",
-        dbname: "[database-name]",
-        url: ""
+        name: "",
+        dbtype: "",
+        ipv4: "",
+        port: "",
+        dbname: "",
+        placeholder: "", // 返回的模板
+        ipv4Active: true,
+        portActive: true,
+        dbnameActive: true,
+        p1: "",
+        p2: "",
+        p3: "",
+        last: ""
       },
-      changeSure: false,
-
       editorConfig: {
         toolbars: [
           [
@@ -147,8 +245,7 @@ export default {
             "formatmatch"
           ]
         ]
-      },
-      url: ""
+      }
     };
   },
   created() {
@@ -172,9 +269,6 @@ export default {
     // 富文本编辑器
     editorReady(editorInstance) {
       editorInstance.setContent("desc");
-      editorInstance.addListener("contentChange", () => {
-        console.log(editorInstance.getContent());
-      });
     },
     // 搜索
     handleFilter() {
@@ -222,50 +316,103 @@ export default {
     },
     resetTemp() {
       this.form = {
-        placeholder: "",
-        url: "",
+        name: "",
+        dbtype: "",
         ipv4: "",
         port: "",
-        dbname: ""
+        dbname: "",
+        placeholder: "", // 返回的模板
+        ipv4Active: true,
+        portActive: true,
+        dbnameActive: true,
+        p1: "",
+        p2: "",
+        p3: "",
+        last: ""
       };
       if (this.$refs["form"]) {
         this.$refs["form"].resetFields();
       }
-      this.changeSure = false;
     },
     change_dbType(val) {
-      var that = this;
-      this.dbTypes.forEach(function(item, index) {
+      this.form.p1 = "";
+      this.form.p2 = "";
+      this.form.p3 = "";
+      this.dbTypes.forEach((item, index) => {
         if (item.key == val) {
-          that.form.placeholder = item.placeholder;
-          var urlTmp = item.placeholder;
-          if (that.form.ipv4) {
-            urlTmp = urlTmp.replace("[host-name]", that.form.ipv4);
+          this.form.last = item.placeholder;
+          // 控制每个input的禁用 和 清空
+          if (this.form.last.indexOf("[host-name]") === -1) {
+            this.form.ipv4Active = false;
+          } else {
+            this.form.ipv4Active = true;
           }
-          if (that.form.port) {
-            urlTmp = urlTmp.replace("[port]", that.form.port);
+          if (this.form.last.indexOf("[port]") === -1) {
+            this.form.portActive = false;
+          } else {
+            this.form.portActive = true;
           }
-          if (that.form.dbname) {
-            urlTmp = urlTmp.replace("[database-name]", that.form.dbname);
+          if (this.form.last.indexOf("[database-name]") === -1) {
+            this.form.dbnameActive = false;
+          } else {
+            this.form.dbnameActive = true;
           }
-          that.form.url = urlTmp;
+          // 拆分各个部分 p1 p2 p3 last
+          if (this.form.ipv4Active) {
+            [this.form.p1, this.form.last] = this.form.last.split(
+              "[host-name]"
+            );
+          }
+          if (this.form.portActive) {
+            // this.form.last 变了
+            [this.form.p2, this.form.last] = this.form.last.split("[port]");
+          }
+          if (this.form.dbnameActive) {
+            [this.form.p3, this.form.last] = this.form.last.split(
+              "[database-name]"
+            );
+          }
         }
       });
     },
     //编辑
     handleUpdate(row) {
-      this.changeSure = false;
       var params = {
         id: row.id
       };
       api.getObj(params).then(res => {
         this.form = res.data;
         this.form.port = this.form.port.toString();
-        var that = this;
         this.dbTypes.forEach((item, index) => {
-          if (item.key == that.form.dbtype) {
-            // this.beforeName = item.placeholder.split(item.key)[0]
-            that.form.placeholder = item.placeholder;
+          if (item.key == this.form.dbtype) {
+            this.form.last = this.form.url;
+            // 控制每个input的禁用 和 清空
+            if (this.form.last.indexOf(this.form.ipv4) === -1) {
+              this.form.ipv4Active = false;
+            } else {
+              this.form.ipv4Active = true;
+            }
+            if (this.form.last.indexOf(this.form.port) === -1) {
+              this.form.portActive = false;
+            } else {
+              this.form.portActive = true;
+            }
+            if (this.form.last.indexOf(this.form.dbname) === -1) {
+              this.form.dbnameActive = false;
+            } else {
+              this.form.dbnameActive = true;
+            }
+            // 拆分各个部分 p1 p2 p3 last
+            if (this.form.ipv4Active) {
+              [this.form.p1, this.form.last] = this.form.last.split(this.form.ipv4);
+            }
+            if (this.form.portActive) {
+              // this.form.last 变了
+              [this.form.p2, this.form.last] = this.form.last.split(this.form.port);
+            }
+            if (this.form.dbnameActive) {
+              [this.form.p3, this.form.last] = this.form.last.split(this.form.dbname);
+            }
           }
         });
         this.dialogStatus = "update";
@@ -273,29 +420,23 @@ export default {
       });
     },
     // 取消按钮
-    cancel(formName) {
+    cancel() {
       this.dialogFormVisible = false;
-      this.$refs[formName].resetFields();
+      // this.$refs[formName].resetFields();
     },
     // 确定按钮--添加
     create(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.changeSure = true;
-          //this.form.url = this.form.placeholder;
           var testparams = {
             dbtype: this.form.dbtype,
-            url: this.form.url,
+            url: this.url,
             username: this.form.username,
             password: this.form.password
           };
           api.testObj(testparams).then(res => {
             if (res.status == "200") {
               if (res.data.status == "success") {
-                var that = this;
-                var params = {
-                  id: this.form.id
-                };
                 api.addnew(this.form).then(res => {
                   if (res.status == "200") {
                     this.dialogFormVisible = false;
@@ -332,17 +473,7 @@ export default {
               });
             }
           });
-          var that = this;
-          setTimeout(function() {
-            that.changeSure = false;
-          }, 1500);
         } else {
-          this.$notify({
-            title: "失败",
-            message: "还有未填项",
-            type: "error",
-            duration: 2000
-          });
           return false;
         }
       });
@@ -351,33 +482,30 @@ export default {
     update(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.changeSure = true;
-          this.form.url = this.form.placeholder;
           var testparams = {
             dbtype: this.form.dbtype,
-            url: this.form.url,
+            url: this.url,
             username: this.form.username,
             password: this.form.password
           };
           api.testObj(testparams).then(res => {
             if (res.status == "200") {
               if (res.data.status == "success") {
-                var that = this;
                 var params = {
                   id: this.form.id
-                };
+                };  
                 api.editObj(params, this.form).then(res => {
                   if (res.status == "200") {
-                    that.dialogFormVisible = false;
-                    that.getList();
-                    that.$notify({
+                    this.dialogFormVisible = false;
+                    this.getList();
+                    this.$notify({
                       title: "成功",
                       message: "创建成功",
                       type: "success",
                       duration: 2000
                     });
                   } else {
-                    that.$notify({
+                    this.$notify({
                       title: "失败",
                       message: res.message,
                       type: "error",
@@ -402,18 +530,7 @@ export default {
               });
             }
           });
-
-          var that = this;
-          setTimeout(function() {
-            that.changeSure = false;
-          }, 1500);
         } else {
-          this.$notify({
-            title: "失败",
-            message: "还有未填项",
-            type: "error",
-            duration: 2000
-          });
           return false;
         }
       });
@@ -439,62 +556,6 @@ export default {
           this.tableData.splice(index, 1);
         });
       });
-    },
-    handleReplace(e, type) {
-      e = e.trim();
-      // 赋值
-      if (this.form.placeholder) {
-        switch (type) {
-          case "ipv4":
-            if (e) {
-              this.form.url = this.form.url.replace(this.form.ipv4, e);
-              this.form.ipv4 = e;
-            } else {
-              this.form.ipv4 = "[host-name]";
-            }
-            break;
-          case "port":
-            if (e) {
-              this.form.url = this.form.url.replace(this.form.port, e);
-              this.form.port = e;
-            } else {
-              this.form.port = "[port]";
-            }
-            break;
-          case "dbname":
-            if (e) {
-              this.form.url = this.form.url.replace(this.form.dbname, e);
-              this.form.dbname = e;
-            } else {
-              this.form.dbname = "[database-name]";
-            }
-            break;
-        }
-      } else {
-        switch (type) {
-          case "ipv4":
-            if (e) {
-              this.form.ipv4 = e;
-            } else {
-              this.form.ipv4 = "[host-name]";
-            }
-            break;
-          case "port":
-            if (e) {
-              this.form.port = e;
-            } else {
-              this.form.port = "[port]";
-            }
-            break;
-          case "dbname":
-            if (e) {
-              this.form.dbname = e;
-            } else {
-              this.form.dbname = "[database-name]";
-            }
-            break;
-        }
-      }
     }
   }
 };
