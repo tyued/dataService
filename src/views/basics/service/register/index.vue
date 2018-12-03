@@ -756,7 +756,7 @@ export default {
             submitD.apis[index].example = item.example; //接口返回示例
             submitD.apis[index].url = item.url; //接口地址
             submitD.apis[index].path = item.path;
-            // submitD.apis[index].method = item.method; //请求方式
+            submitD.apis[index].method = item.method; //请求方式
             submitD.apis[index].resp = item.resp; //返回格式
           });
           this.checkNext("putRest", submitD);
