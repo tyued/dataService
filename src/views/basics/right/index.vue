@@ -38,15 +38,9 @@ export default {
     ...mapGetters(["rightInfoObj"]),
     act() {
       let n = 4;
-      if (this.rightInfoObj["user"]) {
-        n--;
-      }
-      if (this.rightInfoObj["role"]) {
-        n--;
-      }
-      if (this.rightInfoObj["producer"]) {
-        n--;
-      }
+      if (this.rightInfoObj["user"]) n--;
+      if (this.rightInfoObj["role"]) n--;
+      if (this.rightInfoObj["producer"]) n--;
       return n + "";
     }
   },

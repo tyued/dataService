@@ -5,7 +5,8 @@ import {
   mapGetters
 } from "vuex";
 import PageBar from "components/PageBar/index";
-
+import { validateRESTful } from 'utils/rules'
+import ActiveBtn from 'components/ActiveBtn'
 
 var expSoap1 =
   '<?xml version="1.0" encoding="utf-8"?>' +
@@ -31,26 +32,17 @@ var expSoap2 =
   "</[method]Response>" +
   "</soap12:Body>" +
   "</soap12:Envelope>";
-
 export default {
   name: "iomanagement",
   components: {
     PageBar,
-    VueUEditor
+    VueUEditor,
+    ActiveBtn
   },
-
   computed: {
     ...mapGetters(["servTagArr", 'rightInfoObj'])
   },
   data() {
-    var validatePass = (rule, value, callback) => {
-      const re = /^[A-Za-z]\w+(?:\/\{?\w+\}?)*$/i;
-      if (re.test(value)) {
-        callback();
-      } else {
-        callback(new Error("地址不符合RESTful规范"));
-      }
-    };
     return {
       type: '', // 服务类型
       pathRule: [{
@@ -65,7 +57,7 @@ export default {
           trigger: "blur"
         },
         {
-          validator: validatePass,
+          validator: validateRESTful,
           trigger: "blur"
         }
       ],
@@ -219,67 +211,74 @@ export default {
       this.editObj = {}
       this.$set(this.editObj, 'servType', row.servType)
       this.$set(this.editObj, 'servUuid', row.servUuid)
+      if (this.type == '3') {
+        dicty.getDatasources().then(res => {
+          this.dataSourceList = res;
+        });
+        dicty.getOptTypes().then(res => {
+          this.OptTypes = res;
+        });
+        dicty.getRelations().then(res => {
+          this.conditionList = res;
+        });
+      }
+
       api.getApiParamForms({
         apiId: row.apiId,
         servId: row.servId,
         type: row.servType,
-      }).then(({
-        status,
-        data
-      }) => {
-        if (status == 200 && data) {
-          // 处理显示隐藏等active属性
-          if (data.params) {
-            this.editObj.params = data.params.forEach(item => {
-              item.required = item.required === '1' ? true : false
-              item.state = '0'
-              item.foucs = false
-            });
-          }
-
-          if (data.responses) {
-            this.editObj.responses = data.responses.forEach(item => {
-              item.state = '0'
-              item.foucs = false
-            });
-          }
-
-          if (this.type == 3 && data.errors) {
-            this.editObj.errors = data.errors.forEach(item => {
-              item.state = '0'
-              item.foucs = false
-            });
-          }
-          if (this.type == 3 && data.conditions) {
-            this.editObj.conditions = data.conditions.forEach(item => {
-              item.state = '0'
-            });
-          }
-          let obj = Object.assign({}, this.editObj, data, {
-            queryList: [
-              ...data.params,
-              {
-                name: "新增参数"
-              }
-            ],
-            selObjType: ''
-          })
-          if (this.type == 3) {
-            this.selDataSourceInit(obj);
-            this.changeTarget(obj);
-            obj.column = obj.columns.map((item) => {
-              return item.column
-            })
-          }
-          if (this.type == 2) {
-            obj.resp = 'XML'
-            obj.selexample = '1'
-          }
-
-
-          this.editObj = obj
-          this.editDialogVisible = true
+      }).then(data => {
+        // 处理显示隐藏等active属性
+        if (data.params) {
+          this.editObj.params = data.params.forEach(item => {
+            item.required = item.required === '1' ? true : false
+            item.state = '0'
+            item.foucs = false
+          });
         }
+
+        if (data.responses) {
+          this.editObj.responses = data.responses.forEach(item => {
+            item.state = '0'
+            item.foucs = false
+          });
+        }
+
+        if (this.type == 3 && data.errors) {
+          this.editObj.errors = data.errors.forEach(item => {
+            item.state = '0'
+            item.foucs = false
+          });
+        }
+        if (this.type == 3 && data.conditions) {
+          this.editObj.conditions = data.conditions.forEach(item => {
+            item.state = '0'
+          });
+        }
+        let obj = Object.assign({}, this.editObj, data, {
+          queryList: [
+            ...data.params,
+            {
+              name: "新增参数"
+            }
+          ],
+          selObjType: ''
+        })
+        if (this.type == 3) {
+          this.selDataSourceInit(obj);
+          this.changeTarget(obj);
+          obj.column = obj.columns.map((item) => {
+            return item.column
+          })
+        }
+        if (this.type == 2) {
+          obj.resp = 'XML'
+          obj.selexample = '1'
+        }
+
+
+        this.editObj = obj
+        this.editDialogVisible = true
       })
     },
     submitEdit() {
@@ -289,31 +288,17 @@ export default {
           api.submitEditIo({
               ...this.editObj
             }, this.editObj.servType)
-            .then(({
-              status,
-              data
-            }) => {
-              if (status == 200 && data) {
-
-                if (data.status == 'success') {
-                  this.$notify({
-                    title: "成功",
-                    message: "创建成功",
-                    type: "success",
-                    duration: 2000
-                  });
-                  this.$store.dispatch('getNoticeNumber')
-                  this.editDialogVisible = false;
-                } else {
-                  this.$notify({
-                    title: "失败",
-                    message: res.data.message,
-                    type: "error",
-                    duration: 2000
-                  });
-                }
+            .then(data => {
+              if (data.status == 'success') {
+                this.$message({
+                  type: "success",
+                  message: data.message
+                });
+                this.$store.dispatch('getNoticeNumber')
+                this.editDialogVisible = false;
+              } else {
+                this.$message.error(data.message);
               }
-
             })
         } else {
           return false;
@@ -332,33 +317,26 @@ export default {
           apiStatus: this.typeObj.apiStatus,
           servId: this.typeObj.servId
         })
-        .then(res => {
-          const {
-            status,
-            data
-          } = res;
-          if (status == 200 && data) {
-            this.loading = false;
-            data.rows.map(item => {
-              item.apiVer = item.apiVer ? "v" + item.apiVer : '';
-              switch (item.servType) {
-                case "1":
-                  item._servType = "HTTP API";
-                  break;
-                case "2":
-                  item._servType = "WebService API";
-                  break;
-                case "3":
-                  item._servType = "数据源 API";
-                  break;
-              }
-
-              return item;
-            });
-            this.tableData = data.rows;
-            this.total = data.total;
-            this.current = data.current;
-          }
+        .then(data => {
+          this.loading = false;
+          data.rows.map(item => {
+            item.apiVer = item.apiVer ? "v" + item.apiVer : '';
+            switch (item.servType) {
+              case "1":
+                item._servType = "HTTP API";
+                break;
+              case "2":
+                item._servType = "WebService API";
+                break;
+              case "3":
+                item._servType = "数据源 API";
+                break;
+            }
+            return item;
+          });
+          this.tableData = data.rows;
+          this.total = data.total;
+          this.current = data.current;
         });
     },
     handlePage(number) {
@@ -381,23 +359,14 @@ export default {
     //   this.servArr[id].show = true;
     //   this.typeObj.servId = value;
     // },
-    handlePubArr(item) {
-      const {
-        id,
-        value
-      } = item;
-      this.pubStatus.forEach(item => (item.show = false));
-      this.pubStatus[id].show = true;
+    handlePubArr({id, value}) {
+      // this.pubStatus.forEach(item => (item.show = false));
+      // this.pubStatus[id].show = true;
       this.typeObj.pubStatus = value;
-
     },
-    handleApiArr(item) {
-      const {
-        id,
-        value
-      } = item;
-      this.apiStatus.forEach(item => (item.show = false));
-      this.apiStatus[id].show = true;
+    handleApiArr({id, value}) {
+      // this.apiStatus.forEach(item => (item.show = false));
+      // this.apiStatus[id].show = true;
       this.typeObj.apiStatus = value;
     },
     openLayerPage(row, status) {
@@ -411,12 +380,7 @@ export default {
         apiId: row.apiId,
         apiVer: row.apiVer.slice(1)
       };
-      api.getApiParamForms(this.diaData).then(res => {
-        const {
-          status,
-          statusText,
-          data
-        } = res;
+      api.getApiParamForms(this.diaData).then(data => {
         this.contentData = data;
         const {
           path,
@@ -473,7 +437,6 @@ export default {
       this.form.pubId = this.ckRow.pubId;
       this.form.servId = this.ckRow.servId;
       this.form.translate = this.form.translateObj ? "1" : "0";
-
       this.form.servUseof = this.ckRow.servUseof;
       api
         .checkPublishRequest({
@@ -487,13 +450,11 @@ export default {
           servId: this.form.servId,
           translate: this.form.translate
         })
-        .then(res => {
-          if (res.data.status == "success") {
-            this.$notify({
-              title: "成功",
-              message: "审核通过",
+        .then(data => {
+          if (data.status === "success") {
+            this.$message({
               type: "success",
-              duration: 2000
+              message: data.message
             });
             this.outerVisible = false;
             this.innerVisible = false;
@@ -501,12 +462,7 @@ export default {
             this.getList();
             this.$store.dispatch("getNoticeNumber");
           } else {
-            this.$notify({
-              title: "失败",
-              message: res.message,
-              type: "error",
-              duration: 2000
-            });
+            this.$message.error(data.message);
           }
         });
     },
@@ -524,21 +480,15 @@ export default {
               apiId: row.apiId,
               ver: row.apiVer.slice(1)
             })
-            .then(res => {
-              const {
-                status,
-                data
-              } = res;
-              if (status == 200 && data) {
-                if (data.status == "success") {
-                  this.$message({
-                    type: "success",
-                    message: data.message
-                  });
-                  this.getList();
-                } else {
-                  this.$message.error(data.message);
-                }
+            .then(data => {
+              if (data.status == "success") {
+                this.$message({
+                  type: "success",
+                  message: data.message
+                });
+                this.getList();
+              } else {
+                this.$message.error(data.message);
               }
             });
         })
@@ -562,21 +512,15 @@ export default {
               apiId: row.apiId,
               ver: row.apiVer.slice(1)
             })
-            .then(res => {
-              const {
-                status,
-                data
-              } = res;
-              if (status == 200 && data) {
-                if (data.status == "success") {
-                  this.$message({
-                    type: "success",
-                    message: data.message
-                  });
-                  this.getList();
-                } else {
-                  this.$message.error(data.message);
-                }
+            .then(data => {
+              if (data.status == "success") {
+                this.$message({
+                  type: "success",
+                  message: data.message
+                });
+                this.getList();
+              } else {
+                this.$message.error(data.message);
               }
             });
         })
@@ -600,21 +544,15 @@ export default {
               apiId: row.apiId,
               ver: row.apiVer.slice(1)
             })
-            .then(res => {
-              const {
-                status,
-                data
-              } = res;
-              if (status == 200 && data) {
-                if (data.status == "success") {
-                  this.$message({
-                    type: "success",
-                    message: data.message
-                  });
-                  this.getList();
-                } else {
-                  this.$message.error(data.message);
-                }
+            .then(data => {
+              if (data.status == "success") {
+                this.$message({
+                  type: "success",
+                  message: data.message
+                });
+                this.getList();
+              } else {
+                this.$message.error(data.message);
               }
             });
         })
@@ -638,21 +576,15 @@ export default {
               apiId: row.apiId,
               ver: row.apiVer.slice(1)
             })
-            .then(res => {
-              const {
-                status,
-                data
-              } = res;
-              if (status == 200 && data) {
-                if (data.status == "success") {
-                  this.$message({
-                    type: "success",
-                    message: data.message
-                  });
-                  this.getList();
-                } else {
-                  this.$message.error(data.message);
-                }
+            .then(data => {
+              if (data.status == "success") {
+                this.$message({
+                  type: "success",
+                  message: data.message
+                });
+                this.getList();
+              } else {
+                this.$message.error(data.message);
               }
             });
         })
@@ -665,36 +597,33 @@ export default {
     },
     // 获取服务分类
     getBaseData() {
-      if (this.type == '3') {
-        dicty.getDatasources().then(response => {
-          this.dataSourceList = response.data;
-        });
-        dicty.getOptTypes().then(response => {
-          this.OptTypes = response.data;
-        });
-        dicty.getRelations().then(response => {
-          this.conditionList = response.data;
-        });
-      }
+      // console.log(this.type, 'sdf')
+      // if (this.type == '3') {
+      //   dicty.getDatasources().then(res => {
+      //     console.log(res)
+      //     this.dataSourceList = res;
+      //   });
+      //   dicty.getOptTypes().then(res => {
+      //     this.OptTypes = res;
+      //   });
+      //   dicty.getRelations().then(res => {
+      //     this.conditionList = res;
+      //   });
+      // }
 
       // 访问前缀
-      dicty.getSettings().then(response => {
-        this.Settings = response.data.servUrl;
+      dicty.getSettings().then(res => {
+        this.Settings = res.servUrl;
       });
       // 获取适配器 
       api.getExtensions().then(res => {
-        this.extensions = res.data;
+        this.extensions = res;
       });
 
 
       // 拉去服务list
-      api.getServList().then(({
-        status,
-        data
-      }) => {
-        if (status == 200 && data) {
-          this.servArr = data
-        }
+      api.getServList().then(data => {
+        this.servArr = data
         this.getList()
       });
     },
@@ -735,23 +664,23 @@ export default {
 
       var condobj = data.conditions;
       if (condobj) {
-        condobj.forEach(function (item, index) {
+        condobj.forEach(item => {
           if (item.name) item.name = "";
         });
       }
       var query = {
         uid: ele
       };
-      dicty.getTables(query).then(response => {
-        this.ObjTypeList = this.TablesList = response.data;
+      dicty.getTables(query).then(res => {
+        this.ObjTypeList = this.TablesList = res;
         this.ObjTypeList.forEach((item) => {
           if (item.name == data.target) {
             this.editObj.selObjType = 1
           }
         })
       });
-      dicty.getViews(query).then(response => {
-        this.ViewsList = response.data;
+      dicty.getViews(query).then(res => {
+        this.ViewsList = res;
         this.ViewsList.forEach((item) => {
           if (item.name == data.target) {
             this.editObj.selObjType = 2
@@ -771,23 +700,23 @@ export default {
 
       var condobj = data.conditions;
       if (condobj) {
-        condobj.forEach(function (item, index) {
+        condobj.forEach(item => {
           if (item.name) item.name = "";
         });
       }
       var query = {
         uid: ele
       };
-      dicty.getTables(query).then(response => {
-        this.ObjTypeList = this.TablesList = response.data;
+      dicty.getTables(query).then(res => {
+        this.ObjTypeList = this.TablesList = res;
         this.ObjTypeList.forEach((item) => {
           if (item.name == data.target) {
             this.editObj.selObjType = 1
           }
         })
       });
-      dicty.getViews(query).then(response => {
-        this.ViewsList = response.data;
+      dicty.getViews(query).then(res => {
+        this.ViewsList = res;
         this.ViewsList.forEach((item) => {
           if (item.name == data.target) {
             this.editObj.selObjType = 2
@@ -802,7 +731,7 @@ export default {
       this.ObjTransferList = [];
       var condobj = data.conditions;
       if (condobj) {
-        condobj.forEach(function (item, index) {
+        condobj.forEach(item => {
           if (item.name) item.name = "";
         });
       }
@@ -819,7 +748,7 @@ export default {
       this.ObjTransferList = [];
       var condobj = data.conditions;
       if (condobj) {
-        condobj.forEach(function (item, index) {
+        condobj.forEach(item => {
           if (item.name) item.name = "";
         });
       }
@@ -833,9 +762,9 @@ export default {
         uid: ele,
         table: val
       };
-      dicty.getColumns(query).then(response => {
-        var list = response.data;
-        list.forEach((item, index) => {
+      dicty.getColumns(query).then(res => {
+        var list = res;
+        list.forEach(item => {
           this.ObjTransferList.push({
             key: item.name,
             label: item.remark.split("：")[0]
@@ -852,7 +781,7 @@ export default {
       data.ObjTransferList = [];
       var condobj = data.conditions;
       if (condobj) {
-        condobj.forEach(function (item, index) {
+        condobj.forEach(item => {
           if (item.name) item.name = "";
         });
       }
@@ -876,7 +805,7 @@ export default {
       if (val == "params") {
         var queryList = this.editObj.queryList;
         if (queryList) {
-          queryList.forEach(function (item, index) {
+          queryList.forEach(item => {
             if (item.name == row.name) {
               queryList.splice(index, 1);
             }

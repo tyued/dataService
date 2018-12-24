@@ -44,26 +44,24 @@ export default {
   },
   methods: {
     getList() {
-      getSys().then(({ status, data }) => {
-        if (status === 200 && data) {
-          data.rows.forEach(item => {
-            item.key = item.key.replace(/\./g, "_");
-            if (item.source) {
-              item.source = JSON.parse(item.source);
-            }
-            if (item.type === "checkbox") {
-              item.value = item.value.split(",");
-            }
-            if (item.rules) {
-              item.rules = JSON.parse(item.rules);
-            } else {
-              item.rules = [];
-            }
-            this.$set(this.form, item.key, item.value);
-          });
-          this.arr = data.rows;
-          this.isShow = false
-        }
+      getSys().then(data => {
+        data.rows.forEach(item => {
+          item.key = item.key.replace(/\./g, "_");
+          if (item.source) {
+            item.source = JSON.parse(item.source);
+          }
+          if (item.type === "checkbox") {
+            item.value = item.value.split(",");
+          }
+          if (item.rules) {
+            item.rules = JSON.parse(item.rules);
+          } else {
+            item.rules = [];
+          }
+          this.$set(this.form, item.key, item.value);
+        });
+        this.arr = data.rows;
+        this.isShow = false
       });
     },
     submitFormEdit(formName) {
@@ -92,17 +90,15 @@ export default {
               });
               updateSys({
                 datas: query
-              }).then(({ status, data }) => {
-                if (status === 200 && data) {
-                  if (data.status === "success") {
-                    this.getList();
-                    this.$message({
-                      type: "success",
-                      message: data.message
-                    });
-                  } else {
-                    this.$message.error(data.message);
-                  }
+              }).then(data => {
+                if (data.status === "success") {
+                  this.getList();
+                  this.$message({
+                    type: "success",
+                    message: data.message
+                  });
+                } else {
+                  this.$message.error(data.message);
                 }
               });
             })

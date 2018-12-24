@@ -63,18 +63,15 @@ export default {
   created() {
     api
       .postServTypes()
-      .then(res => {
-        const { data, status } = res;
-        if (status === 200 && data) {
-          data.forEach((item, index) => {
-            this.servTypeArr.push({
-              id: ++index,
-              name: item.desc,
-              show: false,
-              value: item.key
-            });
+      .then(data => {
+        data.forEach((item, index) => {
+          this.servTypeArr.push({
+            id: ++index,
+            name: item.desc,
+            show: false,
+            value: item.key
           });
-        }
+        });
       })
       .then(() => {
         this.getList();
@@ -209,22 +206,18 @@ export default {
       if (this.typeObj.inputValue.length !== 0) {
         query.servName = this.typeObj.inputValue;
       }
-      api.postServiceLog(query).then(res => {
-        const { status, data } = res;
-        if (status === 200 && data) {
-          this.loading = false;
-          data.rows.forEach((item) => {
-            item.exception = item.exception ? item.exception : '无'
-            item.type = item.type ? item.type : '无'
-            item.respMsg = item.respMsg ? item.respMsg : '无'
-
-            item.status = item.status == '1' ? '成功' : '异常'
-            item.duration = item.duration + 'ms'
-          })
-          this.tableData = data.rows;
-          this.current = data.current;
-          this.total = data.total;
-        }
+      api.postServiceLog(query).then(data => {
+        this.loading = false;
+        data.rows.forEach((item) => {
+          item.exception = item.exception ? item.exception : '无'
+          item.type = item.type ? item.type : '无'
+          item.respMsg = item.respMsg ? item.respMsg : '无'
+          item.status = item.status == '1' ? '成功' : '异常'
+          item.duration = item.duration + 'ms'
+        })
+        this.tableData = data.rows;
+        this.current = data.current;
+        this.total = data.total;
       });
     },
     handlePage(number) {

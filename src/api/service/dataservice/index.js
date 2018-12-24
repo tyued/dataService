@@ -42,10 +42,10 @@ export function delObj(query) {
     });
 }
 // 数据源连接有效性测试
-export function testObj(query) {
+export function testObj(data) {
     return fetch({
         url: '/dsb/platform/service/datasource/test',
         method: 'post',
-        params: query,
+        data,
     });
 }

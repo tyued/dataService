@@ -35,8 +35,5 @@ export default {
     Done,
     Login
   },
-  data() {
-    return {};
-  }
 };
 </script>

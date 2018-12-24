@@ -4,15 +4,10 @@ import {
   Message,
   MessageBox
 } from 'element-ui';
-
 // 创建axios实例
 const service = axios.create({
-  // baseURL: process.env.BASE_API, // api的base_url
-  // baseURL: 'http://192.168.0.111:8083',
-  baseURL: 'http://192.168.0.49',
-  // baseURL: 'localhost:8083',
-
-  // timeout: 20000 // 请求超时时间
+  baseURL: process.env.BASE_API, // config/[name].env.js
+  timeout: 20000 // 请求超时时间
 });
 
 // request拦截器
@@ -29,20 +24,17 @@ service.interceptors.request.use(config => {
 })
 
 // respone拦截器
-service.interceptors.response.use(function (res) {
-  const {
-    token
-  } = res.data
+service.interceptors.response.use(function ({ data, status }) {
   // Do something with response data
-  switch (token) {
+  switch (data.token) {
     case 'incorrect':
       Message.error('token不正确');
       break;
     case 'invaild':
       Message.error('token无效');
       break;
-    case 'expiry': // be:我可以额外给你加个特殊标记 免得和其他请求数据分不清
-      if (!store.getters.isOut) {
+    case 'expiry': // 后台:我可以额外给你加个特殊标记 免得和其他请求数据分不清
+      if (!store.getters.isOut) { // 因为会有多个响应，会一直弹，这里要加一个控制开关，存全局
         store.commit('SET_ISOUT', true)
         MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
           confirmButtonText: '重新登录',
@@ -52,16 +44,18 @@ service.interceptors.response.use(function (res) {
           store.dispatch('logOut')
             .then(() => {
               location.reload(); // 为了重新实例化vue-router对象 避免bug
-              return 
+              return
             })
         }).catch(() => {
           store.commit('SET_ISOUT', false)
         })
       }
-
       break;
   }
-  return res;
+  // 如果响应200 并且data存在 则返回
+  if (status === 200 && data != undefined) { // [] {} null 0 false >????
+    return data;
+  } 
 }, function (error) {
   Message.error(error.message);
   // Do something with response error

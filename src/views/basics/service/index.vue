@@ -102,13 +102,13 @@ export default {
           type: "warning"
         }).then(() => {
           this.$store.commit("SET_compName", "mainService");
-          this.$store.dispatch("GET_fuwindex_on", [true, false, false, false]);
+          this.$store.commit("SET_fuwindex_on", [true, false, false, false]);
           this.toggleCompo(this.getServiceComponentName);
           this.$store.commit('SET_formLeave', false)
         });
       } else {
         this.$store.commit("SET_compName", "mainService");
-        this.$store.dispatch("GET_fuwindex_on", [true, false, false, false]);
+        this.$store.commit("SET_fuwindex_on", [true, false, false, false]);
         this.toggleCompo(this.getServiceComponentName);
       }
     },
@@ -125,13 +125,13 @@ export default {
           type: "warning"
         }).then(() => {
           this.$store.commit("SET_compName", "register");
-          this.$store.dispatch("GET_fuwindex_on", [false, true, false, false]);
+          this.$store.commit("SET_fuwindex_on", [false, true, false, false]);
           this.toggleCompo(this.getServiceComponentName);
           this.$store.commit('SET_formLeave', false)
         });
       } else {
         this.$store.commit("SET_compName", "register");
-        this.$store.dispatch("GET_fuwindex_on", [false, true, false, false]);
+        this.$store.commit("SET_fuwindex_on", [false, true, false, false]);
         this.toggleCompo(this.getServiceComponentName);
       }
     },
@@ -148,13 +148,13 @@ export default {
           type: "warning"
         }).then(() => {
           this.$store.commit("SET_compName", "management");
-          this.$store.dispatch("GET_fuwindex_on", [false, false, true, false]);
+          this.$store.commit("SET_fuwindex_on", [false, false, true, false]);
           this.toggleCompo(this.getServiceComponentName);
           this.$store.commit('SET_formLeave', false)
         });
       } else {
         this.$store.commit("SET_compName", "management");
-        this.$store.dispatch("GET_fuwindex_on", [false, false, true, false]);
+        this.$store.commit("SET_fuwindex_on", [false, false, true, false]);
         this.toggleCompo(this.getServiceComponentName);
       }
     },
@@ -171,13 +171,13 @@ export default {
           type: "warning"
         }).then(() => {
           this.$store.commit("SET_compName", "dataService");
-          this.$store.dispatch("GET_fuwindex_on", [false, false, false, true]);
+          this.$store.commit("SET_fuwindex_on", [false, false, false, true]);
           this.toggleCompo(this.getServiceComponentName);
           this.$store.commit('SET_formLeave', false)
         });
       } else {
         this.$store.commit("SET_compName", "dataService");
-        this.$store.dispatch("GET_fuwindex_on", [false, false, false, true]);
+        this.$store.commit("SET_fuwindex_on", [false, false, false, true]);
         this.toggleCompo(this.getServiceComponentName);
       }
     },
@@ -219,12 +219,9 @@ export default {
           detail: true
         },
         addr
-      ).then(res => {
-        const { status, data } = res;
-        if (status === 200 && data) {
-          this.editDataObj = data;
-          this.pageMB = edit;
-        }
+      ).then(data => {
+        this.editDataObj = data;
+        this.pageMB = edit;
       });
     }
   }

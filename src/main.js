@@ -7,7 +7,7 @@ import store from './store';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import 'font-awesome/css/font-awesome.min.css'
-import './login.js' 
+import './login.js' // 登录逻辑
 
 Vue.use(ElementUI);
 

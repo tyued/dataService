@@ -121,7 +121,7 @@ export default {
   methods: {
     init() {
       // 系统概况
-      getAllInfoForCustomer().then(({data}) => {
+      getAllInfoForCustomer().then((data) => {
         this.survey = data.survey;
         this.servTop5 = data.servTop5;
         this.zxfwyc = data.error.latest;

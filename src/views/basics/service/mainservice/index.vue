@@ -92,12 +92,12 @@ export default {
     // 获取服务分类
     getBaseData() {
       var query = { group: "servType" };
-      dicty.getBaseData(query).then(response => {
-        response.data.push({
+      dicty.getBaseData(query).then(data => {
+        data.push({
           key: "sub",
           value: "已订阅"
         });
-        this.servTypeList = response.data;
+        this.servTypeList = data;
       });
     },
     // 获取全部服务
@@ -105,13 +105,12 @@ export default {
       api.getRetrieveList({
         ...this.listQuery,
         status: '1'
-      }).then(response => {
-        this.fwserTypeList = response.data.rows;
-        this.total = response.data.total;
-        var that = this;
-        this.fwserTypeList.forEach(function(item, index) {
+      }).then(data => {
+        this.fwserTypeList = data.rows;
+        this.total = data.total;
+        this.fwserTypeList.forEach((item, index) => {
           item.tagname = "";
-          that.servTypeList.forEach(function(obj, ind) {
+          this.servTypeList.forEach((obj, ind) => {
             if (item.tag == obj.key) {
               item.tagname = obj.value;
             }
@@ -156,7 +155,7 @@ export default {
   font-size: 14px;
   color: #9a9a9a;
 }
-.box-card-header {
-  /* line-height: 40px; */
-}
+/* .box-card-header {
+  line-height: 40px;
+} */
 </style>

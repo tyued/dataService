@@ -42,12 +42,10 @@ export default {
         init(){
             var that = this
             // 异常类型汇总
-            api.errorRatio().then(response => {
-                var dataList = response.data
-                dataList.forEach(function(item,index){
-                    that.piedata.push({value:item.count,name:item.code})
+            api.errorRatio().then(data => {
+                data.forEach((item,index) => {
+                    this.piedata.push({value:item.count,name:item.code})
                 })
-                
                 this.initChart();
             })
         },

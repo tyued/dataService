@@ -21,7 +21,6 @@
         </el-table-column>
         <el-table-column prop="business" label="业务名称">
         </el-table-column>
-
         <el-table-column prop="addr" label="来源IP地址">
         </el-table-column>
         <el-table-column prop="clazz" label="异常对象">
@@ -190,17 +189,14 @@ export default {
       if (this.typeObj.systermValue.length !== 0) {
         query.type = this.typeObj.systermValue;
       }
-      api.postSystermLog(query).then(res => {
-        const { status, data } = res;
-        if (status === 200 && data) {
-          this.loading = false;
-          data.rows.forEach(ele => {
-            ele.exception = ele.exception ? ele.exception : "无";
-          });
-          this.tableData = data.rows;
-          this.current = data.current;
-          this.total = data.total;
-        }
+      api.postSystermLog(query).then(data => {
+        this.loading = false;
+        data.rows.forEach(ele => {
+          ele.exception = ele.exception ? ele.exception : "无";
+        });
+        this.tableData = data.rows;
+        this.current = data.current;
+        this.total = data.total;
       });
     },
     handleError(item) {

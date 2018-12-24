@@ -30,15 +30,9 @@ export default {
     ...mapGetters(["rightInfoObj"]),
     act() {
       let n = 4
-      if (this.rightInfoObj['sys-monitor']) {
-        n--
-      }
-      if (this.rightInfoObj['serv-monitor']) {
-        n--
-      }
-      if (this.rightInfoObj['sys-logs']) {
-        n--
-      }
+      if (this.rightInfoObj['sys-monitor']) n--
+      if (this.rightInfoObj['serv-monitor']) n--
+      if (this.rightInfoObj['sys-logs']) n--
       return n + ''
     }
   },
@@ -48,6 +42,7 @@ export default {
     }
   },
   created() {
+    // 从其他页面跳过来高亮
     if (this.$route.params.activeName) {
       this.activeName = this.$route.params.activeName;
     } else {

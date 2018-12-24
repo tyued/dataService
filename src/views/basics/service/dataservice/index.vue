@@ -15,7 +15,6 @@
           <!--<el-button icon="el-icon-download">下载</el-button>
                     <el-button icon="el-icon-tickets">筛选</el-button>
                     <div class="ticksxTab">
-                        
                     </div>-->
         </div>
       </el-col>
@@ -77,13 +76,13 @@
   </el-col>
 </template>
 
-
 <script>
 // <VueUEditor :ueditorConfig='editorConfig' @ready="editorReady"></VueUEditor>
 import VueUEditor from "vue-ueditor";
 import * as api from "api/service/dataservice/index";
 import * as dicty from "api/dictionary";
 import { mapGetters } from "vuex";
+import {checkipv4, checkPort, checkUsername, validatePassService } from 'utils/rules'
 export default {
   name: "dataService",
   components: {
@@ -92,58 +91,13 @@ export default {
   computed: {
     ...mapGetters(["rightInfoObj"]),
     url() {
-      return `${this.form.p1}${this.form.ipv4Active ? this.form.ipv4 : ""}${
-        this.form.p2
+      return `${this.form.p1}${this.form.ipv4Active ? this.form.ipv4 : ""}${this.form.p2
       }${this.form.portActive ? this.form.port : ""}${this.form.p3}${
         this.form.dbnameActive ? this.form.dbname : ""
       }${this.form.last}`;
     }
   },
   data() {
-    var checkipv4 = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入数据库IP"));
-      } else if (
-        !/^(25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}$/.test(
-          value
-        )
-      ) {
-        callback(new Error("请输入正确的IP地址"));
-      } else {
-        callback();
-      }
-    };
-    var checkPort = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入端口号"));
-      } else if (
-        !/^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{4}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/.test(
-          value
-        )
-      ) {
-        callback(new Error("端口号范围为0-65535"));
-      } else {
-        callback();
-      }
-    };
-    var checkUsername = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入用户名称"));
-      } else if (!/^\w{1,50}$/.test(value)) {
-        callback(new Error("请输入字母，数字或下划线, 长度在 1 到 50 个字符"));
-      } else {
-        callback();
-      }
-    };
-    var validatePassNew = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
-      } else if (!/^[a-zA-Z0-9]{6,30}$/.test(value)) {
-        callback(new Error("请输入字母或数字，长度在 6 到 30 个字符"));
-      } else {
-        callback();
-      }
-    };
     return {
       rules: {
         name: [
@@ -166,7 +120,6 @@ export default {
           { required: true, message: "请输入数据库名称", trigger: "blur" },
           { min: 1, max: 100, message: "长度为1-100个字符", trigger: "blur" }
         ],
-
         username: [
           {
             required: true,
@@ -177,7 +130,7 @@ export default {
         password: [
           {
             required: true,
-            validator: validatePassNew,
+            validator: validatePassService,
             trigger: "blur"
           }
         ],
@@ -200,9 +153,7 @@ export default {
       total: null, //总页数
       tableData: [],
       typeSel: "", //数据库类型选择
-
       dbTypes: [], //数据库类型信息
-
       dialogFormVisible: false, //弹层是否显示
       dialogStatus: "",
       textMap: {
@@ -254,16 +205,16 @@ export default {
   },
   methods: {
     getList() {
-      api.getList(this.listQuery).then(response => {
-        this.tableData = response.data.rows;
-        this.total = response.data.total;
+      api.getList(this.listQuery).then(data => {
+        this.tableData = data.rows;
+        this.total = data.total;
         this.listLoading = false;
       });
     },
     // 数据库类型信息
     getdbTypes() {
-      dicty.getdbTypes().then(response => {
-        this.dbTypes = response.data;
+      dicty.getdbTypes().then(data => {
+        this.dbTypes = data;
       });
     },
     // 富文本编辑器
@@ -377,11 +328,10 @@ export default {
     },
     //编辑
     handleUpdate(row) {
-      var params = {
+      api.getObj({
         id: row.id
-      };
-      api.getObj(params).then(res => {
-        this.form = res.data;
+      }).then(data => {
+        this.form = data;
         this.form.port = this.form.port.toString();
         this.dbTypes.forEach((item, index) => {
           if (item.key == this.form.dbtype) {
@@ -428,51 +378,41 @@ export default {
     create(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          var testparams = {
-            dbtype: this.form.dbtype,
-            url: this.url,
-            username: this.form.username,
-            password: this.form.password
-          };
-          api.testObj(testparams).then(res => {
-            if (res.status == "200") {
-              if (res.data.status == "success") {
-                api.addnew(this.form).then(res => {
-                  if (res.status == "200") {
-                    this.dialogFormVisible = false;
-                    this.getList();
-                    this.$notify({
-                      title: "成功",
-                      message: "创建成功",
-                      type: "success",
-                      duration: 2000
-                    });
-                  } else {
-                    this.$notify({
-                      title: "失败",
-                      message: res.message,
-                      type: "error",
-                      duration: 2000
-                    });
-                  }
-                });
-              } else {
-                this.$notify({
-                  title: "失败",
-                  message: res.data.message,
-                  type: "error",
-                  duration: 2000
-                });
-              }
-            } else {
-              this.$notify({
-                title: "失败",
-                message: res.message,
-                type: "error",
-                duration: 2000
+          api.addnew(this.form).then(res => {
+            if (res.status === "success") {
+              this.$message({
+                type: "success",
+                message: res.message
               });
+              this.dialogFormVisible = false;
+              this.getList();
+            } else {
+              this.$message.error(res.message);
             }
           });
+          // api.testObj({
+          //   dbtype: this.form.dbtype,
+          //   url: this.url,
+          //   username: this.form.username,
+          //   password: this.form.password
+          // }).then(data => {
+          //   if (data.status === "success") {
+          //     api.addnew(this.form).then(res => {
+          //       if (res.status === "success") {
+          //         this.$message({
+          //           type: "success",
+          //           message: res.message
+          //         });
+          //         this.dialogFormVisible = false;
+          //         this.getList();
+          //       } else {
+          //         this.$message.error(res.message);
+          //       }
+          //     });
+          //   } else {
+          //     this.$message.error(data.message);
+          //   }
+          // });
         } else {
           return false;
         }
@@ -482,54 +422,45 @@ export default {
     update(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          var testparams = {
-            dbtype: this.form.dbtype,
-            url: this.url,
-            username: this.form.username,
-            password: this.form.password
-          };
-          api.testObj(testparams).then(res => {
-            if (res.status == "200") {
-              if (res.data.status == "success") {
-                var params = {
-                  id: this.form.id
-                };  
-                api.editObj(params, this.form).then(res => {
-                  if (res.status == "200") {
-                    this.dialogFormVisible = false;
-                    this.getList();
-                    this.$notify({
-                      title: "成功",
-                      message: "创建成功",
-                      type: "success",
-                      duration: 2000
-                    });
-                  } else {
-                    this.$notify({
-                      title: "失败",
-                      message: res.message,
-                      type: "error",
-                      duration: 2000
-                    });
-                  }
-                });
-              } else {
-                this.$notify({
-                  title: "失败",
-                  message: res.data.message,
-                  type: "error",
-                  duration: 2000
-                });
-              }
-            } else {
-              this.$notify({
-                title: "失败",
-                message: res.message,
-                type: "error",
-                duration: 2000
+          api.editObj({
+            id: this.form.id
+          }, this.form).then(res => {
+            if (res.status == "success") {
+              this.$message({
+                type: "success",
+                message: res.message
               });
+              this.dialogFormVisible = false;
+              this.getList();
+            } else {
+              this.$message.error(data.message);
             }
           });
+          // api.testObj({
+          //   dbtype: this.form.dbtype,
+          //   url: this.url,
+          //   username: this.form.username,
+          //   password: this.form.password
+          // }).then(data => {
+          //   if (data.status == "success") {
+          //     api.editObj({
+          //       id: this.form.id
+          //     }, this.form).then(res => {
+          //       if (res.status == "success") {
+          //         this.$message({
+          //           type: "success",
+          //           message: res.message
+          //         });
+          //         this.dialogFormVisible = false;
+          //         this.getList();
+          //       } else {
+          //         this.$message.error(data.message);
+          //       }
+          //     });
+          //   } else {
+          //     this.$message.error(data.message);
+          //   }
+          // });
         } else {
           return false;
         }
@@ -542,18 +473,18 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        var params = {
+        api.delObj({
           id: row.id
-        };
-        api.delObj(params).then(() => {
-          this.$notify({
-            title: "成功",
-            message: "删除成功",
-            type: "success",
-            duration: 2000
-          });
-          const index = this.tableData.indexOf(row);
-          this.tableData.splice(index, 1);
+        }).then((data) => {
+          if (data.status == "success") {
+            this.$message({
+              type: "success",
+              message: data.message
+            });
+            this.tableData.splice(this.tableData.indexOf(row), 1);
+          } else {
+            this.$message.error(data.message);
+          }
         });
       });
     }

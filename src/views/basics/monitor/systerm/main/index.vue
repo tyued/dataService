@@ -1,14 +1,13 @@
 <template>
   <div class="main">
     <el-row :gutter="20">
-      <el-col v-for="(item,index) in list" :key="index" :lg="12" :sm="24" style="margin-bottom:20px;">
+      <el-col v-for="(item,index) in list" :key="index" :lg="cover === index ? 24 : 12" :sm="24" style="margin-bottom:20px;">
         <el-card class="box-card" :body-style="{padding: 0}">
           <div slot="header" class="clearfix">
             <span>{{item.registration.name}}</span>
             <span class="fr">状态：
               <span :style="{color: item.statusInfo.status === 'UP' ? 'rgb(19, 206, 102)' : 'rgb(255, 73, 73)'}">{{item.statusInfo.status}}</span>
             </span>
-
           </div>
           <div style="padding: 0 20px;">
             <li>
@@ -52,6 +51,12 @@
 <script>
 import * as api from "api/monitor";
 export default {
+  computed: {
+    cover() {
+      let n = this.list.length
+      if (n === 1 || n % 2 === 1) return --n
+    }
+  },
   created() {
     this.getInstance();
     if (!this.queryTimer) {
@@ -74,18 +79,14 @@ export default {
   },
   methods: {
     getInstance() {
-      api.getInstance().then(res => {
-        const { status, data } = res;
-        if (status === 200 && data) {
-          if (data.length === 0) {
-            this.empty = true;
-          }
-          data.forEach(item => {
-            this.circleData(item);
-          });
-
-          this.list = data;
+      api.getInstance().then(data => {
+        if (data.length === 0) {
+          this.empty = true;
         }
+        data.forEach(item => {
+          this.circleData(item);
+        });
+        this.list = data;
       });
     },
     circleData(item) {
@@ -94,15 +95,12 @@ export default {
           id: item.id,
           type: "system.cpu.usage"
         })
-        .then(res => {
-          const { data, status } = res;
-          if (status === 200 && data) {
-            this.$set(
-              item,
-              "p1",
-              parseInt(Number(data.measurements[0].value.toFixed(2)) * 100)
-            );
-          }
+        .then(data => {
+          this.$set(
+            item,
+            "p1",
+            parseInt(Number(data.measurements[0].value.toFixed(2)) * 100)
+          );
         });
       // 堆内存信息
       Promise.all([
@@ -119,8 +117,8 @@ export default {
           item,
           "p2",
           parseInt(
-            (resArr[0].data.measurements[0].value /
-              resArr[1].data.measurements[0].value) *
+            (resArr[0].measurements[0].value /
+              resArr[1].measurements[0].value) *
               100
           )
         );
@@ -140,8 +138,8 @@ export default {
           item,
           "p3",
           parseInt(
-            (resArr[0].data.measurements[0].value /
-              resArr[1].data.measurements[0].value) *
+            (resArr[0].measurements[0].value /
+              resArr[1].measurements[0].value) *
               100
           )
         );

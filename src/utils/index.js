@@ -41,3 +41,12 @@ export function _getQueryId(name) {
   if (r != null) return unescape(r[2]);
   return "";
 }
+
+// 可以将没用的参数去掉，并没有递归遍历，返回原对象的引用
+export function flterRequestParams(paramsObj) {
+  const arr = [[], {}, '', null, undefined]
+  Object.keys(paramsObj).forEach(key => {
+    if (arr.includes(paramsObj[key])) delete paramsObj[key]
+  })
+  return paramsObj
+}

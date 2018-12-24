@@ -1,5 +1,5 @@
 // private property
-var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="; // 不可以用于URL
 
 // private method for UTF-8 encoding
 function utf8Encode(string) {

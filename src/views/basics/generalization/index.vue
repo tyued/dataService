@@ -129,8 +129,8 @@ export default {
   methods: {
     init() {
       // 系统概况
-      api.survey().then(response => {
-        this.listData = response.data;
+      api.survey().then(data => {
+        this.listData = data;
       });
     },
     goToServiceMonitor() {

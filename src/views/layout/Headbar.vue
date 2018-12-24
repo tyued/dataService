@@ -9,22 +9,21 @@
         <div class="fr">
           <el-dropdown @command="handleCommand" trigger="click">
             <div class="el-dropdown-link">
-              <!-- <img class="user-icon" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjMiIGhlaWdodD0iNTkiIHZpZXdCb3g9IjAgMCA2MyA1OSIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KPGcgaWQ9IkNhbnZhcyIgZmlsbD0ibm9uZSI+CjxnIGlkPSJkdW90YWktaWNvbiI+CjxnIGlkPSJSZWN0YW5nbGUiPgo8cmVjdCB3aWR0aD0iNDEuMTQwMiIgaGVpZ2h0PSI0Mi4xNDI5IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyMS41OTg3IDE2Ljg1NzEpIiBmaWxsPSIjRkY3MjYyIi8+CjwvZz4KPGcgaWQ9IlZlY3RvciAyIj4KPHBhdGggZD0iTSAwIDI1LjI4NTdMIDIxLjU5ODYgMEwgNDMuMTk3MiAyNS4yODU3TCAwIDI1LjI4NTdaIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIDMzLjcxNDIpIiBmaWxsPSIjMEFDRjgzIi8+CjwvZz4KPGcgaWQ9IkVsbGlwc2UiPgo8ZWxsaXBzZSBjeD0iMTYuNDU2MSIgY3k9IjE2Ljg1NzIiIHJ4PSIxNi40NTYxIiByeT0iMTYuODU3MiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNS4xNDI0OSAwKSIgZmlsbD0iIzFBQkNGRSIvPgo8L2c+CjwvZz4KPC9nPgo8L3N2Zz4KCg==" alt="">  -->
-              {{$store.getters.userInfoObj.alias}}
+              {{userInfoObj.alias}}
               <i class="el-icon-arrow-down el-icon--right"></i>
             </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="a">个人信息</el-dropdown-item>
               <el-dropdown-item command="b">密码修改</el-dropdown-item>
               <el-dropdown-item command="c">我的应用</el-dropdown-item>
-              <el-dropdown-item command="e" divided>退出</el-dropdown-item>
+              <el-dropdown-item class="out" command="e" divided>退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
       </li>
       <li>
         <span class="el-dropdown-link">
-          <el-badge :value="number" class="item">
+          <el-badge :value="noticeNumber" class="item">
             <i class="el-icon-bell" @click="goToNotice"></i>
           </el-badge>
         </span>
@@ -105,69 +104,17 @@
 import * as api from "api/login";
 import Base64 from "utils/base64";
 import { mapGetters } from "vuex";
+import { checkPwd, validatePassNew, validatePassOld, phoneCheck, emailCheck } from 'utils/rules'
 export default {
   data() {
-    var checkPwd = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请再次输入密码"));
-      } else if (value !== this.passwordInfoForm.newPassword) {
-        callback(new Error("两次输入密码不一致!"));
-      } else {
-        callback();
-      }
-    };
-    var validatePassNew = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入新密码"));
-      } else if (!/^[a-zA-Z0-9]{6,16}$/.test(value)) {
-        callback(new Error("请输入字母或数字，长度在 6 到 16 个字符"));
-      } else {
-        callback();
-      }
-    };
-    var validatePassOld = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入旧密码"));
-      } else if (/[\u4E00-\u9FA5]/.test(value)) {
-        callback(new Error("不能包含中文"));
-      } else if (
-        Base64.encode(value) !== this.$store.getters.userInfoObj.password
-      ) {
-        callback(new Error("旧密码输入错误"));
-      } else {
-        callback();
-      }
-    };
-    var phoneCheck = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入号码"));
-      } else if (!/^\d{11}$/.test(Number(value))) {
-        callback(new Error("请输入11位有效手机号码"));
-      } else {
-        callback();
-      }
-    };
-    var emailCheck = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入邮箱"));
-      } else if (
-        !/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(
-          value
-        )
-      ) {
-        callback(new Error("请输入正确的邮箱"));
-      } else {
-        callback();
-      }
-    };
     return {
-      inputValue: "",
-      formLabelWidth: "120px",
-      personInfoVisible: false,
-      changePasswordVisible: false,
-      personInfoForm: {
+      inputValue: "", // 输入框value 目前还没接口
+      formLabelWidth: "120px", // 表单label宽度
+      personInfoVisible: false, // 个人信息弹层
+      changePasswordVisible: false, // 修改密码弹层
+      personInfoForm: { // 个人信息表单对象
         avatar: "", // 头像
-        roleId: "",
+        roleId: "", // 角色id
         remark: "", // 备注
         email: "",
         phone: "",
@@ -176,7 +123,7 @@ export default {
         username: "",
         birthday: ""
       },
-      rules: {
+      rules: { // 个人信息表单验证对象
         alias: [
           { required: true, message: "请输入昵称", trigger: "blur" },
           { min: 2, max: 20, message: "长度为2-20个字符", trigger: "blur" }
@@ -188,11 +135,11 @@ export default {
           { min: 1, max: 500, message: "长度为1-500个字符", trigger: "blur" }
         ]
       },
-      rulesPwd: {
+      rulesPwd: {  // 修改密码表单验证对象
         currentPassword: [
           {
             required: true,
-            validator: validatePassOld,
+            validator: validatePassOld.bind(this),
             trigger: "blur"
           }
         ],
@@ -201,38 +148,29 @@ export default {
             required: true,
             validator: validatePassNew,
             trigger: "blur"
-          }
+          },
         ],
         checkNewPassword: [
-          { required: true, validator: checkPwd, trigger: "blur" }
+          { required: true, validator: checkPwd.bind(this), trigger: "blur" }
         ]
       },
-      passwordInfoForm: {
+      passwordInfoForm: { // 修改密码对象
         currentPassword: "",
         newPassword: "",
         checkNewPassword: ""
       },
-      dialogImageUrl: "",
-      dialogVisible: false
     };
   },
   computed: {
-    ...mapGetters(["formLeave"]),
-    number() {
-      // 待处理通知数
-      // return this.$store.state.login.noticeNumber // 根据依赖实时变化
-      return this.$store.getters.noticeNumber; // 根据依赖实时变化
-    }
+    ...mapGetters(["formLeave", "userInfoObj", "noticeNumber"]),
   },
   created() {
     this.$store.dispatch("getNoticeNumber"); // 获取通知数
-    // this.$store.dispatch("getUserInfo"); // 获取用户信息
-    // this.$store.dispatch("getRightObj"); // 获取能查看的权限对象
   },
   methods: {
     handleCommand(command) {
       switch (command) {
-        case "e":
+        case "e": // 登出
           this.$store.dispatch("logOut").then(() => {
             // this.$router.push("/login");
             location.reload();
@@ -253,15 +191,15 @@ export default {
           };
           break;
         case "c": // 我的应用
-          if (this.formLeave) {
+          if (this.formLeave) { // 在注册时，填写表单，一不小心点击了我的应用，表单白填了，所以这里要加一个判断，状态formLeave已存全局vuex
             this.$confirm("数据尚未保存，确定要离开吗?", "提示", {
               confirmButtonText: "确定",
               cancelButtonText: "取消",
               type: "warning"
             }).then(() => {
-              this.$store.commit('SET_formLeave', false)
+              this.$store.commit('SET_formLeave', false) // 离开了，要更新状态为false
               this.$router.push("/application");
-              this.$store.commit("SET_SIDEBAR", "");
+              this.$store.commit("SET_SIDEBAR", ""); // 将左侧的sidebar高亮取消掉
             });
           } else {
             this.$router.push("/application");
@@ -284,7 +222,8 @@ export default {
             roleId,
             username
           } = this.personInfoForm;
-          let query = {
+          // 更新用户信息
+          api.postUserInfo({
             alias,
             birthday,
             email,
@@ -293,20 +232,16 @@ export default {
             remark,
             roleId,
             username
-          };
-          // 更新用户信息
-          api.postUserInfo(query).then(res => {
-            const { status, data } = res;
-            if (status === 200 && data) {
-              if (data.status === "success") {
-                this.$message({
-                  type: "success",
-                  message: data.message
-                });
-              } else {
-                this.$message.error(data.message);
-              }
+          }).then(res => {
+            const {status, message} = res
+            if (status === "success") { 
+              this.$message({
+                type: "success",
+                message
+              });
               this.personInfoVisible = false;
+            } else {
+              this.$message.error(message);
             }
           });
         } else {
@@ -318,24 +253,21 @@ export default {
       // 更新密码
       this.$refs[formName].validate(valid => {
         if (valid) {
-          let query = {
+          api.postPassWord({
             oldPassword: Base64.encode(this.passwordInfoForm.currentPassword),
             password: Base64.encode(this.passwordInfoForm.checkNewPassword)
-          };
-          api.postPassWord(query).then(res => {
-            const { status, data } = res;
-            if (status === 200 && data) {
-              if (data.status === "success") {
-                this.$message({
-                  type: "success",
-                  message: data.message
-                });
-              } else {
-                this.$message.error(data.message);
-              }
+          }).then(res => {
+            const {status, message} = res
+            if (status === "success") { 
+              this.$message({
+                type: "success",
+                message
+              });
+              this.changePasswordVisible = false;
+            } else {
+              this.$message.error(message);
             }
           });
-          this.changePasswordVisible = false;
         } else {
           return false;
         }
@@ -377,6 +309,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.out {
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
 h1 {
   display: block;
   height: 60px;

@@ -15,6 +15,7 @@
           <li>{{infoData.evalCount}}</li>
           <li>
             <el-rate
+              class="serviceinfo-rate"
               v-model="valRate"
               disabled
               show-score
@@ -684,7 +685,6 @@ export default {
         rank2: 0,
         rank1: 0
       },
-
       centerDialogVisible: false,
       rules: {
         text: [
@@ -723,7 +723,6 @@ export default {
     this.submitParams.servId = this.$route.query.servId;
     this.getBaseData();
     this.getErrorCode();
-
     this.getParamForms();
     this.getRelationForms();
   },
@@ -733,33 +732,30 @@ export default {
   methods: {
     // 获取服务分类
     getBaseData() {
-      var query = { group: "servType" };
-      dicty.getBaseData(query).then(response => {
-        this.servTypeList = response.data;
+      dicty.getBaseData({ group: "servType" }).then(data => {
+        this.servTypeList = data;
       });
       // 访问前缀
-      dicty.getSettings().then(response => {
-        this.Settings = response.data.servUrl;
+      dicty.getSettings().then(data => {
+        this.Settings = data.servUrl;
       });
     },
     init() {
       if (this.type == "1") {
         //HTTP API(rest)
-        api.getRest(this.DetailQuery).then(response => {
-          this.infoData = response.data;
-          this.sub = response.data.subscribed;
-          this.apisList = response.data.apis;
+        api.getRest(this.DetailQuery).then(data => {
+          this.infoData = data;
+          this.sub = data.subscribed;
+          this.apisList = data.apis;
           this.infoData.tagname = "";
-          var that = this;
-          this.servTypeList.forEach(function(item, index) {
-            if (that.infoData.tag == item.key) {
-              that.infoData.tagname = item.value;
+          this.servTypeList.forEach((item, index) => {
+            if (this.infoData.tag == item.key) {
+              this.infoData.tagname = item.value;
             }
           });
-          var uuid = this.infoData.uuid;
           this.apisList.forEach((item, index) => {
             //soap---http
-            item.expUrl = `${this.Settings}/http/${uuid}/v${item.version}${
+            item.expUrl = `${this.Settings}/http/${this.infoData.uuid}/v${item.version}${
               item.path ? "/" + item.path : ""
             }`;
           });
@@ -775,21 +771,19 @@ export default {
       }
       if (this.type == "2") {
         //WebService API(soap)
-        api.getSoap(this.DetailQuery).then(response => {
-          this.infoData = response.data;
-          this.sub = response.data.subscribed;
-          this.apisList = response.data.apis;
+        api.getSoap(this.DetailQuery).then(data => {
+          this.infoData = data;
+          this.sub = data.subscribed;
+          this.apisList = data.apis;
           this.infoData.tagname = "";
-          var that = this;
-          this.servTypeList.forEach(function(item, index) {
-            if (that.infoData.tag == item.key) {
-              that.infoData.tagname = item.value;
+          this.servTypeList.forEach((item, index) => {
+            if (this.infoData.tag == item.key) {
+              this.infoData.tagname = item.value;
             }
           });
-          var uuid = this.infoData.uuid;
           this.apisList.forEach((item, index) => {
             //webservice----soap
-            item.expUrl = `${this.Settings}/soap/${uuid}/${item.method}_v${
+            item.expUrl = `${this.Settings}/soap/${this.infoData.uuid}/${item.method}_v${
               item.version
             }`;
           });
@@ -803,21 +797,19 @@ export default {
       }
       if (this.type == "3") {
         //数据源
-        api.getDataset(this.DetailQuery).then(response => {
-          this.infoData = response.data;
-          this.sub = response.data.subscribed;
-          this.apisList = response.data.apis;
+        api.getDataset(this.DetailQuery).then(data => {
+          this.infoData = data;
+          this.sub = data.subscribed;
+          this.apisList = data.apis;
           this.infoData.tagname = "";
-          var that = this;
-          this.servTypeList.forEach(function(item, index) {
-            if (that.infoData.tag == item.key) {
-              that.infoData.tagname = item.value;
+          this.servTypeList.forEach((item, index) => {
+            if (this.infoData.tag == item.key) {
+              this.infoData.tagname = item.value;
             }
           });
-          var uuid = this.infoData.uuid;
           this.apisList.forEach((item, index) => {
             //数据源-----dataset
-            item.expUrl = `${this.Settings}/dataset/${uuid}/v${item.version}${
+            item.expUrl = `${this.Settings}/dataset/${this.infoData.uuid}/v${item.version}${
               item.path ? "/" + item.path : ""
             }`;
           });
@@ -832,18 +824,17 @@ export default {
     },
     // 猜你喜欢的
     getEnjoyList() {
-      var query = { tag: this.infoData.tag };
-      api.getEnjoy(query).then(response => {
-        this.enjoyList = response.data;
-        this.enjoyList.forEach(function(item, index) {
+      api.getEnjoy({ tag: this.infoData.tag }).then(data => {
+        data.forEach((item, index) => {
           item.evalRank = parseInt(item.evalRank);
         });
+        this.enjoyList = data;
       });
     },
     //服务错误对照信息
     getErrorCode() {
-      api.getErrorCode().then(response => {
-        this.ErrorCode = response.data;
+      api.getErrorCode().then(data => {
+        this.ErrorCode = data;
       });
     },
     // 猜你喜欢的查看
@@ -861,13 +852,13 @@ export default {
       this.submitParams.rank = 0;
       this.submitParams.text = "";
       this.submitParams.title = "";
-      api.getEvalStats({ servId: "1" }).then(res => {
-        var rank5 = Number(res.data.rank5);
-        var rank4 = Number(res.data.rank4);
-        var rank3 = Number(res.data.rank3);
-        var rank2 = Number(res.data.rank2);
-        var rank1 = Number(res.data.rank1);
-        var allRank = rank5 + rank4 + rank3 + rank2 + rank1;
+      api.getEvalStats({ servId: "1" }).then(data => {
+        let rank5 = Number(data.rank5);
+        let rank4 = Number(data.rank4);
+        let rank3 = Number(data.rank3);
+        let rank2 = Number(data.rank2);
+        let rank1 = Number(data.rank1);
+        let allRank = rank5 + rank4 + rank3 + rank2 + rank1;
         this.evalself.rank5 = (rank5 / allRank) * 100;
         this.evalself.rank4 = (rank4 / allRank) * 100;
         this.evalself.rank3 = (rank3 / allRank) * 100;
@@ -889,15 +880,12 @@ export default {
           limit,
           sortType
         })
-        .then(res => {
-          const { data, status, total } = res;
-          if (status == 200 && data.rows) {
-            data.rows.forEach(item => {
-              item.rank = +item.rank;
-            });
-            this.accessList = data.rows;
-            this.totalNumber = data.total;
-          }
+        .then(data => {
+          data.rows.forEach(item => {
+            item.rank = +item.rank;
+          });
+          this.accessList = data.rows;
+          this.totalNumber = data.total;
         });
     },
     // 意见反馈--打分
@@ -918,25 +906,26 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          api.submitAssess(this.submitParams).then(res => {
-            if (res.status == 200) {
-              this.$notify({
-                title: "成功",
-                message: "提交成功",
+          api.submitAssess(this.submitParams).then(data => {
+            if (data.status === "success") {
+              this.getList();
+              this.$message({
                 type: "success",
-                duration: 2000
+                message: data.message
               });
               this.init();
               this.centerDialogVisible = false;
+            } else {
+              this.$message.error(data.message);
             }
           });
         } else {
-          this.$notify({
-            title: "失败",
-            message: "还有未填项",
-            type: "error",
-            duration: 2000
-          });
+          // this.$notify({
+          //   title: "失败",
+          //   message: "还有未填项",
+          //   type: "error",
+          //   duration: 2000
+          // });
           return false;
         }
       });
@@ -952,29 +941,28 @@ export default {
       this.$message("已按照" + command + "排序");
     },
     getParamForms() {
-      api.getParamForms().then(res => {
-        res.data.map(item => {
+      api.getParamForms().then(data => {
+        data.map(item => {
           item.require = "是";
           item.type = "String";
           return item;
         });
-        this.requestTableData = res.data;
+        this.requestTableData = data;
       });
     },
     getRelationForms() {
-      api.getRelationForms().then(res => {
-        res.data.map(item => {
+      api.getRelationForms().then(data => {
+        data.map(item => {
           item.require = "是";
           item.type = "String";
           return item;
         });
-        this.responseTableData = res.data;
+        this.responseTableData = data;
       });
     },
     handleMoreMsg() {
       this.lessControll = true;
       this.limitNumber += 5;
-
       this.getMoreList(this.commandNumber, this.limitNumber);
     },
     handleLessMsg() {
@@ -998,20 +986,17 @@ export default {
           .unSubscribe({
             servId: this.servId
           })
-          .then(res => {
-            const { status, data } = res;
-            if (status == 200 && data) {
-              if (data.status == "success") {
-                this.infoData.subCount--;
-                this.sub = "";
-                this.$message({
-                  type: "success",
-                  message: data.message
-                });
-                this.$store.dispatch("getNoticeNumber");
-              } else {
-                this.$message.error(data.message);
-              }
+          .then(data => {
+            if (data.status == "success") {
+              this.infoData.subCount--;
+              this.sub = "";
+              this.$message({
+                type: "success",
+                message: data.message
+              });
+              this.$store.dispatch("getNoticeNumber");
+            } else {
+              this.$message.error(data.message);
             }
           });
       });
@@ -1020,11 +1005,8 @@ export default {
       this.dialogIOVisibleSub = true;
       this.form.appId = "";
       this.form.desc = "";
-      api.getAppList().then(res => {
-        const { status, data } = res;
-        if (status == 200 && data) {
-          this.appArr = data;
-        }
+      api.getAppList().then(data => {
+        this.appArr = data;
       });
     },
     subscribeDone(formName) {
@@ -1036,21 +1018,18 @@ export default {
               appId: this.form.appId,
               desc: this.form.desc
             })
-            .then(res => {
-              const { status, data } = res;
-              if (status == 200 && data) {
-                if (data.status == "success") {
-                  this.dialogIOVisibleSub = false;
-                  this.infoData.subCount++;
-                  this.sub = "0";
-                  this.$message({
-                    type: "success",
-                    message: data.message
-                  });
-                  this.$store.dispatch("getNoticeNumber");
-                } else {
-                  this.$message.error(data.message);
-                }
+            .then(data => {
+              if (data.status == "success") {
+                this.dialogIOVisibleSub = false;
+                this.infoData.subCount++;
+                this.sub = "0";
+                this.$message({
+                  type: "success",
+                  message: data.message
+                });
+                this.$store.dispatch("getNoticeNumber");
+              } else {
+                this.$message.error(data.message);
               }
             });
         } else {
@@ -1060,7 +1039,7 @@ export default {
     },
     handleBack() {
       if (this.$route.params.from == "mgr") {
-        this.$store.dispatch("GET_fuwindex_on", [false, false, true, false]);
+        this.$store.commit("SET_fuwindex_on", [false, false, true, false]);
         this.$router.push({
           name: "service",
           params: {
@@ -1108,7 +1087,7 @@ export default {
     }
   }
   ul li:nth-child(n + 3) {
-    padding-left: 34px;
+    padding-left: 34px; 
   }
   ul li:nth-child(n + 6) {
     float: right;
@@ -1116,28 +1095,77 @@ export default {
   }
   ul li:nth-child(3) {
     background: url("./img/info_wifi.png") no-repeat left center;
+    background-size: 11px;
+    -webkit-background-size: 11px;
+    font-size: 12px;
   }
   ul li:nth-child(4) {
     background: url("./img/info_message.png") no-repeat left center;
+    background-size: 12.5px;
+    -webkit-background-size: 11.5px;
+    font-size: 12px;
   }
   ul li:nth-child(5) {
     background: url("./img/info_good.png") no-repeat left center;
+    background-size: 12px;
+    -webkit-background-size: 12px;
+    font-size: 12px;
   }
 
   .nav-back {
-    background: url("./img/info_back.png") no-repeat left center;
+    background-image: url("./img/info_back.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    transition: all .2s;
+    -webkit-transition: all .2s;
+  }
+  .nav-back:hover {
+    background-image: url("./img/info_back_active.png");
+    color: #409EFF;
   }
   .nav-forbidden {
-    background: url("./img/info_forbidden.png") no-repeat left center;
+    background-image: url("./img/info_forbidden.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    transition: all .2s;
+    -webkit-transition: all .2s;
   }
+  // .nav-forbidden:hover {
+  //   background-image: url("./img/info_forbidden_active.png");
+  //   color: #409EFF;
+  // }
   .nav-monitor {
-    background: url("./img/info_watch.png") no-repeat left center;
+    background-image: url("./img/info_watch.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    transition: all .2s;
+    -webkit-transition: all .2s;
+  }
+  .nav-monitor:hover {
+    background-image: url("./img/info_watch_active.png");
+    color: #409EFF;
   }
   .nav-res {
-    background: url("./img/info_edit.png") no-repeat left center;
+    background-image: url("./img/info_edit.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    transition: all .2s;
+    -webkit-transition: all .2s;
+  }
+  .nav-res:hover {
+    background-image: url("./img/info_edit_active.png");
+    color: #409EFF;
   }
   .nav-sub {
-    background: url("./img/info_wifi.png") no-repeat left center;
+    background-image: url("./img/info_wifi.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    transition: all .2s;
+    -webkit-transition: all .2s;
+  }
+  .nav-sub:hover {
+    background-image: url("./img/info_wifi_active.png");
+    color: #409EFF;
   }
   /* 卡片 */
   .card-item {

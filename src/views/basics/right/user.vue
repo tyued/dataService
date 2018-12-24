@@ -12,6 +12,9 @@
         <el-table-column prop="alias" label="用户别名">
         </el-table-column>
         <el-table-column prop="genderX" label="性别">
+          <template slot-scope="{row}">
+            {{row.gender === "male" ? "男" : "女"}}
+          </template>
         </el-table-column>
         <el-table-column prop="email" label="邮箱">
         </el-table-column>
@@ -28,7 +31,7 @@
         </el-table-column>
         <el-table-column width="150" label="操作">
           <template slot-scope="scope">
-            <el-button v-if="rightInfoObj['user']['user:edit']" size="small" type="warning" @click="editItem(scope.row)">编辑</el-button>
+            <el-button v-if="rightInfoObj['user']['user:edit']" size="small" type="success" @click="editItem(scope.row)">编辑</el-button>
             <el-button v-if="rightInfoObj['user']['user:del']" size="small" type="danger" @click="deleteItem(scope.row)" :disabled="scope.row.username === 'admin'">删除</el-button>
           </template>
         </el-table-column>
@@ -130,14 +133,13 @@
 import * as api from "api/right";
 import PageBar from "components/PageBar/index";
 import Base64 from "utils/base64";
+import { phoneCheck, emailCheck, checkUsernameForUser, validatePass } from "utils/rules";
 import { mapGetters } from "vuex";
 export default {
   name: "user",
   components: {
     PageBar
   },
-
-  computed: {},
   created() {
     this.getList();
   },
@@ -145,49 +147,6 @@ export default {
     ...mapGetters(["rightInfoObj"])
   },
   data() {
-    var phoneCheck = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入号码"));
-        // /^1[34578]\d{9}$/
-      } else if (!/^\d{11}$/.test(Number(value))) {
-        callback(new Error("请输入11位有效手机号码"));
-      } else {
-        callback();
-      }
-    };
-    var emailCheck = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入邮箱"));
-      } else if (
-        !/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(
-          value
-        )
-      ) {
-        callback(new Error("请输入正确的邮箱"));
-      } else {
-        callback();
-      }
-    };
-    var checkUsername = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入用户名称"));
-      } else if (!/^\w{4,16}$/.test(value)) {
-        callback(
-          new Error("请输入字母，数字或下划线, 长度在 4 到 16 个字符")
-        );
-      } else {
-        callback();
-      }
-    };
-    var validatePassNew = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入密码"));
-      } else if (!/^[a-zA-Z0-9]{6,16}$/.test(value)) {
-        callback(new Error("请输入字母或数字，长度在 6 到 16 个字符"));
-      } else {
-        callback();
-      }
-    };
     return {
       roleArr: [], // 角色数组
       valueArr: [],
@@ -211,14 +170,14 @@ export default {
         username: [
           {
             required: true,
-            validator: checkUsername,
+            validator: checkUsernameForUser,
             trigger: "blur"
           }
         ],
         password: [
           {
             required: true,
-            validator: validatePassNew,
+            validator: validatePass,
             trigger: "blur"
           }
         ],
@@ -245,12 +204,12 @@ export default {
         username: [
           {
             required: true,
-            validator: checkUsername,
+            validator: checkUsernameForUser,
             trigger: "blur"
           }
         ],
         password: [
-          { required: true, validator: validatePassNew, trigger: "blur" }
+          { required: true, validator: validatePass, trigger: "blur" }
         ],
         alias: [{ required: true, message: "请输入用户别名", trigger: "blur" },{ min: 2, max: 20, message: "长度为2-20个字符", trigger: "blur" }],
         phone: [{ required: true, validator: phoneCheck, trigger: "blur" }],
@@ -274,17 +233,11 @@ export default {
         pageNo,
         limit
       };
-      api.getUser(query).then(res => {
-        const { status, data } = res;
-        if (status === 200 && data) {
-          this.loading = false;
-          data.rows.forEach(item => {
-            item.genderX = item.gender == "male" ? "男" : "女";
-          });
-          this.tableData = data.rows;
-          this.current = data.current;
-          this.total = data.total;
-        }
+      api.getUser(query).then(data => {
+        this.loading = false;
+        this.tableData = data.rows;
+        this.current = data.current;
+        this.total = data.total;
       });
     },
     handlePage(number) {
@@ -302,7 +255,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           // 添加用户请求
-          let query = {
+          api.addUser({
             username: this.ruleForm.username,
             password: Base64.encode(this.ruleForm.password),
             alias: this.ruleForm.alias,
@@ -311,20 +264,16 @@ export default {
             gender: this.ruleForm.gender,
             pdId: this.ruleForm.pdId,
             roleId: this.ruleForm.roleId
-          };
-          api.addUser(query).then(res => {
-            const { status, data } = res;
-            if (status === 200 && data) {
-              if (data.status === "success") {
-                this.$message({
-                  type: "success",
-                  message: data.message
-                });
-                this.dialogFormVisible = false;
-                this.getList();
-              } else {
-                this.$message.error(data.message);
-              }
+          }).then(data => {
+            if (data.status === "success") {
+              this.$message({
+                type: "success",
+                message: data.message
+              });
+              this.dialogFormVisible = false;
+              this.getList();
+            } else {
+              this.$message.error(data.message);
             }
           });
         } else {
@@ -336,7 +285,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           // 修改
-          let query = {
+          api.updateUser({
             username: this.ruleFormEdit.username,
             password: this.ruleFormEdit.password,
             alias: this.ruleFormEdit.alias,
@@ -346,20 +295,16 @@ export default {
             pdId: this.ruleFormEdit.pdId,
             roleId: this.ruleFormEdit.roleId,
             id: this.ruleFormEdit.id
-          };
-          api.updateUser(query).then(res => {
-            const { status, data } = res;
-            if (status === 200 && data) {
-              if (data.status === "success") {
-                this.$message({
-                  type: "success",
-                  message: data.message
-                });
-                this.dialogFormVisibleEdit = false;
-                this.getList();
-              } else {
-                this.$message.error(data.message);
-              }
+          }).then(data => {
+            if (data.status === "success") {
+              this.$message({
+                type: "success",
+                message: data.message
+              });
+              this.dialogFormVisibleEdit = false;
+              this.getList();
+            } else {
+              this.$message.error(data.message);
             }
           });
         } else {
@@ -378,18 +323,15 @@ export default {
             .deleteUser({
               id: row.id
             })
-            .then(res => {
-              const { status, data } = res;
-              if (status === 200 && data) {
-                if (data.status === "success") {
-                  this.getList();
-                  this.$message({
-                    type: "success",
-                    message: data.message
-                  });
-                } else {
-                  this.$message.error(data.message);
-                }
+            .then(data => {
+              if (data.status === "success") {
+                this.getList();
+                this.$message({
+                  type: "success",
+                  message: data.message
+                });
+              } else {
+                this.$message.error(data.message);
               }
             });
         })
@@ -401,35 +343,25 @@ export default {
         });
     },
     getRoleArr() {
-      api.getRoleArr().then(res => {
-        const { status, data } = res;
-        if (status === 200 && data) {
-          this.roleArr = data.data;
-        }
+      api.getRoleArr().then(data => {
+        this.roleArr = data.data;
       });
     },
     getProducerValueList() {
-      api.getProducerValueList().then(res => {
-        const { status, data } = res;
-        if (status === 200 && data) {
-          this.valueArr = data;
-        }
+      api.getProducerValueList().then(data => {
+        this.valueArr = data;
       });
     },
     editItem(row) {
       this.getProducerValueList();
       this.getRoleArr();
       this.dialogFormVisibleEdit = true;
-
       api
         .getUserListById({
           id: row.id
         })
-        .then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            this.ruleFormEdit = data;
-          }
+        .then(data => {
+          this.ruleFormEdit = data;
         });
     },
     addUser() {
@@ -452,7 +384,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-</style>
-

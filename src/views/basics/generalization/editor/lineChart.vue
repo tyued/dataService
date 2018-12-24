@@ -65,13 +65,11 @@ export default {
   },
   methods: {
     init() {
-      var that = this;
       // 服务订阅量Top5
-      api.subTop5().then(response => {
-        var dataList = response.data;
-        dataList.forEach(function(item, index) {
-          that.lineData.push({ value: item.count, name: item.name });
-          that.titleList.push(item.name);
+      api.subTop5().then(data => {
+        data.forEach((item, index) => {
+          this.lineData.push({ value: item.count, name: item.name });
+          this.titleList.push(item.name);
         });
         this.titleList.push("");
         this.initChart();

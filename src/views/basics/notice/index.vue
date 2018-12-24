@@ -84,14 +84,11 @@ export default {
           limit,
           pageNo
         })
-        .then(res => {
-          const { data, status } = res;
-          if (status === 200 && data) {
-            data.rows.forEach(item => (item.checked = false));
-            this.noticeList = data.rows;
-            this.total = parseInt(data.total);
-            this.current = parseInt(data.current);
-          }
+        .then(data => {
+          data.rows.forEach(item => (item.checked = false));
+          this.noticeList = data.rows;
+          this.total = parseInt(data.total);
+          this.current = parseInt(data.current);
         });
     },
     handlePage(number) {
@@ -111,11 +108,9 @@ export default {
           .postRead({
             id
           })
-          .then(res => {
-            if (res.status === 200 && res.data.status === "success") {
-              row.status = "1";
-              this.changeNoticeNumber();
-            }
+          .then(data => {
+            row.status = "1";
+            this.changeNoticeNumber();
           });
       }
     },
@@ -125,19 +120,16 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        api.postReadAll().then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            if (data.status === "success") {
-              this.getList(this.current, this.size);
-              this.changeNoticeNumber();
-              this.$message({
-                type: "success",
-                message: data.message
-              });
-            } else {
-              this.$message.error(data.message);
-            }
+        api.postReadAll().then(data => {
+          if (data.status === "success") {
+            this.getList(this.current, this.size);
+            this.changeNoticeNumber();
+            this.$message({
+              type: "success",
+              message: data.message
+            });
+          } else {
+            this.$message.error(data.message);
           }
         });
       });
@@ -158,19 +150,16 @@ export default {
           .deleteNotice({
             ids: this.ids.join(",")
           })
-          .then(res => {
-            const { status, data } = res;
-            if (status === 200 && data) {
-              if (data.status === "success") {
-                this.getList(this.current, this.size);
-                this.changeNoticeNumber();
-                this.$message({
-                  type: "success",
-                  message: data.message
-                });
-              } else {
-                this.$message.error(data.message);
-              }
+          .then(data => {
+            if (data.status === "success") {
+              this.getList(this.current, this.size);
+              this.changeNoticeNumber();
+              this.$message({
+                type: "success",
+                message: data.message
+              });
+            } else {
+              this.$message.error(data.message);
             }
           });
       });

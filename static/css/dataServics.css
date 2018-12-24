@@ -14,16 +14,19 @@
     box-sizing: border-box;
 }
 
+.row+.row {margin-top: 20px;} /* 基础间距20，class为row即可 */
+
 .el-header{ background: #409eff;overflow: hidden;}
 .headbar-container{ height: 100%;}
 .headbar-container .el-badge__content.is-fixed {top: 18px;}
 .headbar-container .el-badge__content {border: none;}
 
-.row+.row {margin-top: 20px;}
+/* smallscroll为控制滚动条样式的类名 */
 .smallscroll::-webkit-scrollbar-track {background: #eaedf4;border-radius: 2px;}
 .smallscroll::-webkit-scrollbar-thumb {background: #ccc;border-radius: 2px;}
 .smallscroll::-webkit-scrollbar-button {display: none;}
 .smallscroll::-webkit-scrollbar {height: 10px;width: 4px;}
+
 .el-aside,.el-aside .el-menu{ background: #354357;border:none;}
 .el-aside .el-menu-item{ color: #fff; text-align: center;}
 .el-aside .el-menu-item.is-active{ color: #fff; background: #4a5769;}
@@ -236,3 +239,21 @@ div.edui-box{ float: left;}
 .gl-container .el-table__row:nth-child(3) .el-progress-bar__inner{background-color: #63c249!important;}
 .gl-container .el-table__row:nth-child(4) .el-progress-bar__inner{background-color: #f66b6b!important;}
 .gl-container .el-table__row:nth-child(5) .el-progress-bar__inner{background-color: #f19149!important;}
+
+/* 根据交互要求修改细节 */
+.serviceinfo-rate .el-rate__text {
+    font-size: 12px;
+    line-height: 20px;
+}
+.serviceinfo-rate .el-rate__icon {
+    font-size: 9px;
+    line-height: 20px;
+}
+
+.detail-service .el-card__header {
+    padding: 9px 20px 8px;
+}
+
+.text_under {
+    text-decoration: underline;
+}

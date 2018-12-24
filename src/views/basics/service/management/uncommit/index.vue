@@ -31,7 +31,7 @@
 
       <el-table-column prop="status" label="操作" width="220">
         <template slot-scope="scope">
-          <el-button v-if="rightInfoObj['serv-examining']['serv-examining:renew']" size="small" type="warning" v-show="scope.row.status == '0'" @click="openChange(scope.row)">修改</el-button>
+          <el-button v-if="rightInfoObj['serv-examining']['serv-examining:renew']" size="small" type="success" v-show="scope.row.status == '0'" @click="openChange(scope.row)">修改</el-button>
           <el-button v-if="rightInfoObj['serv-examining']['serv-examining:submit']" size="small" type="primary" @click="openStart(scope.row)" class="activeBtn">提交</el-button>
           <el-button v-if="rightInfoObj['serv-examining']['serv-examining:delete']" size="small" type="danger" @click="deleteServe(scope.row)" class="activeBtn">删除</el-button>
         </template>
@@ -77,30 +77,27 @@ export default {
           limit,
           status
         })
-        .then(res => {
-          const { status, data, total } = res;
-          if (status === 200 && data) {
-            this.loading = false;
-            data.rows.forEach(item => {
-              item.belongValue =
-                item.belong === "1" ? "服务运营方" : "数据提供方";
-              switch (item.type) {
-                case "1":
-                  item.typeValue = "HTTP API";
-                  break;
-                case "2":
-                  item.typeValue = "WebService API";
-                  break;
-                case "3":
-                  item.typeValue = "数据源 API";
-                  break;
-              }
-              item.typeValue;
-            });
-            this.tableData = data.rows;
-            this.total = data.total;
-            this.current = data.current;
-          }
+        .then(data => {
+          this.loading = false;
+          data.rows.forEach(item => {
+            item.belongValue =
+              item.belong === "1" ? "服务运营方" : "数据提供方";
+            switch (item.type) {
+              case "1":
+                item.typeValue = "HTTP API";
+                break;
+              case "2":
+                item.typeValue = "WebService API";
+                break;
+              case "3":
+                item.typeValue = "数据源 API";
+                break;
+            }
+            item.typeValue;
+          });
+          this.tableData = data.rows;
+          this.total = data.total;
+          this.current = data.current;
         });
     },
     handlePage(number) {
@@ -122,7 +119,7 @@ export default {
       }).then(() => {
         putSubmit({
           servId: row.id
-        }).then(({data}) => {
+        }).then(data => {
           if (data.status === "success") {
             this.getList();
             this.$message({
@@ -158,19 +155,16 @@ export default {
         .deleteService(type, {
           servId: row.id
         })
-        .then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            if (data.status === "success") {
-              this.getList();
-              this.$message({
-                type: "success",
-                message: data.message
-              });
-              this.$store.dispatch('getNoticeNumber')
-            } else {
-              this.$message.error(data.message);
-            }
+        .then(data => {
+          if (data.status === "success") {
+            this.getList();
+            this.$message({
+              type: "success",
+              message: data.message
+            });
+            this.$store.dispatch('getNoticeNumber')
+          } else {
+            this.$message.error(data.message);
           }
         });
     }

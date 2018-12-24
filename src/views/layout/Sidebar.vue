@@ -30,11 +30,6 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
-  data() {
-    return {
-      // activePath: ""
-    };
-  },
   computed: {
     ...mapGetters(["rightInfoObj", "activePath", "formLeave"])
   },

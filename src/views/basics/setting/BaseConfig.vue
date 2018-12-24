@@ -25,7 +25,7 @@
           <template slot-scope="scope">
             <el-button v-if="scope.row.status == '0'" size="small" type="success" @click="startItem(scope.row)">启用</el-button>
             <el-button v-if="scope.row.status == '1'" size="small" type="danger" @click="forbiddenItem(scope.row)">禁用</el-button>
-            <el-button size="small" type="warning" @click="editItem(scope.row)">编辑</el-button>
+            <el-button size="small" type="success" @click="editItem(scope.row)">编辑</el-button>
             <el-button size="small" type="danger" @click="deleteItem(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -162,25 +162,18 @@ export default {
     },
     createFilter(queryString) {
       return restaurant => {
-        return (
-          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
-          0
-        );
+        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
       };
     },
     getList(pageNo = 1, limit = this.size) {
-      let query = {
+      api.getBase({
         pageNo,
         limit
-      };
-      api.getBase(query).then(res => {
-        const { status, data } = res;
-        if (status === 200 && data) {
-          this.loading = false;
-          this.tableData = data.rows;
-          this.current = data.current;
-          this.total = data.total;
-        }
+      }).then(data => {
+        this.loading = false;
+        this.tableData = data.rows;
+        this.current = data.current;
+        this.total = data.total;
       });
     },
     handlePage(number) {
@@ -198,25 +191,21 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           // 添加数据请求
-          let query = {
+          api.addBase({
             group: this.ruleForm.group,
             label: this.ruleForm.label,
             key: this.ruleForm.key,
             text: this.ruleForm.text
-          };
-          api.addBase(query).then(res => {
-            const { status, data } = res;
-            if (status === 200 && data) {
-              if (data.status === "success") {
-                this.$message({
-                  type: "success",
-                  message: data.message
-                });
-                this.dialogFormVisible = false;
-                this.getList();
-              } else {
-                this.$message.error(data.message);
-              }
+          }).then(data => {
+            if (data.status === "success") {
+              this.$message({
+                type: "success",
+                message: data.message
+              });
+              this.dialogFormVisible = false;
+              this.getList();
+            } else {
+              this.$message.error(data.message);
             }
           });
         } else {
@@ -228,25 +217,21 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           // 修改
-          let query = {
+          api.updateBase({
             id: this.ruleFormEdit.id,
             label: this.ruleFormEdit.label,
             status: this.ruleFormEdit.status,
             text: this.ruleFormEdit.text
-          };
-          api.updateBase(query).then(res => {
-            const { status, data } = res;
-            if (status === 200 && data) {
-              if (data.status === "success") {
-                this.$message({
-                  type: "success",
-                  message: data.message
-                });
-                this.dialogFormVisibleEdit = false;
-                this.getList();
-              } else {
-                this.$message.error(data.message);
-              }
+          }).then(data => {
+            if (data.status === "success") {
+              this.$message({
+                type: "success",
+                message: data.message
+              });
+              this.dialogFormVisibleEdit = false;
+              this.getList();
+            } else {
+              this.$message.error(data.message);
             }
           });
         } else {
@@ -265,18 +250,15 @@ export default {
             .delBase({
               ids: row.id
             })
-            .then(res => {
-              const { status, data } = res;
-              if (status === 200 && data) {
-                if (data.status === "success") {
-                  this.getList();
-                  this.$message({
-                    type: "success",
-                    message: data.message
-                  });
-                } else {
-                  this.$message.error(data.message);
-                }
+            .then(data => {
+              if (data.status === "success") {
+                this.getList();
+                this.$message({
+                  type: "success",
+                  message: data.message
+                });
+              } else {
+                this.$message.error(data.message);
               }
             });
         })
@@ -293,11 +275,8 @@ export default {
         .getBaseById({
           id: row.id
         })
-        .then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            this.ruleFormEdit = data;
-          }
+        .then(data => {
+          this.ruleFormEdit = data;
         });
     },
     startItem(row) {
@@ -312,17 +291,15 @@ export default {
               id: row.id,
               status: "1"
             })
-            .then(({ status, data }) => {
-              if (status === 200 && data) {
-                if (data.status === "success") {
-                  this.getList();
-                  this.$message({
-                    type: "success",
-                    message: data.message
-                  });
-                } else {
-                  this.$message.error(data.message);
-                }
+            .then(data => {
+              if (data.status === "success") {
+                this.getList();
+                this.$message({
+                  type: "success",
+                  message: data.message
+                });
+              } else {
+                this.$message.error(data.message);
               }
             });
         })
@@ -345,17 +322,15 @@ export default {
               id: row.id,
               status: "0"
             })
-            .then(({ status, data }) => {
-              if (status === 200 && data) {
-                if (data.status === "success") {
-                  this.getList();
-                  this.$message({
-                    type: "success",
-                    message: data.message
-                  });
-                } else {
-                  this.$message.error(data.message);
-                }
+            .then(data => {
+              if (data.status === "success") {
+                this.getList();
+                this.$message({
+                  type: "success",
+                  message: data.message
+                });
+              } else {
+                this.$message.error(data.message);
               }
             });
         })
@@ -367,7 +342,7 @@ export default {
         });
     },
     addUser() {
-      api.getTypes().then(({ status, data }) => {
+      api.getTypes().then(data => {
         this.typeArr = data;
         this.dialogFormVisible = true;
       });

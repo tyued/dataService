@@ -8,9 +8,9 @@ import {
  * @param rightInfoObj
  * @param route
  */
-function hasPermission(rightInfoObj, route) {
+function hasPermission(rightInfoObj, route) { // 通过声明的meta属性来比对后台返回的权限
   if (route.meta && route.meta.right) {
-    return Object.keys(rightInfoObj).some(role => route.meta.right.includes(role))
+    return Object.keys(rightInfoObj).some(role => route.meta.right.includes(role)) // 只要包含就证明该权限为真
   } else {
     return true
   }
@@ -23,10 +23,8 @@ function hasPermission(rightInfoObj, route) {
  */
 function filterAsyncRouter(routes, rightInfoObj) {
   const res = []
-
   routes.forEach(route => {
-    const tmp = { ...route
-    }
+    const tmp = { ...route }
     if (hasPermission(rightInfoObj, tmp)) {
       if (tmp.children) {
         tmp.children = filterAsyncRouter(tmp.children, rightInfoObj)
@@ -37,7 +35,7 @@ function filterAsyncRouter(routes, rightInfoObj) {
   return res
 }
 
-// function filterRouter(router, asyncRouter) {
+// function filterRouter(router, asyncRouter) { // 尝试去重路由表，但是失败了。。。
 //   router.forEach((a) => {
 //     asyncRouter.forEach((b, idx) => {
 //       if (a.name === b.name) {
@@ -51,14 +49,12 @@ function filterAsyncRouter(routes, rightInfoObj) {
 
 const permission = {
   state: {
-    isDone: false,
-    routers: constantRouterMap,
-    addRouters: []
+    isDone: false, // 是否处理完毕
+    routers: constantRouterMap, // 原始路由表
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {
-      state.addRouters = routers
-      state.routers = constantRouterMap.concat(routers)
+      state.routers = constantRouterMap.concat(routers) // 拼接两个路由
       // state.routers = filterRouter(constantRouterMap, routers)
     },
     SET_ISDONE: (state, bool) => {
@@ -74,7 +70,7 @@ const permission = {
         accessedRouters = filterAsyncRouter(asyncRouterMap, rightInfoObj)
         commit('SET_ROUTERS', accessedRouters)
         commit('SET_ISDONE', true)
-        resolve()
+        resolve(accessedRouters)
       })
     }
   }

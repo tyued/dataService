@@ -1,12 +1,12 @@
 import * as api from 'api/login'
-import { getToken, setToken, removeToken} from 'utils/handleToken'
+import { getToken, setToken, removeToken } from 'utils/handleToken'
 const login = {
   state: {
-    token: getToken() || '',
-    noticeNumber: 0,
-    userInfoObj: {},
-    rightInfoObj: {},
-    isOut: false,
+    token: getToken() || '', // 通知数
+    noticeNumber: 0,  // 待处理通知数
+    userInfoObj: {}, // 用户信息对象
+    rightInfoObj: {}, // 权限对象
+    isOut: false, // 开关
     activePath: '' // sidebar 高亮
   },
   mutations: {
@@ -33,31 +33,26 @@ const login = {
     // 登录
     userLogin({ commit }, userInfo) {
       const { username, password, captcha, failureRetries } = userInfo;
-
       return new Promise((resolve, reject) => {
         api.userLogin({
-          username: username,
-          password: password,
+          username,
+          password,
           captcha,
           failureRetries
         }).then(res => {
-          const { data, status } = res;
-          if (status === 200 && data) {
-            const { message, token, status } = data
-
-            if (token) { // 如果有token 设置就完了
-              setToken(token)
-              commit('SET_TOKEN', token);
-            }
-            resolve(data);
+          const { token } = res
+          if (token) { // 如果有token 设置就完了
+            setToken(token)
+            commit('SET_TOKEN', token);
           }
+          resolve(res);
         }).catch(error => {
           reject(error);
         });
       });
     },
     // 登出
-    logOut({ commit, rootState }) {
+    logOut({ commit }) {
       commit('SET_TOKEN', '');
       commit('SET_ISDONE', false)
       commit('SET_RIGHTINFO', {})
@@ -67,12 +62,9 @@ const login = {
     getNoticeNumber({ commit }) {
       return new Promise((resolve, reject) => {
         api.postNoticeNumber().then(res => {
-          const { data, status } = res;
-          if (status === 200 && typeof data === "number") {
-            let noticeNumber = data < 100 ? data : "99+";
-            commit('SET_NOTICENUMBER', noticeNumber);
-            resolve(noticeNumber);
-          }
+          let noticeNumber = res < 100 ? res : "99+";
+          commit('SET_NOTICENUMBER', noticeNumber);
+          resolve(noticeNumber);
         }).catch(error => {
           reject(error);
         });
@@ -82,11 +74,8 @@ const login = {
     getUserInfo({ commit }) {
       return new Promise((resolve, reject) => {
         api.queryCurrentUserInfo().then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            commit('SET_USERINFO', data)
-            resolve(data);
-          }
+          commit('SET_USERINFO', res)
+          resolve(res);
         }).catch(error => {
           reject(error);
         });
@@ -96,24 +85,20 @@ const login = {
     getRightObj({ commit }) {
       return new Promise((resolve, reject) => {
         api.getRightObj().then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            let obj = {}
-            data.map((item) => {
-              obj[item.code] = {}
-              item.perms && item.perms.split(',').forEach((ele) => {
-                obj[item.code][ele] = true
-              })
+          let obj = {}
+          res.map((item) => {
+            obj[item.code] = {}
+            item.perms && item.perms.split(',').forEach((ele) => {
+              obj[item.code][ele] = true
             })
-
-            // if (!store.getters.isadmin) {
-            //   obj['serv-api']['serv-api:review'] = false
-            //   obj['serv-api']['serv-api:deploy'] = false
-            //   obj['serv-api']['serv-api:destroy'] = false
-            // }
-            commit('SET_RIGHTINFO', obj)
-            resolve(obj);
-          }
+          })
+          // if (!store.getters.isadmin) {
+          //   obj['serv-api']['serv-api:review'] = false
+          //   obj['serv-api']['serv-api:deploy'] = false
+          //   obj['serv-api']['serv-api:destroy'] = false
+          // }
+          commit('SET_RIGHTINFO', obj)
+          resolve(obj);
         }).catch(error => {
           reject(error);
         });

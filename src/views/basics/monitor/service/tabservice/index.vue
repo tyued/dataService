@@ -209,8 +209,7 @@ export default {
           servId: this.servId,
           type: this.servType
         })
-        .then(res => {
-          const { data } = res;
+        .then(data => {
           data.forEach(item => {
             item.active = false;
           });
@@ -262,15 +261,12 @@ export default {
     },
     async getYesterday(id) {
       // 昨日信息
-      let res = await api.postYesterday({
+      let data = await api.postYesterday({
         servId: this.servId,
         apiId: id
       });
-      const { status, data } = res;
-      if (status === 200 && data) {
-        formatData(data);
-        this.yesObj = data;
-      }
+      formatData(data);
+      this.yesObj = data;
     },
     changeTabs(tab) {
       // 改变echarts tab
@@ -278,19 +274,16 @@ export default {
     },
     async getTable(pageNo = 1, limit = this.size) {
       // 渲染表格
-      let res = await api.postDetail({
+      let data = await api.postDetail({
         pageNo,
         limit,
         byType: this.byType,
         servId: this.servId,
         apiId: this.apiId
       });
-      const { status, data } = res;
-      if (status === 200 && data) {
-        this.tableData = data.rows;
-        this.total = parseInt(data.total);
-        this.current = parseInt(data.current);
-      }
+      this.tableData = data.rows;
+      this.total = parseInt(data.total);
+      this.current = parseInt(data.current);
     },
     handlePage(number) {
       // 分页

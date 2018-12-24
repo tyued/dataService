@@ -9,8 +9,5 @@
 <script>
 export default {
   name: "systerm",
-  data() {
-    return {};
-  }
 };
 </script>

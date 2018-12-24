@@ -31,7 +31,6 @@
         </el-table-column>
         <el-table-column prop="protocol" label="认证协议">
         </el-table-column>
-
         <el-table-column prop="realm" label="Realm名称">
         </el-table-column>
         <el-table-column prop="level" label="日志级别">
@@ -225,22 +224,19 @@ export default {
       if (this.typeObj.status.length !== 0) {
         query.status = this.typeObj.status;
       }
-      api.postLoginLog(query).then(res => {
-        const { status, data } = res;
-        if (status === 200 && data) {
-          this.loading = false;
-          data.rows.forEach(ele => {
-            if (!ele.userName) {
-              ele.userName = '异常账户'
-              ele.red = true
-            }
-            ele.exception = ele.exception ? ele.exception : '无'
-            ele.respCode = ele.respCode ? ele.respCode : '无'
-          });
-          this.tableData = data.rows;
-          this.current = data.current;
-          this.total = data.total;
-        }
+      api.postLoginLog(query).then(data => {
+        this.loading = false;
+        data.rows.forEach(ele => {
+          if (!ele.userName) {
+            ele.userName = '异常账户'
+            ele.red = true
+          }
+          ele.exception = ele.exception ? ele.exception : '无'
+          ele.respCode = ele.respCode ? ele.respCode : '无'
+        });
+        this.tableData = data.rows;
+        this.current = data.current;
+        this.total = data.total;
       });
     },
     handlePage(number) {

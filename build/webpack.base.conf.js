@@ -11,7 +11,7 @@ function resolve(dir) {
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    app: ["babel-polyfill", './src/main.js']
+    app: ["babel-polyfill", './src/main.js'] // 加入babel-polyfill做兼容
   },
   output: {
     path: config.build.assetsRoot,
@@ -21,8 +21,8 @@ module.exports = {
       config.dev.assetsPublicPath
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json'],
-    alias: {
+    extensions: ['.js', '.vue', '.json'], // 省略后缀
+    alias: { // import引入别名
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
       'src': path.resolve(__dirname, '../src'),
@@ -78,7 +78,7 @@ module.exports = {
             sourceMap: true
           }
         }, {
-          loader: "sass-loader",
+          loader: "sass-loader", // 使用sass-loader处理sass
           options: {
             sourceMap: true
           }

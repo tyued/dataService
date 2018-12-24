@@ -33,12 +33,8 @@ export default {
     ...mapGetters(["rightInfoObj"]),
     act() {
       let n = 3;
-      if (this.rightInfoObj["setting"]) {
-        n--;
-      }
-      if (this.rightInfoObj["basedata"]) {
-        n--;
-      }
+      if (this.rightInfoObj["setting"]) n--;
+      if (this.rightInfoObj["basedata"]) n--;
       return n + "";
     }
   }

@@ -54,7 +54,7 @@
 
         <el-table-column min-width="150" label="操作">
           <template slot-scope="scope">
-            <el-button size="small" type="warning" @click="editItem(scope.row)">编辑</el-button>
+            <el-button size="small" type="success" @click="editItem(scope.row)">编辑</el-button>
             <el-button size="small" type="danger" @click="deleteItem(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -140,6 +140,8 @@
 <script>
 import * as api from "api/login";
 import PageBar from "components/PageBar/index";
+import { nameCheck, descCheck } from 'utils/rules'
+import { noticeResponse } from 'utils'
 export default {
   name: "application",
   components: {
@@ -148,30 +150,7 @@ export default {
   created() {
     this.getList();
   },
-
   data() {
-    var nameCheck = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入应用名称"));
-      } else if (!/^.{1,50}$/.test(value)) {
-        callback(new Error("长度在 1 到 50 个字符"));
-      } else if (/\s+/.test(value)) {
-        callback(new Error("不能包含空格"));
-      } else {
-        callback();
-      }
-    };
-    var descCheck = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入应用描述"));
-      } else if (!/^.{1,50}$/.test(value)) {
-        callback(new Error("长度在 1 到 300 个字符"));
-      } else if (/\s+/.test(value)) {
-        callback(new Error("不能包含空格"));
-      } else {
-        callback();
-      }
-    };
     return {
       ruleForm: {
         name: "",
@@ -231,13 +210,10 @@ export default {
         limit
       };
       api.getAppList(query).then(res => {
-        const { status, data } = res;
-        if (status === 200 && data) {
-          this.loading = false;
-          this.tableData = data.rows;
-          this.current = data.current;
-          this.total = data.total;
-        }
+        this.loading = false;
+        this.tableData = res.rows;
+        this.current = res.current;
+        this.total = res.total;
       });
     },
     handlePage(number) {
@@ -255,25 +231,21 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           // 添加用户请求
-          let query = {
+          api.addApp({
             name: this.ruleForm.name,
             desc: this.ruleForm.desc,
             lang: this.ruleForm.lang,
             addr: this.ruleForm.addr
-          };
-          api.addApp(query).then(res => {
-            const { status, data } = res;
-            if (status === 200 && data) {
-              if (data.status === "success") {
-                this.$message({
-                  type: "success",
-                  message: data.message
-                });
-                this.dialogFormVisible = false;
-                this.getList();
-              } else {
-                this.$message.error(data.message);
-              }
+          }).then(res => {
+            if (res.status === "success") {
+              this.$message({
+                type: "success",
+                message: res.message
+              });
+              this.dialogFormVisible = false;
+              this.getList();
+            } else {
+              this.$message.error(res.message);
             }
           });
         } else {
@@ -293,18 +265,15 @@ export default {
             id: this.ruleFormEdit.id
           };
           api.updateApp(query).then(res => {
-            const { status, data } = res;
-            if (status === 200 && data) {
-              if (data.status === "success") {
-                this.$message({
-                  type: "success",
-                  message: data.message
-                });
-                this.dialogFormVisibleEdit = false;
-                this.getList();
-              } else {
-                this.$message.error(data.message);
-              }
+            if (res.status === "success") {
+              this.$message({
+                type: "success",
+                message: res.message
+              });
+              this.dialogFormVisibleEdit = false;
+              this.getList();
+            } else {
+              this.$message.error(res.message);
             }
           });
         } else {
@@ -324,17 +293,14 @@ export default {
               appId: row.id
             })
             .then(res => {
-              const { status, data } = res;
-              if (status === 200 && data) {
-                if (data.status === "success") {
-                  this.getList();
-                  this.$message({
-                    type: "success",
-                    message: data.message
-                  });
-                } else {
-                  this.$message.error(data.message);
-                }
+              if (res.status === "success") {
+                this.getList();
+                this.$message({
+                  type: "success",
+                  message: res.message
+                });
+              } else {
+                this.$message.error(res.message);
               }
             });
         })
@@ -352,10 +318,7 @@ export default {
           id: row.id
         })
         .then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            this.ruleFormEdit = data;
-          }
+          this.ruleFormEdit = res;
         });
     },
     addUser() {

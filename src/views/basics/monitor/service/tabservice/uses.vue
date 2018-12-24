@@ -58,17 +58,14 @@ export default {
     async init(time = this.defaultValueTime) {
       this.activeArr = [false, false, true];
       // 获取echarts数据并props down
-      let res = await api.postCallTimes({
+      let data = await api.postCallTimes({
         servId: this.servId,
         apiId: this.apiId,
         byType: this.byType,
         begintime: time[0],
         endtime: time[1]
       });
-      const { status, data } = res;
-      if (status === 200 && data) {
-        this.echartsArr = data;
-      }
+      this.echartsArr = data;
     },
     lastDay(nowDay, n) {
       // 格式化日期-昨天

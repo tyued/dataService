@@ -36,17 +36,18 @@ export default {
   name: "login",
   data() {
     return {
-      captchaFlag: "",
-      loginTip: "",
-      imgSrc: "http://vincent1003.oicp.net:12673/dsb/kaptcha",
-      imgLoading: true,
-      loginForm: {
+      captchaFlag: "", // 是否显示验证码
+      loginTip: "", // 登录提示
+      imgSrc: "http://vincent1003.oicp.net:12673/dsb/kaptcha", // 二维码的图片路径
+      imgLoading: true, // 二维码图片是否加载完毕
+      loading: false, // 按钮的loading状态
+      loginForm: { // 登录表单对象
         username: "",
         password: "",
         captcha: "",
         failureRetries: 0
       },
-      loginRules: {
+      loginRules: { // 表单验证对象
         username: [
           {
             required: true,
@@ -69,18 +70,12 @@ export default {
           }
         ]
       },
-      loading: false,
-      showDialog: false
     };
-  },
-  created() {
-    // this.captchaFlag = JSON.parse(window.localStorage.getItem('captchaFlag')) || ''
   },
   mounted() {
     // three.js
     container = document.createElement("div");
     this.$refs.can.appendChild(container);
-
     camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
@@ -88,11 +83,8 @@ export default {
       10000
     );
     camera.position.z = 1000;
-
     scene = new THREE.Scene();
-
     particles = new Array();
-
     var PI2 = Math.PI * 2;
     var material = new THREE.ParticleCanvasMaterial({
       color: 0x0078de,
@@ -102,9 +94,7 @@ export default {
         context.fill();
       }
     });
-
     var i = 0;
-
     for (var ix = 0; ix < AMOUNTX; ix++) {
       for (var iy = 0; iy < AMOUNTY; iy++) {
         particle = particles[i++] = new THREE.Particle(material);
@@ -113,16 +103,11 @@ export default {
         scene.add(particle);
       }
     }
-
     renderer = new THREE.CanvasRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
-
     document.addEventListener("mousemove", onDocumentMouseMove, false);
-    //
-
     window.addEventListener("resize", onWindowResize, false);
-
     animate();
   },
   methods: {
@@ -134,8 +119,8 @@ export default {
             .dispatch("userLogin", {
               username: this.loginForm.username,
               password: Base64.encode(this.loginForm.password),
-              captcha: this.loginForm.captcha,
-              failureRetries: this.loginForm.failureRetries++ // 用于后台判断是否显示验证码的字段
+              captcha: this.loginForm.captcha, // 验证码
+              failureRetries: this.loginForm.failureRetries++ // 用于后台判断是否显示验证码的字段 当为3的时候，后台会返回需要验证码逻辑
             })
             .then(data => {
               this.loading = false;
@@ -147,7 +132,6 @@ export default {
                 default:
                   if (captcha) {
                     this.captchaFlag = 'active'
-                    // window.localStorage.setItem('captchaFlag', JSON.stringify('active'))
                   }
                   this.loginTip = message;
                   break;

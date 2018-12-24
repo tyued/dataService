@@ -296,15 +296,12 @@ export default {
     this.getBaseData();
     this.init();
   },
-  mounted() {
-
-  },
   methods: {
     init() {
       // this.listLoading = false;
       this.getReviewList();
-      api.getExtensions().then(res => {
-        this.extensions = res.data;
+      api.getExtensions().then(data => {
+        this.extensions = data;
       });
     },
     //分页
@@ -326,29 +323,25 @@ export default {
       });
     },
     getReviewList(params = this.listQuery) {
-      api.getApiList(params).then(res => {
-        const { status, statusText, data } = res;
-        if (status === 200 && statusText === "OK") {
-          this.listLoading = false;
-          data.rows.map(item => {
-            item.apiVer = "v" + item.apiVer;
-            switch (item.servType) {
-              case "1":
-                item._servType = "HTTP API";
-                break;
-              case "2":
-                item._servType = "WebService API";
-                break;
-              case "3":
-                item._servType = "数据源 API";
-                break;
-            }
-
-            return item;
-          });
-          this.tableData = data.rows;
-          this.totalItem = data.total;
-        }
+      api.getApiList(params).then(data => {
+        this.listLoading = false;
+        data.rows.map(item => {
+          item.apiVer = "v" + item.apiVer;
+          switch (item.servType) {
+            case "1":
+              item._servType = "HTTP API";
+              break;
+            case "2":
+              item._servType = "WebService API";
+              break;
+            case "3":
+              item._servType = "数据源 API";
+              break;
+          }
+          return item;
+        });
+        this.tableData = data.rows;
+        this.totalItem = data.total;
       });
     },
     openLayerPage(row) {
@@ -360,8 +353,7 @@ export default {
         type: row.servType,
         apiId: row.apiId
       };
-      api.getApiParamForms(this.diaData).then(res => {
-        const { status, statusText, data } = res;
+      api.getApiParamForms(this.diaData).then(data => {
         data.apiVer = "v" + data.apiVer;
         switch (data.servType) {
           case "1":
@@ -407,18 +399,18 @@ export default {
       }
     },
 
-    // 富文本编辑器
-    editorReady(editorInstance) {
-      editorInstance.addListener("contentChange", () => {
-        // this.editableTabs[this.curEditTabs].intro = editorInstance.getContent();
-        // console.log(editorInstance.getContent().replace(/<[^<]+>/g, ''))
-      });
-    },
+    // // 富文本编辑器
+    // editorReady(editorInstance) {
+    //   editorInstance.addListener("contentChange", () => {
+    //     // this.editableTabs[this.curEditTabs].intro = editorInstance.getContent();
+    //     // console.log(editorInstance.getContent().replace(/<[^<]+>/g, ''))
+    //   });
+    // },
     // 获取服务分类
     getBaseData() {
       // 访问前缀
-      dicty.getSettings().then(response => {
-        this.Settings = response.data.servUrl;
+      dicty.getSettings().then(data => {
+        this.Settings = data.servUrl;
       });
     },
     // 审核通过按钮
@@ -443,9 +435,7 @@ export default {
       this.form.pubId = this.ckRow.pubId;
       this.form.servId = this.ckRow.servId;
       this.form.translate = this.form.translateObj ? "1" : "0";
-
       this.form.servUseof = this.ckRow.servUseof;
-      var that = this;
       api
         .checkPublishRequest({
           apiId: this.form.apiId,
@@ -458,13 +448,17 @@ export default {
           servId: this.form.servId,
           translate: this.form.translate
         })
-        .then(res => {
-          if (res.data.status == "success") {
-            this.$notify({
-              title: "成功",
-              message: "审核通过",
+        .then(data => {
+          if (data.status == "success") {
+            // this.$notify({
+            //   title: "成功",
+            //   message: "审核通过",
+            //   type: "success",
+            //   duration: 2000
+            // });
+            this.$message({
               type: "success",
-              duration: 2000
+              message: res.message
             });
             this.outerVisible = false;
             this.innerVisible = false;
@@ -473,22 +467,13 @@ export default {
             this.getReviewList();
             this.$store.dispatch("getNoticeNumber");
           } else {
-            this.$notify({
-              title: "失败",
-              message: res.message,
-              type: "error",
-              duration: 2000
-            });
+            this.$message.error(res.message);
           }
         });
-      // console.log(this.ckRow)
-      // // console.log(this.diaData)
-      // console.log(this.form)
     }
   }
 };
 </script>
-
 
 <style lang="scss" scoped>
 .el-tabs--border-card {

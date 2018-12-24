@@ -60,7 +60,7 @@
             <el-button
               v-if="rightInfoObj['producer']['producer:edit']"
               size="small"
-              type="warning"
+              type="success"
               @click="editItem(scope.row)"
             >编辑</el-button>
             <el-button
@@ -241,6 +241,7 @@
 import * as api from "api/right";
 import PageBar from "components/PageBar/index";
 import Base64 from "utils/base64";
+import { checkNumber } from 'utils/rules'
 import { mapGetters } from "vuex";
 export default {
   name: "producer",
@@ -253,7 +254,6 @@ export default {
   created() {
     this.getList();
   },
-
   data() {
     return {
       ruleForm: {
@@ -266,8 +266,8 @@ export default {
         status: ""
       },
       rules: {
-        code: [{ required: true, type:"number", message: "请输入数字代码", trigger: "blur" }],
-        name: [{ required: true, message: "请输入名称", trigger: "blur" }],
+        code: [{ required: true, validator: checkNumber, trigger: "blur" }],
+        name: [{ required: true, message: "请输入名称", trigger: "blur" },{ min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }],
         addr: [{ required: true, message: "请输入地址", trigger: "blur" }],
         trade: [{ required: true, message: "请输入行业", trigger: "blur" }],
         contact: [
@@ -284,8 +284,8 @@ export default {
         status: ""
       },
       rulesEdit: {
-        code: [{ required: true, type:"number", message: "请输入数字代码", trigger: "blur" }],
-        name: [{ required: true, message: "请输入名称", trigger: "blur" }],
+        code: [{ required: true, validator: checkNumber, trigger: "blur" }],
+        name: [{ required: true, message: "请输入名称", trigger: "blur" },{ min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }],
         addr: [{ required: true, message: "请输入地址", trigger: "blur" }],
         trade: [{ required: true, message: "请输入行业", trigger: "blur" }],
         contact: [
@@ -307,14 +307,11 @@ export default {
         pageNo,
         limit
       };
-      api.getProducerList(query).then(res => {
-        const { status, data } = res;
-        if (status === 200 && data) {
-          this.loading = false;
-          this.tableData = data.rows;
-          this.current = data.current;
-          this.total = data.total;
-        }
+      api.getProducerList(query).then(data => {
+        this.loading = false;
+        this.tableData = data.rows;
+        this.current = data.current;
+        this.total = data.total;
       });
     },
     handlePage(number) {
@@ -332,26 +329,22 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           // 添加用户请求
-          let query = {
+          api.addProducer({
             code: this.ruleForm.code,
             name: this.ruleForm.name,
             addr: this.ruleForm.addr,
             contact: this.ruleForm.contact,
             trade: this.ruleForm.trade
-          };
-          api.addProducer(query).then(res => {
-            const { status, data } = res;
-            if (status === 200 && data) {
-              if (data.status === "success") {
-                this.$message({
-                  type: "success",
-                  message: data.message
-                });
-                this.dialogFormVisible = false;
-                this.getList();
-              } else {
-                this.$message.error(data.message);
-              }
+          }).then(data => {
+            if (data.status === "success") {
+              this.$message({
+                type: "success",
+                message: data.message
+              });
+              this.dialogFormVisible = false;
+              this.getList();
+            } else {
+              this.$message.error(data.message);
             }
           });
         } else {
@@ -363,27 +356,23 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           // 修改
-          let query = {
+          api.updateProducer({
             id: this.ruleFormEdit.id,
             code: this.ruleFormEdit.code,
             name: this.ruleFormEdit.name,
             addr: this.ruleFormEdit.addr,
             contact: this.ruleFormEdit.contact,
             trade: this.ruleFormEdit.trade
-          };
-          api.updateProducer(query).then(res => {
-            const { status, data } = res;
-            if (status === 200 && data) {
-              if (data.status === "success") {
-                this.$message({
-                  type: "success",
-                  message: data.message
-                });
-                this.dialogFormVisibleEdit = false;
-                this.getList();
-              } else {
-                this.$message.error(data.message);
-              }
+          }).then(data => {
+            if (data.status === "success") {
+              this.$message({
+                type: "success",
+                message: data.message
+              });
+              this.dialogFormVisibleEdit = false;
+              this.getList();
+            } else {
+              this.$message.error(data.message);
             }
           });
         } else {
@@ -402,18 +391,15 @@ export default {
             .deleteProducer({
               id: row.id
             })
-            .then(res => {
-              const { status, data } = res;
-              if (status === 200 && data) {
-                if (data.status === "success") {
-                  this.getList();
-                  this.$message({
-                    type: "success",
-                    message: data.message
-                  });
-                } else {
-                  this.$message.error(data.message);
-                }
+            .then(data => {
+              if (data.status === "success") {
+                this.getList();
+                this.$message({
+                  type: "success",
+                  message: data.message
+                });
+              } else {
+                this.$message.error(data.message);
               }
             });
         })
@@ -426,16 +412,12 @@ export default {
     },
     editItem(row) {
       this.dialogFormVisibleEdit = true;
-
       api
         .getProducerListById({
           id: row.id
         })
-        .then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            this.ruleFormEdit = data;
-          }
+        .then(data => {
+          this.ruleFormEdit = data;
         });
     },
     addUser() {

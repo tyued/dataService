@@ -67,12 +67,10 @@ export default {
     methods: {
       init(){
           // 用户订阅量Top5
-          api.userTop5().then(response => {
-              var that = this
-              var dataList = response.data;
-              dataList.forEach(function(item,index){
-                  that.barList.push({value:item.count,name:item.username})
-                  that.titleList.push(item.username)
+          api.userTop5().then(data => {
+              data.forEach((item,index) => {
+                  this.barList.push({value:item.count,name:item.username})
+                  this.titleList.push(item.username)
               })
               this.initChart();
           })

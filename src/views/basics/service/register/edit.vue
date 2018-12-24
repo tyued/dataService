@@ -297,11 +297,11 @@
   </el-col>
 </template>
 
-
 <script>
 import VueUEditor from "vue-ueditor";
 import * as dicty from "api/dictionary";
 import * as api from "api/service/register";
+import { validateRESTful } from 'utils/rules'
 import { mapGetters } from "vuex";
 var expSoap1 =
   '<?xml version="1.0" encoding="utf-8"?>' +
@@ -342,19 +342,11 @@ export default {
   },
   props: ["editDataObj"],
   data() {
-    var validatePass = (rule, value, callback) => {
-      const re = /^[A-Za-z]\w+(?:\/\{?\w+\}?)*$/i;
-      if (re.test(value)) {
-        callback();
-      } else {
-        callback(new Error("地址不符合RESTful规范"));
-      }
-    };
     return {
       pathRule: [
         { required: true, message: "请输入接口发布地址", trigger: "blur" },
         { max: 200, min: 3, message: "长度3-200个字符", trigger: "blur" },
-        { validator: validatePass, trigger: "blur" }
+        { validator: validateRESTful, trigger: "blur" }
       ],
       sureRegFlag: false,
       nextActive: false,
@@ -364,7 +356,6 @@ export default {
       dbTypes: [],
       dataSourceList: [], // 选择数据源
       OptTypes: [], //查询数据源操作类型信息
-
       conditionList: [], //条件与条件值关系
       valtypeList: [
         //值类型
@@ -574,27 +565,6 @@ export default {
             this.init();
           });
       }
-
-      // dicty.getBaseData(query).then(response => {
-      //   this.servTypeList = response.data;
-      // });
-      // dicty.getdbTypes().then(response => {
-      //   this.dbTypes = response.data;
-      // });
-      // dicty.getDatasources().then(response => {
-      //   this.dataSourceList = response.data;
-      // });
-
-      // dicty.getOptTypes().then(response => {
-      //   this.OptTypes = response.data;
-      // });
-      // dicty.getRelations().then(response => {
-      //   this.conditionList = response.data;
-      // });
-      // // 访问前缀
-      // dicty.getSettings().then(response => {
-      //   this.Settings = response.data.servUrl;
-      // });
     },
     // 接口返回实例
     changeExample(val) {
@@ -716,21 +686,21 @@ export default {
 
       var condobj = data.conditions;
       if (condobj) {
-        condobj.forEach(function(item, index) {
+        condobj.forEach((item, index) => {
           if (item.name) item.name = "";
         });
       }
       var query = { uid: ele };
-      dicty.getTables(query).then(response => {
-        data.ObjTypeList = data.TablesList = response.data;
+      dicty.getTables(query).then(res => {
+        data.ObjTypeList = data.TablesList = res;
         data.ObjTypeList.forEach(item => {
           if (item.name == data.target) {
             data.selObjType = 1;
           }
         });
       });
-      dicty.getViews(query).then(response => {
-        data.ViewsList = response.data;
+      dicty.getViews(query).then(res => {
+        data.ViewsList = res;
         data.ViewsList.forEach(item => {
           if (item.name == data.target) {
             data.selObjType = 2;
@@ -745,7 +715,7 @@ export default {
       data.ObjTransferList = [];
       var condobj = this.editableTabs[this.curEditTabs].conditions;
       if (condobj) {
-        condobj.forEach(function(item, index) {
+        condobj.forEach((item, index) => {
           if (item.name) item.name = "";
         });
       }
@@ -762,7 +732,7 @@ export default {
       data.ObjTransferList = [];
       var condobj = this.editableTabs[this.curEditTabs].conditions;
       if (condobj) {
-        condobj.forEach(function(item, index) {
+        condobj.forEach((item, index) => {
           if (item.name) item.name = "";
         });
       }
@@ -776,9 +746,8 @@ export default {
         uid: ele,
         table: val
       };
-      dicty.getColumns(query).then(response => {
-        var list = response.data;
-        list.forEach((item, index) => {
+      dicty.getColumns(query).then(res => {
+        res.forEach((item, index) => {
           data.ObjTransferList.push({
             key: item.name,
             label: item.remark.split("：")[0]
@@ -1062,29 +1031,22 @@ export default {
             // 所有的表单验证通过
             this.nextActive = true;
             api[method](submitD)
-              .then(res => {
-                if (res.status == "200") {
-                  this.servId = this.editDataObj.id;
-                  if (this.sureRegFlag) {
-                    this.save();
-                  } else {
-                    this.$notify({
-                      title: "成功",
-                      message: "创建成功",
+              .then(data => {
+                this.servId = this.editDataObj.id;
+                if (this.sureRegFlag) {
+                  this.save();
+                } else {
+                  if (data.status === "success") {
+                    this.$message({
                       type: "success",
-                      duration: 2000
+                      message: data.message
                     });
                     this.$store.commit('SET_formLeave', false)
                     this.$emit("clickServiceManegement");
                     this.$store.dispatch("getNoticeNumber");
+                  } else {
+                    this.$message.error(data.message);
                   }
-                } else {
-                  this.$notify({
-                    title: "失败",
-                    message: res.data.message,
-                    type: "error",
-                    duration: 2000
-                  });
                 }
                 this.nextActive = false;
               })
@@ -1099,22 +1061,19 @@ export default {
       });
     },
     save() {
-      var submitD = {
+      api
+        .putSubmit({
         servId: this.servId,
         userId: ""
-      };
-      api
-        .putSubmit(submitD)
-        .then(res => {
-          if (res.status == "200") {
-            this.$notify({
-              title: "成功",
-              message: "提交成功",
+      })
+        .then(data => {
+          if (data.status === "success") {
+            this.$message({
               type: "success",
-              duration: 2000
+              message: data.message
             });
             this.$store.commit('SET_formLeave', false)
-            this.$store.dispatch("GET_fuwindex_on", [
+            this.$store.commit("SET_fuwindex_on", [
               true,
               false,
               false,
@@ -1122,13 +1081,9 @@ export default {
             ]);
             this.$emit("clickServiceManegement");
           } else {
-            this.$notify({
-              title: "失败",
-              message: res.message,
-              type: "error",
-              duration: 2000
-            });
+            this.$message.error(data.message);
           }
+
           this.sureRegFlag = false;
           this.sureRegActive = false;
         })

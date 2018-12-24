@@ -9,7 +9,6 @@ let getters = {
     activePath: state => state.login.activePath,
     isDone: state => state.permission.isDone,
     permission_routers: state => state.permission.routers,
-    addRouters: state => state.permission.addRouters,
     servTagArr: state => state.service.servTagArr,
     getServiceComponentName: state => state.service.compName,
     formLeave: state => state.service.formLeave,

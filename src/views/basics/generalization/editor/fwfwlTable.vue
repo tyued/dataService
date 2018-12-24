@@ -28,8 +28,8 @@ export default {
     methods:{
         init(){
             // 服务访问量Top5
-            api.pvTop5().then(response => {
-                this.tableData = response.data
+            api.pvTop5().then(data => {
+                this.tableData = data
             })
         }
     },

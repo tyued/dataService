@@ -2,7 +2,7 @@
   <div class="detail-service">
     <!-- ==========服务监控============ -->
     <el-card class="box-card">
-      <div slot="header" style="overflow:hidden">
+      <div slot="header" style="overflow:hidden;">
         <span>服务信息</span>
         <el-select clearable style="float:right;line-height:40px;width:300px" clear="sel" @change="searchServById" v-model="typeId" filterable placeholder="请选择">
           <el-option v-for="item in servArr" :key="item.key" :label="item.value" :value="item.key">
@@ -171,25 +171,20 @@ export default {
           pageNo: 1,
           servId: this.typeId
         })
-        .then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            this.loading = false;
-            data.rows.forEach(item => {
-              formatData(item);
-            });
-            this.tabData = data.rows;
-            this.total = parseInt(data.total);
-            this.current = parseInt(data.current);
-          }
+        .then(data => {
+          this.loading = false;
+          data.rows.forEach(item => {
+            formatData(item);
+          });
+          this.tabData = data.rows;
+          this.total = parseInt(data.total);
+          this.current = parseInt(data.current);
         });
     },
     handleType() {
       // 拉去服务list
-      getServList().then(({ status, data }) => {
-        if (status == 200 && data) {
-          this.servArr = data;
-        }
+      getServList().then((data) => {
+        this.servArr = data;
       });
     },
     init() {
@@ -202,17 +197,14 @@ export default {
           limit,
           pageNo
         })
-        .then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            this.loading = false;
-            data.rows.forEach(item => {
-              formatData(item);
-            });
-            this.tabData = data.rows;
-            this.total = parseInt(data.total);
-            this.current = parseInt(data.current);
-          }
+        .then(data => {
+          this.loading = false;
+          data.rows.forEach(item => {
+            formatData(item);
+          });
+          this.tabData = data.rows;
+          this.total = parseInt(data.total);
+          this.current = parseInt(data.current);
         });
     },
     showIOList(servId, servType) {

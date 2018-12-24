@@ -59,18 +59,15 @@ export default {
   created() {
     api
       .postOptTypes()
-      .then(res => {
-        const { data, status } = res;
-        if (status === 200 && data) {
-          data.forEach((item, index) => {
-            this.optArr.push({
-              id: ++index,
-              name: item.desc,
-              show: false,
-              value: item.key
-            });
+      .then(data => {
+        data.forEach((item, index) => {
+          this.optArr.push({
+            id: ++index,
+            name: item.desc,
+            show: false,
+            value: item.key
           });
-        }
+        });
       })
       .then(() => {
         this.getList();
@@ -192,22 +189,19 @@ export default {
       if (this.typeObj.business.length !== 0) {
         query.business = this.typeObj.business;
       }
-      api.postDoneLog(query).then(res => {
-        const { status, data } = res;
-        if (status === 200 && data) {
-          this.loading = false;
-          data.rows.forEach(ele => {
-            ele.exception = ele.exception ? ele.exception : '无'
-            this.optArr.forEach(item => {
-              if (item.value == ele.opt) {
-                ele.opt = item.name;
-              }
-            });
+      api.postDoneLog(query).then(data => {
+        this.loading = false;
+        data.rows.forEach(ele => {
+          ele.exception = ele.exception ? ele.exception : '无'
+          this.optArr.forEach(item => {
+            if (item.value == ele.opt) {
+              ele.opt = item.name;
+            }
           });
-          this.tableData = data.rows;
-          this.current = data.current;
-          this.total = data.total;
-        }
+        });
+        this.tableData = data.rows;
+        this.current = data.current;
+        this.total = data.total;
       });
     },
     handlePage(number) {

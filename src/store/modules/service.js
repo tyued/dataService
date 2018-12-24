@@ -7,10 +7,10 @@ import {
 const service = {
   state: {
     getfuwindex_on: [true, false, false, false], //服务首页高亮
-    servTagArr: [],
+    servTagArr: [], // servType 服务类型，好多地方需要使用
     compName: 'mainService', // 当前的动态组件
-    sysEchartsActIndex: '0',
-    formLeave: false
+    sysEchartsActIndex: '0', // 系统监控echarts 高亮索引
+    formLeave: false // 是否处于注册表单页面，防止误操作导致表单白填
   },
   mutations: {
     SET_fuwindex_on: (state, data) => {
@@ -30,11 +30,7 @@ const service = {
     },
   },
   actions: {
-    GET_fuwindex_on: ({
-      commit
-    }, data) => {
-      commit('SET_fuwindex_on', data)
-    },
+    // 设置服务类型
     setServTagArr: ({
       commit
     }) => {
@@ -43,14 +39,8 @@ const service = {
         getBaseData({
           group: "servType"
         }).then(res => {
-          const {
-            status,
-            data
-          } = res;
-          if (status === 200 && data) {
-            commit('SET_servTagArr', data)
-            resolve(data)
-          }
+          commit('SET_servTagArr', res)
+          resolve(res)
         }).catch(error => {
           reject(error);
         });

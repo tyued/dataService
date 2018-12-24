@@ -19,15 +19,12 @@ export default {
     this.id = this.$route.query.id // 获取传过来的服务ID
     api.getInstance({  // 信息列表的显示
       id: this.id
-    }).then((res) => {
-      const { status, data } = res
-      if (status === 200 && data) {
-        this.metadata = data[0].registration.metadata
-        this.status = data[0].statusInfo.status
-        this.name = data[0].registration.name
-      }
+    }).then(data => {
+      this.metadata = data[0].registration.metadata
+      this.status = data[0].statusInfo.status
+      this.name = data[0].registration.name
     })
-
+    
     this.circleData() // 页面初始化调用一次，之后循环调用
     if (!this.queryTimer) {
       this.queryTimer = setInterval(() => {
@@ -116,49 +113,37 @@ export default {
       // 基础数据
       api.getPID({
         id: this.id,
-      }).then((res) => {
-        const { data, status } = res
-        if (status === 200 && data) {
-          this.PID = data.propertySources[0].properties.value.value
-        }
+      }).then(data => {
+        this.PID = data.propertySources[0].properties.value.value
       })
       api.getDetail({
         id: this.id,
         type: 'system.cpu.count'
-      }).then((res) => {
-        const { data, status } = res
-        if (status === 200 && data) {
-          this.CPUCOUNT = data.measurements[0].value
-        }
+      }).then(data => {
+        this.CPUCOUNT = data.measurements[0].value
       })
       api.getDetail({
         id: this.id,
         type: 'process.uptime'
-      }).then((res) => {
-        const { data, status } = res
-        if (status === 200 && data) {
-          this.timerValue = data.measurements[0].value
-          this.UPTIME = this.formatTime(this.timerValue)
-          if (!this.timer) {
-            this.timer = setInterval(() => {
-              this.timerValue++
-              this.UPTIME = this.formatTime(this.timerValue)
-            }, 1000)
-          }
+      }).then(data => {
+        this.timerValue = data.measurements[0].value
+        this.UPTIME = this.formatTime(this.timerValue)
+        if (!this.timer) {
+          this.timer = setInterval(() => {
+            this.timerValue++
+            this.UPTIME = this.formatTime(this.timerValue)
+          }, 1000)
         }
       })
       // 垃圾回收
       api.getDetail({
         id: this.id,
         type: 'jvm.gc.pause'
-      }).then((res) => {
-        const { data, status } = res
-        if (status === 200 && data) {
-          this.errorObj.gc.show = false
-          this.gcObj.count = data.measurements[0].value
-          this.gcObj.total = data.measurements[1].value.toFixed(2) + 's'
-          this.gcObj.max = data.measurements[2].value.toFixed(2) + 's'
-        }
+      }).then(data => {
+        this.errorObj.gc.show = false
+        this.gcObj.count = data.measurements[0].value
+        this.gcObj.total = data.measurements[1].value.toFixed(2) + 's'
+        this.gcObj.max = data.measurements[2].value.toFixed(2) + 's'
       }).catch((error) => {
         this.errorObj.gc.show = true
         this.errorObj.gc.message = error.message
@@ -167,12 +152,9 @@ export default {
       api.getDetail({
         id: this.id,
         type: 'process.cpu.usage'
-      }).then((res) => {
-        const { data, status } = res
-        if (status === 200 && data) {
-          this.errorObj.process.show = false
-          this.processCPUUsage = data.measurements[0].value.toFixed(2)
-        }
+      }).then(data => {
+        this.errorObj.process.show = false
+        this.processCPUUsage = data.measurements[0].value.toFixed(2)
       }).catch((error) => {
         this.errorObj.process.show = true
         this.errorObj.process.message = error.message
@@ -180,17 +162,13 @@ export default {
       api.getDetail({
         id: this.id,
         type: 'system.cpu.usage'
-      }).then((res) => {
-        const { data, status } = res
-        if (status === 200 && data) {
-          this.errorObj.process.show = false
-          this.systermCPUUsage = data.measurements[0].value.toFixed(2)
-        }
+      }).then(data => {
+        this.errorObj.process.show = false
+        this.systermCPUUsage = data.measurements[0].value.toFixed(2)
       }).catch((error) => {
         this.errorObj.process.show = true
         this.errorObj.process.message = error.message
       })
-
 
       // 线程信息
       Promise.all([api.getDetail({
@@ -204,7 +182,7 @@ export default {
         type: 'jvm.threads.peak'
       })]).then((resArr) => {
         this.errorObj.threads.show = false
-        this.threadsArr = resArr.map(({data}) => data.measurements[0].value)
+        this.threadsArr = resArr.map(data => data.measurements[0].value)
       }).catch((error) => {
         this.errorObj.threads.show = true
         this.errorObj.threads.message = error.message
@@ -224,7 +202,7 @@ export default {
         type: 'jvm.memory.max?tag=area:heap'
       })]).then((resArr) => {
         this.errorObj.heap.show = false
-        this.heapArr = resArr.map(({data}) => Number((data.measurements[0].value / 10e8).toFixed(2)))
+        this.heapArr = resArr.map(data => Number((data.measurements[0].value / 10e8).toFixed(2)))
       }).catch((error) => {
         this.errorObj.heap.show = true
         this.errorObj.heap.message = error.message
@@ -245,7 +223,7 @@ export default {
         type: 'jvm.memory.max?tag=area:nonheap'
       })]).then((resArr) => {
         this.errorObj.noHeap.show = false
-        this.nonHeapArr = resArr.map(({data}) => Number((data.measurements[0].value / 10e8).toFixed(2)))
+        this.nonHeapArr = resArr.map(data => Number((data.measurements[0].value / 10e8).toFixed(2)))
       }).catch((error) => {
         this.errorObj.noHeap.show = true
         this.errorObj.noHeap.message = error.message

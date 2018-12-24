@@ -8,10 +8,12 @@
       </el-select>
     </el-form-item>
     <el-form-item label="审核状态">
-      <el-button size="small" v-for="(item,index) in pubStatus" :key="index" :class="{active: item.show}" @click="handlePubArr(item)">{{item.name}}</el-button>
+      <!-- <el-button size="small" v-for="(item,index) in pubStatus" :key="index" :class="{active: item.show}" @click="handlePubArr(item)">{{item.name}}</el-button> -->
+      <ActiveBtn :btnArr="pubStatus" type="" size="small" activeIndex="0" activeName="act1" @handleClick="handlePubArr" />
     </el-form-item>
     <el-form-item label="接口状态">
-      <el-button size="small" v-for="(item,index) in apiStatus" :key="index" :class="{active: item.show}" @click="handleApiArr(item)">{{item.name}}</el-button>
+      <!-- <el-button size="small" v-for="(item,index) in apiStatus" :key="index" :class="{active: item.show}" @click="handleApiArr(item)">{{item.name}}</el-button> -->
+      <ActiveBtn :btnArr="apiStatus" type="" size="small" activeIndex="0" activeName="act1" @handleClick="handleApiArr" />
     </el-form-item>
     <el-button size="small" type="primary" @click="handleSearch"><i class="el-icon-search"></i> 查询</el-button>
   </el-form>
@@ -52,22 +54,25 @@
       </el-table-column>
       <el-table-column label="操作" width="290">
         <template slot-scope="scope">
-
+          <template v-if="rightInfoObj['serv-api']['serv-api:detail']">
+            <!-- <el-button type="info" size="small" @click="openLayerPage(scope.row, false)">详情</el-button> -->
+            <el-button class="text_under" type="text" @click="openLayerPage(scope.row, false)">详情</el-button>
+          </template>
+          <template v-if="rightInfoObj['serv-api']['serv-api:renew']">
+            <!-- <el-button type="warning" size="small" @click="openEdit(scope.row)">修改</el-button> -->
+            <el-button class="text_under change" type="text" @click="openEdit(scope.row)">修改</el-button>
+          </template>
           <template v-if="rightInfoObj['serv-api']['serv-api:restore']">
             <el-button v-if="scope.row.pubStatus==='1' && scope.row.apiStatus==='2'" type="success" size="small" @click="openChange(scope.row)">启用</el-button>
           </template>
           <template v-if="rightInfoObj['serv-api']['serv-api:pause']">
-            <el-button v-if="scope.row.pubStatus==='1' && scope.row.apiStatus==='1'" type="danger" size="small" @click="handleForbidden(scope.row)">禁用</el-button>
+            <el-button v-if="scope.row.pubStatus==='1' && scope.row.apiStatus==='1'" type="warning" size="small" @click="handleForbidden(scope.row)">禁用</el-button>
           </template>
 
 
 
-          <template v-if="rightInfoObj['serv-api']['serv-api:detail']">
-            <el-button type="info" size="small" @click="openLayerPage(scope.row, false)">详情</el-button>
-          </template>
-          <template v-if="rightInfoObj['serv-api']['serv-api:renew']">
-            <el-button type="warning" size="small" @click="openEdit(scope.row)">修改</el-button>
-          </template>
+
+
           <template v-if="rightInfoObj['serv-api']['serv-api:review']">
             <el-button v-if="scope.row.pubStatus==='0'" type="primary" size="small" @click="openLayerPage(scope.row, true)">审核</el-button>
           </template>
@@ -78,7 +83,8 @@
             <el-button v-if="scope.row.pubStatus==='1' && scope.row.apiStatus==='3'" type="success" size="small" @click="handleOn(scope.row)">上线</el-button>
           </template>
           <template v-if="rightInfoObj['serv-api']['serv-api:destroy']">
-            <el-button v-if="scope.row.pubStatus==='1' && (scope.row.apiStatus==='1' || scope.row.apiStatus==='2')" type="danger" size="small" @click="handleOff(scope.row)">下线</el-button>
+            <el-button v-if="scope.row.pubStatus==='1' && (scope.row.apiStatus==='1' || scope.row.apiStatus==='2')"
+              type="danger" size="small" @click="handleOff(scope.row)">下线</el-button>
           </template>
 
 
@@ -215,7 +221,7 @@
     <el-form label-width="120px" :model="editObj" ref="editForm">
       <el-form-item :rules="[{ required: true, message: '请输入接口中文名称', trigger: 'blur' },{ max: 50, min: 3, message: '长度3-50个字符', trigger: 'blur' }]"
         label="接口中文名称" prop="name">
-        <el-input v-model.trim="editObj.name" placeholder="3-50个字符"></el-input>
+        <el-input v-model.trim="editObj.name" placeholder="3-50个字符" :disabled="true"></el-input>
       </el-form-item>
       <el-form-item :rules="[{ required: true, message: '请输入原始接口地址', trigger: 'blur' },{ max: 200, min: 3, message: '长度3-200个字符', trigger: 'blur' }]"
         label="原始接口地址" v-if="editObj.servType == 1 || editObj.servType == 2" prop="url">

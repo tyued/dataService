@@ -29,7 +29,7 @@
         </el-table-column>
         <el-table-column width="150" label="操作">
           <template slot-scope="scope">
-            <el-button :disabled="scope.row.name === '超级管理员'" v-if="rightInfoObj['role']['role:edit']" size="small" type="warning" @click="editItem(scope.row)">编辑</el-button>
+            <el-button :disabled="scope.row.name === '超级管理员'" v-if="rightInfoObj['role']['role:edit']" size="small" type="success" @click="editItem(scope.row)">编辑</el-button>
             <el-button :disabled="scope.row.name === '超级管理员'" v-if="rightInfoObj['role']['role:del']" size="small" type="danger" @click="deleteItem(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -122,13 +122,8 @@ export default {
   created() {
     this.getList();
   },
-
   data() {
     return {
-      // defaultProps: {
-      //   children: "children",
-      //   label: "label"
-      // },
       checkboxArr: [],
       checkboxArrEdit: [],
       ruleForm: {
@@ -176,18 +171,14 @@ export default {
   },
   methods: {
     getList(pageNo = 1, limit = this.size) {
-      let query = {
+      api.getRoleList({
         pageNo,
         limit
-      };
-      api.getRoleList(query).then(res => {
-        const { status, data } = res;
-        if (status === 200 && data) {
-          this.loading = false;
-          this.tableData = data.rows;
-          this.current = data.current;
-          this.total = data.total;
-        }
+      }).then(data => {
+        this.loading = false;
+        this.tableData = data.rows;
+        this.current = data.current;
+        this.total = data.total;
       });
     },
     handlePage(number) {
@@ -211,27 +202,23 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           // 添加用户请求
-          let query = {
+          api.addRole({
             intro: this.ruleForm.intro,
             name: this.ruleForm.name,
-            perms: Array.from(
+            perms: Array.from( // 去重
               new Set(this.getPermsArr(this.ruleForm.right, this.checkboxArr))
             ),
             type: "4"
-          };
-          api.addRole(query).then(res => {
-            const { status, data } = res;
-            if (status === 200 && data) {
-              if (data.status === "success") {
-                this.$message({
-                  type: "success",
-                  message: data.message
-                });
-                this.dialogFormVisible = false;
-                this.getList();
-              } else {
-                this.$message.error(data.message);
-              }
+          }).then(data => {
+            if (data.status === "success") {
+              this.$message({
+                type: "success",
+                message: data.message
+              });
+              this.dialogFormVisible = false;
+              this.getList();
+            } else {
+              this.$message.error(data.message);
             }
           });
         } else {
@@ -243,7 +230,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           // 修改
-          let query = {
+          api.updateRole({
             intro: this.ruleFormEdit.intro,
             name: this.ruleFormEdit.name,
             perms: Array.from(
@@ -253,20 +240,16 @@ export default {
             ),
             type: "4",
             id: this.ruleFormEdit.id
-          };
-          api.updateRole(query).then(res => {
-            const { status, data } = res;
-            if (status === 200 && data) {
-              if (data.status === "success") {
-                this.$message({
-                  type: "success",
-                  message: data.message
-                });
-                this.dialogFormVisibleEdit = false;
-                this.getList();
-              } else {
-                this.$message.error(data.message);
-              }
+          }).then(data => {
+            if (data.status === "success") {
+              this.$message({
+                type: "success",
+                message: data.message
+              });
+              this.dialogFormVisibleEdit = false;
+              this.getList();
+            } else {
+              this.$message.error(data.message);
             }
           });
         } else {
@@ -285,18 +268,15 @@ export default {
             .deleteRole({
               id: row.id
             })
-            .then(res => {
-              const { status, data } = res;
-              if (status === 200 && data) {
-                if (data.status === "success") {
-                  this.getList();
-                  this.$message({
-                    type: "success",
-                    message: data.message
-                  });
-                } else {
-                  this.$message.error(data.message);
-                }
+            .then(data => {
+              if (data.status === "success") {
+                this.getList();
+                this.$message({
+                  type: "success",
+                  message: data.message
+                });
+              } else {
+                this.$message.error(data.message);
               }
             });
         })
@@ -314,24 +294,18 @@ export default {
         .getRoleListById({
           id: row.id
         })
-        .then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            this.ruleFormEdit.intro = data.intro;
-            this.ruleFormEdit.name = data.name;
-            this.ruleFormEdit.id = data.id;
-          }
+        .then(data => {
+          this.ruleFormEdit.intro = data.intro;
+          this.ruleFormEdit.name = data.name;
+          this.ruleFormEdit.id = data.id;
         });
       api
         .getRightTree({
           roleid: row.id
         })
-        .then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            this.handleForEach(data, row.id);
-            this.checkboxArrEdit = data;
-          }
+        .then(data => {
+          this.handleForEach(data, row.id);
+          this.checkboxArrEdit = data;
         });
     },
     handleForEach(arr, id) {
@@ -339,17 +313,14 @@ export default {
         .getRoleRight({
           roleId: id
         })
-        .then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            arr.forEach((x, idx) => {
-              data.forEach(y => {
-                if (x.code === y.code) {
-                  this.ruleFormEdit.right.push(idx);
-                }
-              });
+        .then(data => {
+          arr.forEach((x, idx) => {
+            data.forEach(y => {
+              if (x.code === y.code) {
+                this.ruleFormEdit.right.push(idx);
+              }
             });
-          }
+          });
         });
     },
     addUser() {
@@ -360,17 +331,10 @@ export default {
         right: [],
         intro: ""
       };
-      api.getRightTree().then(res => {
-        const { status, data } = res;
-        if (status === 200 && data) {
-          this.checkboxArr = data;
-        }
+      api.getRightTree().then(data => {
+        this.checkboxArr = data;
       });
     }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-</style>
-

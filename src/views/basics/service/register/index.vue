@@ -359,6 +359,7 @@ import VueUEditor from "vue-ueditor";
 import * as dicty from "api/dictionary";
 import * as api from "api/service/register";
 import { mapGetters } from "vuex";
+import { validateRESTful } from 'utils/rules'
 var expSoap1 =
   '<?xml version="1.0" encoding="utf-8"?>' +
   '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
@@ -389,19 +390,11 @@ export default {
     VueUEditor
   },
   data() {
-    var validatePass = (rule, value, callback) => {
-      const re = /^[A-Za-z]\w+(?:\/\{?\w+\}?)*$/i;
-      if (re.test(value)) {
-        callback();
-      } else {
-        callback(new Error("地址不符合RESTful规范"));
-      }
-    };
     return {
       pathRule: [
         { required: true, message: "请输入接口发布地址", trigger: "blur" },
         { max: 200, min: 3, message: "长度3-200个字符", trigger: "blur" },
-        { validator: validatePass, trigger: "blur" }
+        { validator: validateRESTful, trigger: "blur" }
       ],
       nextActive: false,
       sureRegActive: false,
@@ -443,7 +436,6 @@ export default {
       ], //请求方式
       retformat: ["normal", "JSON", "XML", "Stream"], //返回格式
       editableTabsValue: "1",
-
       disRelation: false, //是否值类型能填
       valtypeList: [
         //值类型
@@ -551,7 +543,6 @@ export default {
         ]
       },
       datatype: ["String", "Boolean", "Number"], //数据类型
-
       Settings: "", //访问地址前缀
       servId: ""
     };
@@ -827,29 +818,23 @@ export default {
             // 所有的表单验证通过
             this.nextActive = true;
             api[method](submitD)
-              .then(res => {
-                if (res.status == "200") {
-                  this.servId = res.data.servId;
-                  if (this.sureRegFlag) {
-                    this.save();
-                  } else {
-                    this.$notify({
-                      title: "成功",
-                      message: "创建成功",
+              .then(data => {
+                this.servId = data.servId;
+                if (this.sureRegFlag) {
+                  this.save();
+                } else {
+                  if (data.status === "success") {
+                    this.$message({
                       type: "success",
-                      duration: 2000
+                      message: data.message
                     });
                     this.active = 3;
                     this.$store.dispatch("getNoticeNumber");
+                  } else {
+                    this.$message.error(data.message);
                   }
-                } else {
-                  this.$notify({
-                    title: "失败",
-                    message: res.data.message,
-                    type: "error",
-                    duration: 2000
-                  });
                 }
+                
                 this.nextActive = false;
               })
               .catch(() => {
@@ -892,26 +877,25 @@ export default {
     },
     // 获取服务分类
     getBaseData() {
-      var query = { group: "servType" };
-      dicty.getBaseData(query).then(response => {
-        this.servTypeList = response.data;
+      dicty.getBaseData({ group: "servType" }).then(data => {
+        this.servTypeList = data;
       });
-      dicty.getdbTypes().then(response => {
-        this.dbTypes = response.data;
+      dicty.getdbTypes().then(data => {
+        this.dbTypes = data;
       });
-      dicty.getDatasources().then(response => {
-        this.dataSourceList = response.data;
+      dicty.getDatasources().then(data => {
+        this.dataSourceList = data;
       });
 
-      dicty.getOptTypes().then(response => {
-        this.OptTypes = response.data;
+      dicty.getOptTypes().then(data => {
+        this.OptTypes = data;
       });
-      dicty.getRelations().then(response => {
-        this.conditionList = response.data;
+      dicty.getRelations().then(data => {
+        this.conditionList = data;
       });
       // 访问前缀
-      dicty.getSettings().then(response => {
-        this.Settings = response.data.servUrl;
+      dicty.getSettings().then(data => {
+        this.Settings = data.servUrl;
       });
     },
     // 接口返回实例
@@ -1034,16 +1018,16 @@ export default {
 
       var condobj = data.conditions;
       if (condobj) {
-        condobj.forEach(function(item, index) {
+        condobj.forEach((item, index) => {
           if (item.name) item.name = "";
         });
       }
       var query = { uid: ele };
-      dicty.getTables(query).then(response => {
-        data.ObjTypeList = this.TablesList = response.data;
+      dicty.getTables(query).then(res => {
+        data.ObjTypeList = this.TablesList = res;
       });
-      dicty.getViews(query).then(response => {
-        this.ViewsList = response.data;
+      dicty.getViews(query).then(res => {
+        this.ViewsList = res;
       });
     },
     // 注册--数据流注册--接口列表--查询对象
@@ -1053,7 +1037,7 @@ export default {
       data.ObjTransferList = [];
       var condobj = this.editableTabs[this.curEditTabs].conditions;
       if (condobj) {
-        condobj.forEach(function(item, index) {
+        condobj.forEach((item, index) => {
           if (item.name) item.name = "";
         });
       }
@@ -1070,7 +1054,7 @@ export default {
       data.ObjTransferList = [];
       var condobj = this.editableTabs[this.curEditTabs].conditions;
       if (condobj) {
-        condobj.forEach(function(item, index) {
+        condobj.forEach((item, index) => {
           if (item.name) item.name = "";
         });
       }
@@ -1084,9 +1068,8 @@ export default {
         uid: ele,
         table: val
       };
-      dicty.getColumns(query).then(response => {
-        var list = response.data;
-        list.forEach((item, index) => {
+      dicty.getColumns(query).then(res => {
+        res.forEach((item, index) => {
           data.ObjTransferList.push({
             key: item.name,
             label: item.remark.split("：")[0]
@@ -1102,7 +1085,7 @@ export default {
       data.ObjTransferList = [];
       var condobj = this.editableTabs[this.curEditTabs].conditions;
       if (condobj) {
-        condobj.forEach(function(item, index) {
+        condobj.forEach((item, index) => {
           if (item.name) item.name = "";
         });
       }
@@ -1126,7 +1109,7 @@ export default {
       if (val == "params") {
         var queryList = this.editableTabs[this.curEditTabs].queryList;
         if (queryList) {
-          queryList.forEach(function(item, index) {
+          queryList.forEach((item, index) => {
             if (item.name == row.name) {
               queryList.splice(index, 1);
             }
@@ -1147,23 +1130,17 @@ export default {
     // 注册--数据流注册--接口列表--条件及参数设定--删除
     tabNozzPDelete(val, row) {
       if (val == "nozz") {
-        const index = this.editableTabs[this.curEditTabs].conditions.indexOf(
-          row
-        );
+        const index = this.editableTabs[this.curEditTabs].conditions.indexOf(row);
         this.editableTabs[this.curEditTabs].conditions.splice(index, 1);
       }
       if (val == "params") {
         const index = this.editableTabs[this.curEditTabs].params.indexOf(row);
         this.editableTabs[this.curEditTabs].params.splice(index, 1);
-        const index1 = this.editableTabs[this.curEditTabs].queryList.indexOf(
-          row
-        );
+        const index1 = this.editableTabs[this.curEditTabs].queryList.indexOf(row);
         this.editableTabs[this.curEditTabs].queryList.splice(index1, 1);
       }
       if (val == "res") {
-        const index = this.editableTabs[this.curEditTabs].responses.indexOf(
-          row
-        );
+        const index = this.editableTabs[this.curEditTabs].responses.indexOf(row);
         this.editableTabs[this.curEditTabs].responses.splice(index, 1);
       }
       if (val == "err") {
@@ -1244,21 +1221,18 @@ export default {
     // 提交审核
     sureReg() {
       this.sureRegActive = true;
-      var submitD = {
+      api
+        .putSubmit({
         servId: this.servId,
         userId: ""
-      };
-      api
-        .putSubmit(submitD)
-        .then(res => {
-          if (res.status == "200") {
-            this.$notify({
-              title: "成功",
-              message: "提交成功",
+      })
+        .then(data => {
+          if (data.status === "success") {
+            this.$message({
               type: "success",
-              duration: 2000
+              message: data.message
             });
-            this.$store.dispatch("GET_fuwindex_on", [
+            this.$store.commit("SET_fuwindex_on", [
               true,
               false,
               false,
@@ -1266,13 +1240,9 @@ export default {
             ]);
             this.$emit("clickServiceManegement");
           } else {
-            this.$notify({
-              title: "失败",
-              message: res.message,
-              type: "error",
-              duration: 2000
-            });
+            this.$message.error(data.message);
           }
+
           this.sureRegActive = false;
         })
         .catch(() => {

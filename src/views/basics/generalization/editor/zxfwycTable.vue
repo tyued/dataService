@@ -26,8 +26,8 @@ export default {
   methods: {
     init() {
       // 最新服务访问异常数据
-      api.errorLastest().then(response => {
-        this.tableData = response.data;
+      api.errorLastest().then(data => {
+        this.tableData = data;
       });
     }
   }

@@ -32,9 +32,10 @@
             <el-button v-if="scope.row.status == '0'" type="primary" size="small" @click="showDetail(scope.row)">审核</el-button>
           </template>
           
-          <el-button v-if="rightInfoObj['serv-subscribe']['serv-sub:detail']" type="info" size="small" @click="goToServiceInfo(scope.row)">详情</el-button>
+          <!-- <el-button v-if="rightInfoObj['serv-subscribe']['serv-sub:detail']" type="info" size="small" @click="goToServiceInfo(scope.row)">详情</el-button> -->
+          <el-button v-if="rightInfoObj['serv-subscribe']['serv-sub:detail']" class="text_under" type="text" @click="goToServiceInfo(scope.row)">详情</el-button>
           <template  v-if="rightInfoObj['serv-subscribe']['serv-sub:list']">
-            <el-button v-if="scope.row.status == '1'" type="danger" size="small" @click="showDialog(scope.row)">授权管理</el-button>
+            <el-button v-if="scope.row.status == '1'" type="primary" size="small" @click="showDialog(scope.row)">授权管理</el-button>
           </template>
         </template>
       </el-table-column>
@@ -153,7 +154,6 @@ export default {
     ...mapGetters(["servTagArr", 'rightInfoObj'])
   },
   data() {
-    let that = this
     return {
       pickerOptions1: {
         disabledDate(time) {
@@ -209,28 +209,25 @@ export default {
           pageNo,
           limit
         })
-        .then(res => {
-          const { status, statusText, data } = res;
-          if (status === 200 && statusText === "OK") {
-            this.loading = false;
-            data.rows.forEach(item => {
-              switch (item.servType) {
-                case "1":
-                  item.typeValue = "HTTP API";
-                  break;
-                case "2":
-                  item.typeValue = "WebService API";
-                  break;
-                case "3":
-                  item.typeValue = "数据源 API";
-                  break;
-              }
-              item.typeValue;
-            });
-            this.tableData = data.rows;
-            this.total = data.total;
-            this.current = data.current;
-          }
+        .then(data => {
+          this.loading = false;
+          data.rows.forEach(item => {
+            switch (item.servType) {
+              case "1":
+                item.typeValue = "HTTP API";
+                break;
+              case "2":
+                item.typeValue = "WebService API";
+                break;
+              case "3":
+                item.typeValue = "数据源 API";
+                break;
+            }
+            item.typeValue;
+          });
+          this.tableData = data.rows;
+          this.total = data.total;
+          this.current = data.current;
         });
     },
     handlePage(number) {
@@ -260,16 +257,13 @@ export default {
           subId: row.id,
           appId: row.appId
         })
-        .then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            this.loading = false;
-            data.rows.forEach(item => {
-              item.expValue = item.expiration ? item.expiration : "无限制";
-            });
-            this.gridData = data.rows;
-            this.firstrow = Object.assign({}, this.firstrow, data.rows[0]);
-          }
+        .then(data => {
+          this.loading = false;
+          data.rows.forEach(item => {
+            item.expValue = item.expiration ? item.expiration : "无限制";
+          });
+          this.gridData = data.rows;
+          this.firstrow = Object.assign({}, this.firstrow, data.rows[0]);
         });
     },
     showDetail(row) {
@@ -294,20 +288,17 @@ export default {
               status: st,
               userId: this.ruleForm.userId
             })
-            .then(res => {
-              const { status, data } = res;
-              if (status === 200 && data) {
-                if (data.status === "success") {
-                  this.$message({
-                    type: "success",
-                    message: data.message
-                  });
-                  this.dialogTableVisibleSee = false;
-                  this.getList();
-                  this.$store.dispatch("getNoticeNumber");
-                } else {
-                  this.$message.error(data.message);
-                }
+            .then(data => {
+              if (data.status === "success") {
+                this.$message({
+                  type: "success",
+                  message: data.message
+                });
+                this.dialogTableVisibleSee = false;
+                this.getList();
+                this.$store.dispatch("getNoticeNumber");
+              } else {
+                this.$message.error(data.message);
               }
             });
         }
@@ -322,27 +313,24 @@ export default {
           id: this.firstrow.id,
           status: st
         })
-        .then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            if (data.status === "success") {
-              this.$message({
-                type: "success",
-                message: data.message
-              });
-              if (st === "0") {
-                this.visible2 = false;
-              } else if (st === "1") {
-                this.visible3 = false;
-              }
-              this.getGridList({
-                servId: this.servId,
-                id: this.subId,
-                appId: this.appId
-              });
-            } else {
-              this.$message.error(data.message);
+        .then(data => {
+          if (data.status === "success") {
+            this.$message({
+              type: "success",
+              message: data.message
+            });
+            if (st === "0") {
+              this.visible2 = false;
+            } else if (st === "1") {
+              this.visible3 = false;
             }
+            this.getGridList({
+              servId: this.servId,
+              id: this.subId,
+              appId: this.appId
+            });
+          } else {
+            this.$message.error(data.message);
           }
         });
     },
@@ -356,23 +344,20 @@ export default {
           id: this.firstrow.id,
           expiration: this.firstrow.expiration
         })
-        .then(res => {
-          const { status, data } = res;
-          if (status === 200 && data) {
-            if (data.status === "success") {
-              this.$message({
-                type: "success",
-                message: data.message
-              });
-              this.visible1 = false;
-              this.getGridList({
-                servId: this.servId,
-                id: this.subId,
-                appId: this.appId
-              });
-            } else {
-              this.$message.error(data.message);
-            }
+        .then(data => {
+          if (data.status === "success") {
+            this.$message({
+              type: "success",
+              message: data.message
+            });
+            this.visible1 = false;
+            this.getGridList({
+              servId: this.servId,
+              id: this.subId,
+              appId: this.appId
+            });
+          } else {
+            this.$message.error(data.message);
           }
         });
     },

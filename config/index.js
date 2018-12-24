@@ -11,7 +11,7 @@ module.exports = {
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
+    proxyTable: {  // 开发模式下使用服务器代理防止跨域
       '/dsb':{
         // target: 'http://47.96.114.14:8083/dsb',
         // target: 'localhost:8083',
