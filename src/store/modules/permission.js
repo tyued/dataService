@@ -69,7 +69,7 @@ const permission = {
         let accessedRouters
         accessedRouters = filterAsyncRouter(asyncRouterMap, rightInfoObj)
         commit('SET_ROUTERS', accessedRouters)
-        commit('SET_ISDONE', true)
+        commit('SET_ISDONE', true) // 处理完成
         resolve(accessedRouters)
       })
     }

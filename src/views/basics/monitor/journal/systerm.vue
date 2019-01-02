@@ -2,15 +2,31 @@
   <div class="journal-systerm">
     <el-form label-position="left" label-width="70px">
       <el-form-item label="时间">
-        <el-button size="small" v-for="(item,index) in timeArr" :key="index" :class="{active: item.show}" @click="handleTime(item)">{{item.name}}</el-button>
+        <ActiveBtn
+          @handleClick="handleTimeBtn"
+          :btnArr="timeArr"
+          :activeIndex="act"
+          :cancel="cancel"
+          activeName="act1"
+        />
         <el-date-picker size="small" @change="handleTimeChange" value-format="yyyy-MM-dd" style="margin-left:10px;" v-model="valueT" type="daterange" align="right" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="异常类型">
-        <el-button size="small" v-for="(item,index) in systermArr" :key="index" :class="{active: item.show}" @click="handleSystermArr(item)">{{item.name}}</el-button>
+        <ActiveBtn
+          @handleClick="handleSystermArr"
+          :btnArr="systermArr"
+          :activeIndex="act"
+          activeName="act1"
+        />
       </el-form-item>
       <el-form-item label="日志级别">
-        <el-button size="small" v-for="(item,index) in errorArr" :key="index" :class="{active: item.show}" @click="handleError(item)">{{item.name}}</el-button>
+        <ActiveBtn
+          @handleClick="handleError"
+          :btnArr="errorArr"
+          :activeIndex="act"
+          activeName="act1"
+        />
       </el-form-item>
       <el-button size="small" type="primary" @click="handleSearch"><i class="el-icon-search"></i> 查询</el-button>
     </el-form>
@@ -28,6 +44,10 @@
         <el-table-column prop="msg" label="异常描述">
         </el-table-column>
         <el-table-column prop="exception" label="异常信息">
+          <template slot-scope="scope">
+            <span v-if="!scope.row.exception">无</span>
+            <el-button v-else class="exception" type="text" @click="showException(scope.row.exception)">{{scope.row.exception}}</el-button>
+          </template>
         </el-table-column>
         <el-table-column prop="level" label="日志级别">
         </el-table-column>
@@ -41,23 +61,43 @@
       <!-- 分页组件here -->
       <PageBar :total="total" :currentpage="current" @handlePage="handlePage" @handlePageSize="handlePageSize" />
     </el-row>
+
+    <el-dialog
+      :title="dialog.tip"
+      :visible.sync="dialogVisible"
+      >
+      <pre>{{dialog.data}}</pre>
+      <span slot="footer" class="dialog-footer">
+        <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import ActiveBtn from "components/ActiveBtn";
 import * as api from "api/monitor";
 import PageBar from "components/PageBar/index";
-import moment from "moment";
+import moment from "utils/moment";
 export default {
   name: "journal-systerm",
   created() {
     this.getList();
   },
   components: {
-    PageBar
+    PageBar,
+    ActiveBtn
   },
   data() {
     return {
+      act: 0,
+      cancel: -1,
+      dialogVisible: false,
+      dialog: {
+        tip: '',
+        data: ''
+      },
       loading: true,
       total: 0, // 分页
       current: 1, // 分页
@@ -67,98 +107,68 @@ export default {
       timeArr: [
         // 日期-‘全部’ 高亮
         {
-          id: 0,
           name: "全部",
-          show: true,
-          value: ""
+          value: null
         },
         {
-          id: 1,
           name: "当日",
-          show: false,
-          value: this.outPutValue(1)
+          value: 1
         },
         {
-          id: 2,
           name: "7日内",
-          show: false,
-          value: this.outPutValue(7)
+          value: 7
         },
         {
-          id: 3,
           name: "30日内",
-          show: false,
-          value: this.outPutValue(30)
+          value: 30
         }
       ],
       errorArr: [
         // 类别
         {
-          id: 0,
           name: "全部",
-          show: true,
-          value: ""
+          value: null
         },
         {
-          id: 1,
           name: "调试",
-          show: false,
           value: "debug"
         },
         {
-          id: 2,
           name: "信息",
-          show: false,
           value: "info"
         },
         {
-          id: 3,
           name: "警告",
-          show: false,
           value: "warn"
         },
         {
-          id: 4,
           name: "错误",
-          show: false,
           value: "error"
         },
         {
-          id: 5,
           name: "严重错误",
-          show: false,
           value: "fetal"
         }
       ],
       systermArr: [
         {
-          id: 0,
           name: "全部",
-          show: true,
-          value: ""
+          value: null
         },
         {
-          id: 1,
           name: "运行异常",
-          show: false,
           value: "runtime"
         },
         {
-          id: 2,
           name: "检查异常",
-          show: false,
           value: "check"
         },
         {
-          id: 3,
           name: "IO异常",
-          show: false,
           value: "io"
         },
         {
-          id: 4,
           name: "数据库异常",
-          show: false,
           value: "dbaccess"
         }
       ],
@@ -171,6 +181,11 @@ export default {
     };
   },
   methods: {
+    showException(data) {
+      this.dialog.tip = '异常信息'
+      this.dialog.data = data
+      this.dialogVisible = true
+    },
     handleSearch() {
       this.getList(this.current, this.size);
     },
@@ -191,33 +206,16 @@ export default {
       }
       api.postSystermLog(query).then(data => {
         this.loading = false;
-        data.rows.forEach(ele => {
-          ele.exception = ele.exception ? ele.exception : "无";
-        });
         this.tableData = data.rows;
         this.current = data.current;
         this.total = data.total;
       });
     },
-    handleError(item) {
-      const { id, value } = item;
-      this.errorArr.forEach(item => (item.show = false));
-      this.errorArr[id].show = true;
-      if (id === 0) {
-        this.typeObj.errorValue = "";
-      } else {
-        this.typeObj.errorValue = value;
-      }
+    handleError({ value }) {
+      this.typeObj.errorValue = value || '';
     },
-    handleSystermArr(item) {
-      const { id, value } = item;
-      this.systermArr.forEach(item => (item.show = false));
-      this.systermArr[id].show = true;
-      if (id === 0) {
-        this.typeObj.systermValue = "";
-      } else {
-        this.typeObj.systermValue = value;
-      }
+    handleSystermArr({ value }) {
+      this.typeObj.systermValue = value || '';
     },
     handlePage(number) {
       // 分页
@@ -233,41 +231,27 @@ export default {
     handleTimeChange(data) {
       // 日期组件change事件
       this.typeObj.timeValue = data;
-      // 解除其余日期按钮高亮
-      this.timeArr.forEach(item => {
-        item.show = false;
-      });
+      this.cancel = -Math.random();
     },
-    outPutValue(long) {
-      const today = moment().format("YYYY-MM-DD");
-      const beforeDay = this.lastDay(today, -long);
-      return [beforeDay, today];
+    handleTimeBtn({ value }) {
+      this.valueT = [] // 日期选择器清空
+      this.typeObj.timeValue = value || "";
     },
-    lastDay(nowDay, n) {
-      // 格式化日期-昨天
-      return moment(nowDay)
-        .add(n, "days")
-        .format("YYYY-MM-DD");
-    },
-    handleTime(item) {
-      const { id, value } = item;
-      this.timeArr.forEach(item => (item.show = false));
-      this.timeArr[id].show = true;
-      if (id === 0) {
-        this.typeObj.timeValue = "";
-      } else {
-        this.typeObj.timeValue = value;
-      }
-    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.active {
-  background-color: #409eff;
-  border-color: #409eff;
-  color: #fff;
+pre {
+  height: 500px;
+  overflow-y: auto;
+}
+.exception {
+  text-align: left;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
 

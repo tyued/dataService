@@ -239,12 +239,18 @@
         <el-input v-model.trim="editObj.method" placeholder="3-200个字符"></el-input>
       </el-form-item>
       <el-form-item label="外部访问地址" v-if="editObj.servType!=4">
-        <el-input v-if="editObj.servType == 1" :value="`${Settings}/http/${editObj.servUuid}/v${editObj.version}${editObj.path ? '/' + editObj.path : ''}`"
+        <el-input v-if="editObj.servType == 1" :value="`${Settings}/http/${editObj.servUuid}/{version}${editObj.path ? '/' + editObj.path : ''}`"
           disabled></el-input>
-        <el-input v-if="editObj.servType == 2" :value="`${Settings}/soap/${editObj.servUuid}/${editObj.method}_v${editObj.version ? editObj.version : ''}`"
+        <!-- <el-input v-if="editObj.servType == 1" :value="`${Settings}/http/${editObj.servUuid}/v${editObj.version}${editObj.path ? '/' + editObj.path : ''}`"
+          disabled></el-input> -->
+        <el-input v-if="editObj.servType == 2" :value="`${Settings}/soap/${editObj.servUuid}/${editObj.method}_{version}`"
           disabled></el-input>
-        <el-input v-if="editObj.servType == 3" :value="`${Settings}/dataset/${editObj.servUuid}/v${editObj.version}${editObj.path ? '/' + editObj.path : ''}`"
+        <!-- <el-input v-if="editObj.servType == 2" :value="`${Settings}/soap/${editObj.servUuid}/${editObj.method}_v${editObj.version ? editObj.version : ''}`"
+          disabled></el-input> -->
+        <el-input v-if="editObj.servType == 3" :value="`${Settings}/dataset/${editObj.servUuid}/{version}${editObj.path ? '/' + editObj.path : ''}`"
           disabled></el-input>
+        <!-- <el-input v-if="editObj.servType == 3" :value="`${Settings}/dataset/${editObj.servUuid}/v${editObj.version}${editObj.path ? '/' + editObj.path : ''}`"
+          disabled></el-input> -->
       </el-form-item>
       <el-form-item :rules="[{ required: true, message: '请选择请求方式', trigger: 'change' }]" label="请求方式" v-if="editObj.servType==1"
         prop="method">

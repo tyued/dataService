@@ -1,4 +1,6 @@
+// 格式化数据，添加百分号
 function formatData(val) {
+  if (!val) return
   return val === "--" ? val : val + "%";
 }
 export default function format(data) {

@@ -13,6 +13,10 @@ export default {
       type: String,
       default: "200px"
     },
+    type: {
+      type: String,
+      default: ""
+    },
     arr: {
       type: Array,
       required: true,
@@ -46,7 +50,7 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$refs.monitorEcharts, "macarons");
-      this.chart.setOption({
+      let option = {
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -59,8 +63,8 @@ export default {
         color: ["#209cee"],
         grid: {
           top: "14px",
-          left: "10px",
-          right: "10px",
+          left: "14px",
+          right: "14px",
           bottom: "10px",
           containLabel: true
         },
@@ -69,7 +73,7 @@ export default {
           data: this.timeArr
         },
         yAxis: {
-          type: "value"
+          type: "value",
         },
         series: [
           {
@@ -77,7 +81,25 @@ export default {
             type: "line"
           }
         ]
-      });
+      }
+      switch (this.type) {
+        case 'fail':
+          option.yAxis.axisLabel = {
+            formatter: '{value}%'
+          }
+          break;
+        // case 'avg':
+        //   option.yAxis.axisLabel = {
+        //     formatter: '{value}ms'
+        //   }
+        //   break;
+        // case 'max':
+        //   option.yAxis.axisLabel = {
+        //     formatter: '{value}ms'
+        //   }
+        //   break;
+      }
+      this.chart.setOption(option);
     },
     __resizeHanlder() {
       debounce(() => {

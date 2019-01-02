@@ -10,7 +10,7 @@
         </el-select>
       </div>
 
-      <el-table v-loading="loading" :show-header="false" ref="multipleTable" :data="tabData" tooltip-effect="dark" style="width: 100%">
+      <el-table v-loading="loading" :row-key="getRowKeys" :expand-row-keys="expands" :show-header="false" ref="multipleTable" :data="tabData" tooltip-effect="dark" style="width: 100%">
         <el-table-column type="servName">
           <template slot-scope="scope">
             <span>{{scope.row.servName}}</span>
@@ -153,14 +153,14 @@ export default {
       servId: "", // 服务id
       servType: "", // 服务类型
       tabData: [],
-      activeName: 0, // 默认展开第一个
       dialogIOVisible: false,
       total: 0,
       current: 0,
       size: 10,
       loading: true,
       servArr: [],
-      typeId: ""
+      typeId: "",
+      expands: []
     };
   },
   methods: {
@@ -202,7 +202,8 @@ export default {
           data.rows.forEach(item => {
             formatData(item);
           });
-          this.tabData = data.rows;
+          this.tabData = data.rows; 
+          this.expands.push(this.tabData[0].servId);
           this.total = parseInt(data.total);
           this.current = parseInt(data.current);
         });
@@ -212,9 +213,9 @@ export default {
       this.servType = servType;
       this.dialogIOVisible = true;
 
-      if (this.$refs["tab-service"]) {
-        this.$refs["tab-service"].init();
-      }
+      // if (this.$refs["tab-service"]) {
+      //   this.$refs["tab-service"].init();
+      // }
     },
     handlePage(number) {
       // 分页
@@ -224,7 +225,11 @@ export default {
     handlePageSize(number) {
       this.getList(1, number);
       this.current = 1;
-    }
+    },
+    // 获取row的key值
+    getRowKeys(row) {
+      return row.servId;
+    },
   }
 };
 </script>

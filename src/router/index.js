@@ -54,7 +54,7 @@ export default new Router({
 //异步挂载的路由
 //动态需要根据权限加载的路由表 
 export const asyncRouterMap = [{
-  path: '/',
+  path: '/', // 这里跟上面重复了，控制台会有警告
   component: Layout,
   // redirect: 'generalization',
   name: '/',

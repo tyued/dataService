@@ -2,18 +2,39 @@
   <div class="journal-login">
     <el-form label-position="left" label-width="70px">
       <el-form-item label="时间">
-        <el-button size="small" v-for="(item,index) in timeArr" :key="index" :class="{active: item.show}" @click="handleTime(item)">{{item.name}}</el-button>
+        <ActiveBtn
+          @handleClick="handleTimeBtn"
+          :btnArr="timeArr"
+          :activeIndex="act"
+          :cancel="cancel"
+          activeName="act1"
+        />
         <el-date-picker size="small" @change="handleTimeChange" value-format="yyyy-MM-dd" style="margin-left:10px;" v-model="valueT" type="daterange" align="right" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="认证类型">
-        <el-button size="small" v-for="(item,index) in optArr" :key="index" :class="{active: item.show}" @click="handleOptType(item)">{{item.name}}</el-button>
+        <ActiveBtn
+          @handleClick="handleOptType"
+          :btnArr="optArr"
+          :activeIndex="act"
+          activeName="act1"
+        />
       </el-form-item>
       <el-form-item label="认证协议">
-        <el-button size="small" v-for="(item,index) in protocolArr" :key="index" :class="{active: item.show}" @click="handleProtocolType(item)">{{item.name}}</el-button>
+        <ActiveBtn
+          @handleClick="handleProtocolType"
+          :btnArr="protocolArr"
+          :activeIndex="act"
+          activeName="act1"
+        />
       </el-form-item>
       <el-form-item label="认证结果">
-        <el-button size="small" v-for="(item,index) in status" :key="index" :class="{active: item.show}" @click="handleStatus(item)">{{item.name}}</el-button>
+        <ActiveBtn
+          @handleClick="handleStatus"
+          :btnArr="status"
+          :activeIndex="act"
+          activeName="act1"
+        />
       </el-form-item>
       <el-button size="small" type="primary" @click="handleSearch"><i class="el-icon-search"></i> 查询</el-button>
     </el-form>
@@ -42,6 +63,10 @@
         <el-table-column prop="msg" label="请求信息">
         </el-table-column>
         <el-table-column prop="exception" label="异常信息">
+          <template slot-scope="scope">
+            <span v-if="!scope.row.exception">无</span>
+            <el-button v-else class="exception" type="text" @click="showException(scope.row.exception)">{{scope.row.exception}}</el-button>
+          </template>
         </el-table-column>
         <el-table-column prop="respCode" label="错误对照码">
         </el-table-column>
@@ -53,23 +78,42 @@
       <!-- 分页组件here -->
       <PageBar :total="total" :currentpage="current" @handlePage="handlePage" @handlePageSize="handlePageSize" />
     </el-row>
+    <el-dialog
+      :title="dialog.tip"
+      :visible.sync="dialogVisible"
+      >
+      <pre>{{dialog.data}}</pre>
+      <span slot="footer" class="dialog-footer">
+        <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import ActiveBtn from "components/ActiveBtn";
 import * as api from "api/monitor";
 import PageBar from "components/PageBar/index";
-import moment from "moment";
+import moment from "utils/moment";
 export default {
   name: "journal-login",
   created() {
     this.getList();
   },
   components: {
-    PageBar
+    PageBar,
+    ActiveBtn
   },
   data() {
     return {
+      act: 0,
+      cancel: -1,
+      dialogVisible: false,
+      dialog: {
+        tip: '',
+        data: ''
+      },
       loading: true,
       total: 0, // 分页
       current: 1, // 分页
@@ -79,117 +123,81 @@ export default {
       timeArr: [
         // 日期-‘全部’ 高亮
         {
-          id: 0,
           name: "全部",
-          show: true,
-          value: ""
+          value: null
         },
         {
-          id: 1,
           name: "当日",
-          show: false,
-          value: this.outPutValue(1)
+          value: 1
         },
         {
-          id: 2,
           name: "7日内",
-          show: false,
-          value: this.outPutValue(7)
+          value: 7
         },
         {
-          id: 3,
           name: "30日内",
-          show: false,
-          value: this.outPutValue(30)
+          value: 30
         }
       ],
       optArr: [
         {
-          id: 0,
           name: "全部",
-          show: true,
-          value: ""
+          value: null
         },
         {
-          id: 1,
           name: "登录认证",
-          show: false,
           value: "login"
         },
         {
-          id: 2,
           name: "会话注销",
-          show: false,
           value: "logout"
         }
       ],
       protocolArr: [
         {
-          id: 0,
           name: "全部",
-          show: true,
-          value: ""
+          value: null
         },
         {
-          id: 1,
           name: "CAS",
-          show: false,
           value: "CAS"
         },
         {
-          id: 2,
           name: "HTTP",
-          show: false,
           value: "HTTP"
         },
         {
-          id: 3,
           name: "JWT",
-          show: false,
           value: "JWT"
         },
         {
-          id: 4,
           name: "LDAP",
-          show: false,
           value: "LDAP"
         },
         {
-          id: 5,
           name: "OAuth2",
-          show: false,
           value: "OAuth2"
         },
         {
-          id: 6,
           name: "OpenID",
-          show: false,
           value: "OpenID"
         },
         {
-          id: 7,
           name: "SMAL",
-          show: false,
           value: "SMAL"
         }
       ],
       status: [
         {
-          id: 0,
           name: "全部",
-          show: true,
-          value: ""
+          value: null
         },
         {
-          id: 1,
           name: "成功",
-          show: false,
           value: "success"
         },
         {
-          id: 2,
           name: "失败",
-          show: false,
           value: "fail"
         }
       ],
@@ -203,6 +211,11 @@ export default {
     };
   },
   methods: {
+    showException(data) {
+      this.dialog.tip = '异常信息'
+      this.dialog.data = data
+      this.dialogVisible = true
+    },
     handleSearch() {
       this.getList(this.current, this.size);
     },
@@ -231,7 +244,6 @@ export default {
             ele.userName = '异常账户'
             ele.red = true
           }
-          ele.exception = ele.exception ? ele.exception : '无'
           ele.respCode = ele.respCode ? ele.respCode : '无'
         });
         this.tableData = data.rows;
@@ -254,70 +266,36 @@ export default {
       // 日期组件change事件
       this.typeObj.timeValue = data;
       // 解除其余日期按钮高亮
-      this.timeArr.forEach(item => {
-        item.show = false;
-      });
+      this.cancel = -Math.random();
     },
-    outPutValue(long) {
-      const today = moment().format("YYYY-MM-DD");
-      const beforeDay = this.lastDay(today, -long);
-      return [beforeDay, today];
+    handleTimeBtn({ value }) {
+      this.valueT = [] // 日期选择器清空
+      this.typeObj.timeValue = value || "";
     },
-    lastDay(nowDay, n) {
-      // 格式化日期-昨天
-      return moment(nowDay)
-        .add(n, "days")
-        .format("YYYY-MM-DD");
+    handleOptType({ value }) {
+      this.typeObj.opt = value || '';
     },
-    handleTime(item) {
-      const { id, value } = item;
-      this.timeArr.forEach(item => (item.show = false));
-      this.timeArr[id].show = true;
-      if (id === 0) {
-        this.typeObj.timeValue = "";
-      } else {
-        this.typeObj.timeValue = value;
-      }
+    handleProtocolType({ value }) {
+      this.typeObj.protocol = value || '';
     },
-    handleOptType(item) {
-      const { id, value } = item;
-      this.optArr.forEach(item => (item.show = false));
-      this.optArr[id].show = true;
-      if (id === 0) {
-        this.typeObj.opt = "";
-      } else {
-        this.typeObj.opt = value;
-      }
-    },
-    handleProtocolType(item) {
-      const { id, value } = item;
-      this.protocolArr.forEach(item => (item.show = false));
-      this.protocolArr[id].show = true;
-      if (id === 0) {
-        this.typeObj.protocol = "";
-      } else {
-        this.typeObj.protocol = value;
-      }
-    },
-    handleStatus(item) {
-      const { id, value } = item;
-      this.status.forEach(item => (item.show = false));
-      this.status[id].show = true;
-      if (id === 0) {
-        this.typeObj.status = "";
-      } else {
-        this.typeObj.status = value;
-      }
+    handleStatus({ value }) {
+      this.typeObj.status = value || '';
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.active {
-  background-color: #409eff;
-  border-color: #409eff;
-  color: #fff;
+pre {
+  height: 500px;
+  overflow-y: auto;
+}
+.exception {
+  text-align: left;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .red {
   color: #F56C6C;

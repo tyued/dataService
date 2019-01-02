@@ -12,7 +12,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {  // 开发模式下使用服务器代理防止跨域
-      '/dsb':{
+      '/dsb':{ // 自定义名称
         // target: 'http://47.96.114.14:8083/dsb',
         // target: 'localhost:8083',
         target: 'http://192.168.0.49',
@@ -20,7 +20,7 @@ module.exports = {
         // target: 'http://192.168.0.111:8083',
         changeOrigin: true,
         pathRewrite: {
-          '^/dsb': '/dsb'
+          '^/dsb': '/dsb' // 将dsb重写为dsb
         }
       }
     },

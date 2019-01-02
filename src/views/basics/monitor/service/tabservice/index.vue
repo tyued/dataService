@@ -1,149 +1,154 @@
 <template>
   <el-row id="monitor-tabbox">
-    <el-col :span="5">
-      <ul class="io-tree">
-        <li v-for="(item, index) in tabData" :key="index" @click="changeTab(item)" :class="{'active': item.active}">{{item.name}}</li>
-      </ul>
-    </el-col>
-    <el-col :span="19">
-      <el-card :v-loading="flag" class="tabbox-card">
-        <el-row class="row">
-          <el-radio-group v-model="tabDateValue">
-            <el-radio-button label="小时报"></el-radio-button>
-            <el-radio-button label="日报"></el-radio-button>
-          </el-radio-group>
-        </el-row>
-        <el-row v-if="tabDateValue == '日报'" class="row">
-          <el-card :body-style="{padding: '0'}">
-            <div slot="header" class="clearfix">
-              <span>昨日关键指标</span>
-            </div>
-            <el-row style="padding: 30px 0;">
-              <el-col class="keybox" :span="6">
-                <p>调用次数</p>
-                <h2>{{yesObj.calltimes}}</h2>
-                <div>
-                  <p>日&emsp;
-                    <span>
-                      <i></i>{{yesObj.calltimesPctDay}}</span>
-                  </p>
-                  <p>周&emsp;
-                    <span>
-                      <i></i>{{yesObj.calltimesPctWeek}}</span>
-                  </p>
-                  <p>月&emsp;
-                    <span>{{yesObj.calltimesPctMonth}}</span>
-                  </p>
-                </div>
-              </el-col>
-              <el-col class="keybox" :span="6">
-                <p>失败率</p>
-                <h2>{{yesObj.failurePct}}</h2>
-                <div>
-                  <p>日&emsp;
-                    <span>
-                      <i></i>{{yesObj.failurePctDay}}</span>
-                  </p>
-                  <p>周&emsp;
-                    <span>
-                      <i></i>{{yesObj.failurePctWeek}}</span>
-                  </p>
-                  <p>月&emsp;
-                    <span>{{yesObj.failurePctMonth}}</span>
-                  </p>
-                </div>
-              </el-col>
-              <el-col class="keybox" :span="6">
-                <p>平均耗时(毫秒)</p>
-                <h2>{{yesObj.avgdur}}</h2>
-                <div>
-                  <p>日&emsp;
-                    <span>
-                      <i></i>{{yesObj.avgdurPctDay}}</span>
-                  </p>
-                  <p>周&emsp;
-                    <span>
-                      <i></i>{{yesObj.avgdurPctWeek}}</span>
-                  </p>
-                  <p>月&emsp;
-                    <span>{{yesObj.avgdurPctMonth}}</span>
-                  </p>
-                </div>
-              </el-col>
-              <el-col class="keybox" :span="6">
-                <p>最大耗时(毫秒)</p>
-                <h2>{{yesObj.maxdur}}</h2>
-                <div>
-                  <p>日&emsp;
-                    <span>
-                      <i></i>{{yesObj.maxdurPctDay}}</span>
-                  </p>
-                  <p>周&emsp;
-                    <span>
-                      <i></i>{{yesObj.maxdurPctWeek}}</span>
-                  </p>
-                  <p>月&emsp;
-                    <span>{{yesObj.maxdurPctMonth}}</span>
-                  </p>
-                </div>
-              </el-col>
-            </el-row>
-          </el-card>
-        </el-row>
-        <el-row class="row">
-          <el-tabs @tab-click="changeTabs" v-model="activeNameTable" type="border-card">
-            <!-- <el-tab-pane label="关键指标详解" name="0">
-                <Key :servId="servId" :apiId="apiId" :byType="byType" />
-              </el-tab-pane> -->
-            <el-tab-pane label="调用次数" name="0">
-              <Uses ref="uses" :tabName="tabName" :servId="servId" :apiId="apiId" :byType="byType" />
-            </el-tab-pane>
-            <el-tab-pane label="失败率" name="1">
-              <Fail ref="fail" :tabName="tabName" :servId="servId" :apiId="apiId" :byType="byType" />
-            </el-tab-pane>
-            <el-tab-pane label="平均耗时" name="2">
-              <Avg ref="avg" :tabName="tabName" :servId="servId" :apiId="apiId" :byType="byType" />
-            </el-tab-pane>
-            <el-tab-pane label="最大耗时" name="3">
-              <Max ref="max" :tabName="tabName" :servId="servId" :apiId="apiId" :byType="byType" />
-            </el-tab-pane>
-          </el-tabs>
-        </el-row>
-        <el-row class="row">
-          <el-card class="main-table">
-            <p class="tab-title">
-              <span class="fl" style="line-height:40px;">
-                <i class="el-icon-menu"></i> 详细数据</span>
-              <span class="fr">
-                <el-button type="text" @click="outputExcel">导出Excel</el-button>
-              </span>
-            </p>
-            <el-table id="out-table" :data="tableData" stripe style="width: 100%;margin: 10px 0;">
-              <el-table-column prop="date" label="时间" sortable>
-              </el-table-column>
-              <el-table-column v-if="byType === '1'" prop="hour" label="小时">
-              </el-table-column>
-              <el-table-column prop="calltimes" label="调用次数">
-              </el-table-column>
-              <el-table-column prop="failures" label="失败次数">
-              </el-table-column>
-              <el-table-column prop="failurePct" label="失败率">
-              </el-table-column>
-              <el-table-column prop="sumdur" label="总共耗时(毫秒)">
-              </el-table-column>
-              <el-table-column prop="avgdur" label="平均耗时(毫秒)">
-              </el-table-column>
-              <el-table-column prop="maxdur" label="最大耗时(毫秒)">
-              </el-table-column>
-            </el-table>
-            <!-- 分页 组件-->
-            <el-row>
-              <PageBar :total="total" :currentpage="current" @handlePage="handlePage" @handlePageSize="handlePageSize" />
-            </el-row>
-          </el-card>
-        </el-row>
-      </el-card>
-    </el-col>
+    <div v-if="tabData.length !== 0">
+      <el-col :span="5">
+        <ul class="io-tree">
+          <li v-for="(item, index) in tabData" :key="index" @click="changeTab(item)" :class="{'active': item.active}">{{item.name}}</li>
+        </ul>
+      </el-col>
+      <el-col :span="19">
+        <el-card :v-loading="flag" class="tabbox-card">
+          <el-row class="row">
+            <el-radio-group v-model="tabDateValue" @change="handleTabChange">
+              <el-radio-button label="小时报"></el-radio-button>
+              <el-radio-button label="日报"></el-radio-button>
+            </el-radio-group>
+          </el-row>
+          <el-row v-if="tabDateValue == '日报'" class="row">
+            <el-card :body-style="{padding: '0'}">
+              <div slot="header" class="clearfix">
+                <span>昨日关键指标</span>
+              </div>
+              <el-row style="padding: 30px 0;">
+                <el-col class="keybox" :span="6">
+                  <p>调用次数</p>
+                  <h2>{{yesObj.calltimes}}</h2>
+                  <div>
+                    <p>日&emsp;
+                      <span>
+                        <i></i>{{yesObj.calltimesPctDay}}</span>
+                    </p>
+                    <p>周&emsp;
+                      <span>
+                        <i></i>{{yesObj.calltimesPctWeek}}</span>
+                    </p>
+                    <p>月&emsp;
+                      <span>{{yesObj.calltimesPctMonth}}</span>
+                    </p>
+                  </div>
+                </el-col>
+                <el-col class="keybox" :span="6">
+                  <p>失败率</p>
+                  <h2>{{yesObj.failurePct}}</h2>
+                  <div>
+                    <p>日&emsp;
+                      <span>
+                        <i></i>{{yesObj.failurePctDay}}</span>
+                    </p>
+                    <p>周&emsp;
+                      <span>
+                        <i></i>{{yesObj.failurePctWeek}}</span>
+                    </p>
+                    <p>月&emsp;
+                      <span>{{yesObj.failurePctMonth}}</span>
+                    </p>
+                  </div>
+                </el-col>
+                <el-col class="keybox" :span="6">
+                  <p>平均耗时(毫秒)</p>
+                  <h2>{{yesObj.avgdur}}</h2>
+                  <div>
+                    <p>日&emsp;
+                      <span>
+                        <i></i>{{yesObj.avgdurPctDay}}</span>
+                    </p>
+                    <p>周&emsp;
+                      <span>
+                        <i></i>{{yesObj.avgdurPctWeek}}</span>
+                    </p>
+                    <p>月&emsp;
+                      <span>{{yesObj.avgdurPctMonth}}</span>
+                    </p>
+                  </div>
+                </el-col>
+                <el-col class="keybox" :span="6">
+                  <p>最大耗时(毫秒)</p>
+                  <h2>{{yesObj.maxdur}}</h2>
+                  <div>
+                    <p>日&emsp;
+                      <span>
+                        <i></i>{{yesObj.maxdurPctDay}}</span>
+                    </p>
+                    <p>周&emsp;
+                      <span>
+                        <i></i>{{yesObj.maxdurPctWeek}}</span>
+                    </p>
+                    <p>月&emsp;
+                      <span>{{yesObj.maxdurPctMonth}}</span>
+                    </p>
+                  </div>
+                </el-col>
+              </el-row>
+            </el-card>
+          </el-row>
+          <el-row class="row">
+            <el-tabs @tab-click="changeTabs" v-model="activeNameTable" type="border-card">
+              <!-- <el-tab-pane label="关键指标详解" name="0">
+                  <Key :servId="servId" :apiId="apiId" :byType="byType" />
+                </el-tab-pane> -->
+              <el-tab-pane label="调用次数" name="0">
+                <Uses ref="uses" :tabName="tabName" :servId="servId" :apiId="apiId" :byType="byType" @handleComplete="handleComplete"  @handleEmitTable="getTable"/>
+              </el-tab-pane>
+              <el-tab-pane label="失败率" name="1">
+                <Fail ref="fail" :tabName="tabName" :servId="servId" :apiId="apiId" :byType="byType" @handleComplete="handleComplete"  @handleEmitTable="getTable"/>
+              </el-tab-pane>
+              <el-tab-pane label="平均耗时" name="2">
+                <Avg ref="avg" :tabName="tabName" :servId="servId" :apiId="apiId" :byType="byType" @handleComplete="handleComplete"  @handleEmitTable="getTable"/>
+              </el-tab-pane>
+              <el-tab-pane label="最大耗时" name="3">
+                <Max ref="max" :tabName="tabName" :servId="servId" :apiId="apiId" :byType="byType" @handleComplete="handleComplete"  @handleEmitTable="getTable"/>
+              </el-tab-pane>
+            </el-tabs>
+          </el-row>
+          <el-row class="row">
+            <el-card class="main-table">
+              <p class="tab-title">
+                <span class="fl" style="line-height:40px;">
+                  <i class="el-icon-menu"></i> 详细数据</span>
+                <span class="fr">
+                  <el-button type="text" @click="outputExcel">导出Excel</el-button>
+                </span>
+              </p>
+              <el-table id="out-table" :data="tableData" stripe style="width: 100%;margin: 10px 0;">
+                <el-table-column prop="date" label="时间" sortable>
+                </el-table-column>
+                <el-table-column v-if="byType === '1'" prop="hour" label="小时">
+                </el-table-column>
+                <el-table-column prop="calltimes" label="调用次数">
+                </el-table-column>
+                <el-table-column prop="failures" label="失败次数">
+                </el-table-column>
+                <el-table-column prop="failurePct" label="失败率">
+                </el-table-column>
+                <el-table-column prop="sumdur" label="总共耗时(毫秒)">
+                </el-table-column>
+                <el-table-column prop="avgdur" label="平均耗时(毫秒)">
+                </el-table-column>
+                <el-table-column prop="maxdur" label="最大耗时(毫秒)">
+                </el-table-column>
+              </el-table>
+              <!-- 分页 组件-->
+              <el-row>
+                <PageBar :total="total" :currentpage="current" @handlePage="handlePage" @handlePageSize="handlePageSize" />
+              </el-row>
+            </el-card>
+          </el-row>
+        </el-card>
+      </el-col>
+    </div>
+    <div class="emptybox" v-else>
+      <p>暂无数据</p>
+    </div>
   </el-row>
 </template>
 
@@ -195,10 +200,20 @@ export default {
       yesObj: {},
       apiId: "",
       tabName: "0",
-      flag: true
+      flag: true,
+      echartCompleteNumber: 0
     };
   },
   methods: {
+    handleComplete() {
+      this.echartCompleteNumber++
+      // 是否 4 个 echarts 以及，promise.all 都执行完成
+      if (this.echartCompleteNumber === 5) {
+        console.log('true')
+        // 此时可以切换接口
+        this.flag = false;
+      }
+    },
     init() {
       // 初始化弹出层
       // 改变左侧tab
@@ -213,51 +228,54 @@ export default {
           data.forEach(item => {
             item.active = false;
           });
-          data[0].active = true; // 默认第一个高亮
+          if(data[0]) {
+            data[0].active = true; // 默认第一个高亮
+            this.initTab(data[0].id); // 初始化第一个tab 把第一个id传进去
+          } 
           this.tabData = data;
-          // 初始化第一个tab 把第一个id传进去
-          this.initTab(data[0].id);
+
         });
       // // 重置tabs为第一个
       this.activeNameTable = "0";
     },
     changeTab(item) {
+      // 防止频繁请求
       if (this.flag) {
         return;
       }
-      this.flag = true;
+
       // 改变接口tab
       if (!item) {
         // 防止报错
         return;
       }
+
       this.tabData.forEach(item => {
         item.active = false;
       });
       item.active = true;
-      let id = item.id;
-      this.initTab(id);
-    },
-    async initEcharts() {
-      // 请求太多，控制频繁请求
-      await this.$refs.uses.init();
-      await this.$refs.max.init();
-      await this.$refs.fail.init();
-      await this.$refs.avg.init();
+
+      this.initTab(item.id);
     },
     async initTab(id) {
-      // 每个接口tab的初始化及切换
-      this.apiId = id;
-      // // 改变小时和日报
-      this.tabDateValue = "日报"; // 重置默认为日报 改变type
-      // 昨日信息
-      await this.getYesterday(id);
-      // 获取下面表格
-      await this.getTable();
-      // 获取4 个 echarts
-      await this.initEcharts();
+      // 不可点击其他接口
+      this.flag = true;
 
-      this.flag = false;
+      // 重置this.echartCompleteNumber
+      this.echartCompleteNumber = 0
+
+      // 每个接口tab的初始化及切换,此时echarts watch执行
+      this.apiId = id;
+      // 改变小时和日报
+      this.tabDateValue = "日报"; // 重置默认为日报 改变type
+
+
+
+      // 获取昨日信息 获取下面表格
+      await Promise.all([this.getYesterday(id), this.getTable()]).then(() => {
+        this.handleComplete()
+      })
+
     },
     async getYesterday(id) {
       // 昨日信息
@@ -281,19 +299,25 @@ export default {
         servId: this.servId,
         apiId: this.apiId
       });
+      data.rows.forEach(item => {
+        item.failurePct = item.failurePct + "%"
+      })
       this.tableData = data.rows;
       this.total = parseInt(data.total);
       this.current = parseInt(data.current);
     },
+    handleTabChange() { // 改变小时报和日报
+      this.getTable()
+    },
     handlePage(number) {
       // 分页
-      this.getList(number);
+      this.getTable(number);
       this.current = number;
     },
     handlePageSize(number) {
       // 分页大小
       this.size = number;
-      this.getList(1, number);
+      this.getTable(1, number);
       this.current = 1;
     },
     outputExcel() {
@@ -321,6 +345,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.emptybox {
+  text-align: center;
+  padding: 140px 0;
+  font-size: 14px;
+  color: #9a9a9a;
+}
 .el-tabs__content {
   overflow: auto;
 }

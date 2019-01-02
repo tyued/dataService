@@ -2,15 +2,31 @@
   <div class="journal-done">
     <el-form label-position="left" label-width="70px">
       <el-form-item label="时间">
-        <el-button size="small" v-for="(item,index) in timeArr" :key="index" :class="{active: item.show}" @click="handleTime(item)">{{item.name}}</el-button>
+        <ActiveBtn
+          @handleClick="handleTimeBtn"
+          :btnArr="timeArr"
+          :activeIndex="act"
+          :cancel="cancel"
+          activeName="act1"
+        />
         <el-date-picker size="small" @change="handleTimeChange" value-format="yyyy-MM-dd" style="margin-left:10px;" v-model="valueT" type="daterange" align="right" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="操作类型">
-        <el-button size="small" v-for="(item,index) in optArr" :key="index" :class="{active: item.show}" @click="handleOptArr(item)">{{item.name}}</el-button>
+        <ActiveBtn
+          @handleClick="handleOptArr"
+          :btnArr="optArr"
+          :activeIndex="act"
+          activeName="act1"
+        />
       </el-form-item>
       <el-form-item label="日志级别">
-        <el-button size="small" v-for="(item,index) in errorArr" :key="index" :class="{active: item.show}" @click="handleErrorArr(item)">{{item.name}}</el-button>
+        <ActiveBtn
+          @handleClick="handleErrorArr"
+          :btnArr="errorArr"
+          :activeIndex="act"
+          activeName="act1"
+        />
       </el-form-item>
       <el-form-item label="业务名称">
         <el-input size="small" clearable :maxlength="50" prefix-icon="el-icon-search" placeholder="请输入业务名称关键字" v-model.trim="typeObj.business" style="width: 300px;"></el-input>
@@ -34,6 +50,10 @@
         <el-table-column prop="addr" label="来源IP地址">
         </el-table-column>
         <el-table-column prop="exception" label="异常信息">
+          <template slot-scope="scope">
+            <span v-if="!scope.row.exception">无</span>
+            <el-button v-else class="exception" type="text" @click="showException(scope.row.exception)">{{scope.row.exception}}</el-button>
+          </template>
         </el-table-column>
         <el-table-column prop="level" label="日志级别">
         </el-table-column>
@@ -47,13 +67,25 @@
       <!-- 分页组件here -->
       <PageBar :total="total" :currentpage="current" @handlePage="handlePage" @handlePageSize="handlePageSize" />
     </el-row>
+
+    <el-dialog
+      :title="dialog.tip"
+      :visible.sync="dialogVisible"
+      >
+      <pre>{{dialog.data}}</pre>
+      <span slot="footer" class="dialog-footer">
+        <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import ActiveBtn from "components/ActiveBtn";
 import * as api from "api/monitor";
 import PageBar from "components/PageBar/index";
-import moment from "moment";
+import moment from "utils/moment";
 export default {
   name: "journal-done",
   created() {
@@ -74,10 +106,18 @@ export default {
       });
   },
   components: {
-    PageBar
+    PageBar,
+    ActiveBtn
   },
   data() {
     return {
+      act: 0,
+      cancel: -1,
+      dialogVisible: false,
+      dialog: {
+        tip: '',
+        data: ''
+      },
       loading: true,
       total: 0, // 分页
       current: 1, // 分页
@@ -87,74 +127,52 @@ export default {
       timeArr: [
         // 日期-‘全部’ 高亮
         {
-          id: 0,
           name: "全部",
-          show: true,
-          value: ""
+          value: null
         },
         {
-          id: 1,
           name: "当日",
-          show: false,
-          value: this.outPutValue(1)
+          value: 1
         },
         {
-          id: 2,
           name: "7日内",
-          show: false,
-          value: this.outPutValue(7)
+          value: 7
         },
         {
-          id: 3,
           name: "30日内",
-          show: false,
-          value: this.outPutValue(30)
+          value: 30
         }
       ],
       optArr: [
         {
-          id: 0,
           name: "全部",
-          show: true,
-          value: ""
+          value: null
         }
       ],
       errorArr: [
         // 类别
         {
-          id: 0,
           name: "全部",
-          show: true,
-          value: ""
+          value: null
         },
         {
-          id: 1,
           name: "调试",
-          show: false,
           value: "debug"
         },
         {
-          id: 2,
           name: "信息",
-          show: false,
           value: "info"
         },
         {
-          id: 3,
           name: "警告",
-          show: false,
           value: "warn"
         },
         {
-          id: 4,
           name: "错误",
-          show: false,
           value: "error"
         },
         {
-          id: 5,
           name: "严重错误",
-          show: false,
           value: "fetal"
         }
       ],
@@ -168,6 +186,11 @@ export default {
     };
   },
   methods: {
+    showException(data) {
+      this.dialog.tip = '异常信息'
+      this.dialog.data = data
+      this.dialogVisible = true
+    },
     handleSearch() {
       this.getList(this.current, this.size);
     },
@@ -192,7 +215,6 @@ export default {
       api.postDoneLog(query).then(data => {
         this.loading = false;
         data.rows.forEach(ele => {
-          ele.exception = ele.exception ? ele.exception : '无'
           this.optArr.forEach(item => {
             if (item.value == ele.opt) {
               ele.opt = item.name;
@@ -219,59 +241,32 @@ export default {
       // 日期组件change事件
       this.typeObj.timeValue = data;
       // 解除其余日期按钮高亮
-      this.timeArr.forEach(item => {
-        item.show = false;
-      });
+      this.cancel = -Math.random();
     },
-    outPutValue(long) {
-      const today = moment().format("YYYY-MM-DD");
-      const beforeDay = this.lastDay(today, -long);
-      return [beforeDay, today];
+    handleTimeBtn({ value }) {
+      this.valueT = [] // 日期选择器清空
+      this.typeObj.timeValue = value || "";
     },
-    lastDay(nowDay, n) {
-      // 格式化日期-昨天
-      return moment(nowDay)
-        .add(n, "days")
-        .format("YYYY-MM-DD");
+    handleOptArr({ value }) {
+      this.typeObj.opt = value || '';
     },
-    handleTime(item) {
-      const { id, value } = item;
-      this.timeArr.forEach(item => (item.show = false));
-      this.timeArr[id].show = true;
-      if (id === 0) {
-        this.typeObj.timeValue = "";
-      } else {
-        this.typeObj.timeValue = value;
-      }
-    },
-    handleOptArr(item) {
-      const { id, value } = item;
-      this.optArr.forEach(item => (item.show = false));
-      this.optArr[id].show = true;
-      if (id === 0) {
-        this.typeObj.opt = "";
-      } else {
-        this.typeObj.opt = value;
-      }
-    },
-    handleErrorArr(item) {
-      const { id, value } = item;
-      this.errorArr.forEach(item => (item.show = false));
-      this.errorArr[id].show = true;
-      if (id === 0) {
-        this.typeObj.errorValue = "";
-      } else {
-        this.typeObj.errorValue = value;
-      }
+    handleErrorArr({ value }) {
+      this.typeObj.errorValue = value || '';
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.active {
-  background-color: #409eff;
-  border-color: #409eff;
-  color: #fff;
+pre {
+  height: 500px;
+  overflow-y: auto;
+}
+.exception {
+  text-align: left;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

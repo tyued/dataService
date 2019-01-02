@@ -36,7 +36,7 @@ service.interceptors.response.use(function ({ data, status }) {
     case 'expiry': // 后台:我可以额外给你加个特殊标记 免得和其他请求数据分不清
       if (!store.getters.isOut) { // 因为会有多个响应，会一直弹，这里要加一个控制开关，存全局
         store.commit('SET_ISOUT', true)
-        MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
+        MessageBox.confirm('会话已过期，可以取消继续留在该页面，或者重新登录', '会话过期', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
           type: 'warning'

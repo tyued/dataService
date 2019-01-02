@@ -40,6 +40,7 @@ dataservice
     │   ├── AreaChart               区域echarts
     │   ├── LineChart               线型echarts
     │   ├── PageBar                 封装的分页组件
+    │   ├── DatePicker              封装的日期按钮搜索组件
     │   └── ActiveBtn.vue           封装的按钮高亮组件
     ├── router                      路由
     ├── store                       vuex
@@ -83,7 +84,7 @@ dataservice
 
 ### 写在之前
 
-> 开发模式下使用服务器代理防止跨域
+- 开发模式下使用服务器代理防止跨域
 ``` javascript
 // config/index.js
 proxyTable: {
@@ -97,38 +98,37 @@ proxyTable: {
 }
 ```
 
-> 配置axios基础路径
+- 配置axios基础路径
 `config/[name].env.js` 中的`BASE_API`
 对应`utils/fetch.js`里面的`process.env.BASE_API`
 
-> axios 请求
+- axios 请求
 ``` javascript
 import fetch from 'utils/fetch';
 // xxx
 export function fnName(obj) { // 传入参数对象，key为参数名
-    return fetch({
-        url: '/dsb/admin/service/registry/rest',
-        method: 'post',
-        data: obj, // data 会将参数对象放入请求体
-        params: obj, // params 会将参数对象拼接到URL后面(query形式)
-    });
+  return fetch({
+    url: '/dsb/admin/service/registry/rest',
+    method: 'post',
+    data: obj, // data 会将参数对象放入请求体
+    params: obj, // params 会将参数对象拼接到URL后面(query形式)
+  });
 }
 ```
 
 ### 注意事项
 
-> 静态资源放置在src/assets下面，可以被webpack压缩处理
-> static/css/dataService.css 覆盖element默认样式（因为没有被vue-loader处理不会有data-自定义属性）注意添加父类名来防止造成全局css污染
-> 每个页面style标签添加scoped
-> 会复用的模块模块化
-> 以接口的数据格式为data，防止来回处理数据
-> 表单必有编辑，注意清空和还原逻辑
+- 静态资源放置在src/assets下面，可以被webpack压缩处理
+- static/css/dataService.css 覆盖element默认样式（因为没有被vue-loader处理不会有data-自定义属性）注意添加父类名来防止造成全局css污染
+- 每个页面style标签添加scoped
+- 会复用的模块模块化
+- 以接口的数据格式为data，防止来回处理数据
+- 表单必有编辑，注意清空和还原逻辑
 
 
 ### 如何继续开发
 
-> router 添加路由
-> 添加对应的页面目录
-> 配置layout/Sidebar.vue侧边导航
-> 调整login.js页面跳转函数
-> 复制、粘贴
+- router 添加路由
+- 添加对应的页面目录
+- 配置layout/Sidebar.vue侧边导航
+- 调整login.js页面跳转函数
